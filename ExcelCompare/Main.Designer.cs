@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.CompareBtn = new System.Windows.Forms.Button();
-            this.CheckDocuments = new System.Windows.Forms.Button();
             this.Output = new ExcelCompare.SaveFileControl();
             this.FileTwo = new ExcelCompare.OpenFileControl();
             this.FileOne = new ExcelCompare.OpenFileControl();
@@ -38,23 +37,13 @@
             // CompareBtn
             // 
             this.CompareBtn.Enabled = false;
-            this.CompareBtn.Location = new System.Drawing.Point(414, 54);
+            this.CompareBtn.Location = new System.Drawing.Point(415, 13);
             this.CompareBtn.Name = "CompareBtn";
-            this.CompareBtn.Size = new System.Drawing.Size(90, 40);
+            this.CompareBtn.Size = new System.Drawing.Size(90, 80);
             this.CompareBtn.TabIndex = 2;
             this.CompareBtn.Text = "Compare";
             this.CompareBtn.UseVisualStyleBackColor = true;
             this.CompareBtn.Click += new System.EventHandler(this.CompareBtn_Click);
-            // 
-            // CheckDocuments
-            // 
-            this.CheckDocuments.Location = new System.Drawing.Point(414, 12);
-            this.CheckDocuments.Name = "CheckDocuments";
-            this.CheckDocuments.Size = new System.Drawing.Size(90, 40);
-            this.CheckDocuments.TabIndex = 3;
-            this.CheckDocuments.Text = "Check";
-            this.CheckDocuments.UseVisualStyleBackColor = true;
-            this.CheckDocuments.Click += new System.EventHandler(this.CheckDocuments_Click);
             // 
             // Output
             // 
@@ -63,6 +52,7 @@
             this.Output.Size = new System.Drawing.Size(396, 22);
             this.Output.TabIndex = 4;
             this.Output.Title = "Output:";
+            this.Output.Leave += new System.EventHandler(this.CheckDocumentsEvt);
             // 
             // FileTwo
             // 
@@ -71,6 +61,7 @@
             this.FileTwo.Size = new System.Drawing.Size(395, 22);
             this.FileTwo.TabIndex = 1;
             this.FileTwo.Title = "Document Two:";
+            this.FileTwo.Leave += new System.EventHandler(this.CheckDocumentsEvt);
             // 
             // FileOne
             // 
@@ -79,6 +70,7 @@
             this.FileOne.Size = new System.Drawing.Size(395, 22);
             this.FileOne.TabIndex = 0;
             this.FileOne.Title = "Document One:";
+            this.FileOne.Leave += new System.EventHandler(this.CheckDocumentsEvt);
             // 
             // Main
             // 
@@ -86,7 +78,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(517, 106);
             this.Controls.Add(this.Output);
-            this.Controls.Add(this.CheckDocuments);
             this.Controls.Add(this.CompareBtn);
             this.Controls.Add(this.FileTwo);
             this.Controls.Add(this.FileOne);
@@ -104,7 +95,6 @@
         private OpenFileControl FileOne;
         private OpenFileControl FileTwo;
         private System.Windows.Forms.Button CompareBtn;
-        private System.Windows.Forms.Button CheckDocuments;
         private SaveFileControl Output;
     }
 }

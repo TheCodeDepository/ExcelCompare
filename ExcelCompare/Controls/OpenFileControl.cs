@@ -25,7 +25,11 @@ namespace ExcelCompare
 
         }
 
-        public string FilePath { get; private set; }
+        public string FilePath
+        {
+            get { return path.Text; }
+            private set { path.Text = value; }
+        }
 
 
         private void Label_Click(object sender, EventArgs e)
@@ -33,19 +37,24 @@ namespace ExcelCompare
 
         }
 
+        public event EventHandler _TextChanged;
         private void path_TextChanged(object sender, EventArgs e)
         {
+            if (_TextChanged!=null)
+            {
+                _TextChanged(this, e);
+            }      
 
+            
         }
 
         private void OpenDialog_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            openFileDialog.Filter = "Supported Types|*.xlsx;*.csv;*.txt|Excel files (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv|Fixed-Width files (*.txt)|*.txt|All files (*.*)|*.*";
             openFileDialog.Multiselect = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                path.Text = openFileDialog.SafeFileName;
+            {                
                 FilePath = openFileDialog.FileName;
             }
         }

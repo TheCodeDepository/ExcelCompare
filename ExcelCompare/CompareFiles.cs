@@ -15,66 +15,80 @@ namespace ExcelCompare
         private string pathTwo;
         private string outputPath;
         private string outputFormat;
+        public DataTable comparisonResult { get; set; }
 
         public List<Tuple<int, int>> DiffLocations { get; private set; }
 
-        public CompareFiles(string filePathOne, string filePathTwo, string outputFilePath, string outputType)
+        public CompareFiles(string filePathOne, string filePathTwo, string outputFilePath)
         {
             pathOne = filePathOne;
             pathTwo = filePathTwo;
             outputPath = outputFilePath;
-            outputFormat = outputType;
-
+            outputFormat = Path.GetExtension(outputFilePath);
             DiffLocations = new List<Tuple<int, int>>();
-            outputFormat = Path.GetExtension(filePathOne);
+
+        }
+
+        public void Go()
+        {
+            DataTable docOne = GetDataTable(pathOne);
+            DataTable docTwo = GetDataTable(pathTwo);
+
+            comparisonResult = CompareDateSets(docOne, docTwo);
         }
 
 
-        public void Compare()
-        {
-            string fileExtOne = Path.GetExtension(pathOne);
 
-            if (fileExtOne == Path.GetExtension(pathTwo))
+        private DataTable GetDataTable(string path)
+        {
+            string ext = Path.GetExtension(path);
+            DataTable tmp = new DataTable();
+
+            switch (ext)
             {
-                DataTable tmp = new DataTable();
+                case ".xlsx":
+                    ExcelConverter xconverter = new ExcelConverter();
+                    tmp = xconverter.GetDataTable(path);
+                    break;
 
+                case ".xls":
+                    ExcelConverter exconverter = new ExcelConverter();
+                    tmp = exconverter.GetDataTable(path);
+                    break;
 
-                switch (fileExtOne)
-                {
-                    case ".xlsx":
-                        ExcelConverter xconverter = new ExcelConverter();
-                        tmp = CompareDateSets(xconverter.GetDataTable(pathOne), xconverter.GetDataTable(pathTwo));
-                        break;
+                case ".csv":
+                    CsvConverter csvConverter = new CsvConverter();
+                    tmp = csvConverter.GetDataTable(path);
+                    break;
 
-                    case ".xls":
-                        CsvConverter csvConverter = new CsvConverter();
-                        tmp = CompareDateSets(csvConverter.GetDataTable(pathOne), csvConverter.GetDataTable(pathTwo));
-                        break;
+                case ".txt":
+                    break;
 
-                    case ".csv":
-                        break;
-                    case ".txt":
-                        break;
-                    default:
-                        break;
-                }
-
-                GenerateReport(tmp);
             }
+            return tmp;
+
         }
 
-        private void GenerateReport(DataTable data)
+        public void GenerateReport()
         {
+            IConversion converter;
             switch (outputFormat)
             {
                 case ".xlsx":
-                    ExcelConverter converter = new ExcelConverter();
-                    converter.GenerateXlsx(data, DiffLocations, outputPath);
+                    converter = new ExcelConverter();
+                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
                     break;
+
+                case ".xls":
+                    converter = new ExcelConverter();
+                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    break;
+
                 case ".csv":
-
-
+                    converter = new CsvConverter();
+                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
                     break;
+
                 default:
                     break;
             }
@@ -83,6 +97,7 @@ namespace ExcelCompare
 
         private DataTable CompareDateSets(DataTable docOne, DataTable docTwo)
         {
+
             int docOneCol = docOne.Columns.Count;
             int docTwoCol = docTwo.Columns.Count;
             int docOneRow = docOne.Rows.Count;
@@ -157,8 +172,11 @@ namespace ExcelCompare
                     }
                     else
                     {
-
-                        if (docOneCell != string.Empty)
+                        if (docOneCell == docTwoCell)
+                        {
+                            tmpRow[col] = docOneCell;
+                        }
+                        else if (docOneCell != string.Empty)
                         {
                             tmpRow[col] = docOneCell;
                             DiffLocations.Add(diffLoc);

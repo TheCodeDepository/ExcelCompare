@@ -67,6 +67,7 @@
             this.path.ReadOnly = true;
             this.path.Size = new System.Drawing.Size(174, 20);
             this.path.TabIndex = 3;
+            this.path.TextChanged += new System.EventHandler(this.path_TextChanged);
             // 
             // SaveFileControl
             // 

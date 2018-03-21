@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,43 +14,104 @@ namespace ExcelCompare
 {
     public partial class Main : Form
     {
+        private BackgroundWorker compareWorker;
+        private BackgroundWorker reportWorker;
+        private CompareFiles comp;
+
         public Main()
         {
             InitializeComponent();
-         
+            compareWorker = new BackgroundWorker();
+            compareWorker.RunWorkerCompleted += CompareWorkerCompleted;
+            compareWorker.DoWork += CompareDoWork;
 
+            reportWorker = new BackgroundWorker();
+            reportWorker.RunWorkerCompleted += ReportWorkerCompleted;
+            reportWorker.DoWork += ReportDoWork;
+
+            FileOne._TextChanged += CheckDocumentsEvt;
+            FileTwo._TextChanged += CheckDocumentsEvt;
+            Output._TextChanged += CheckDocumentsEvt;
         }
 
         private void CompareBtn_Click(object sender, EventArgs e)
         {
             CompareBtn.Enabled = false;
-            CheckDocuments.Enabled = false;
-            CompareFiles comp = new CompareFiles(FileOne.FilePath, FileTwo.FilePath, Output.FilePath, ".xlsx");
-            comp.Compare();
+            comp = new CompareFiles(FileOne.FilePath, FileTwo.FilePath, Output.FilePath);
+            compareWorker.RunWorkerAsync();
+        }
+
+        private void CheckDocumentsEvt(object sender, EventArgs e)
+        {
+            var w1 = File.Exists(FileOne.FilePath);
+            var w2 = File.Exists(FileTwo.FilePath);
+            var w3 = Output.FilePath != null;
+            if (w1 && w2 && w3)
+            {
+                CompareBtn.Enabled = true;
+                return;
+            }
+        }
+
+        //Worker Events
+
+        private void ReportDoWork(object sender, DoWorkEventArgs e)
+        {
+            bool retry = false;
+            do
+            {
+                try
+                {
+                    comp.GenerateReport();
+                }
+                catch (Exception)
+                {
+                    var errorMess = MessageBox.Show("Please ensure the all involved documents are closed", "Error", MessageBoxButtons.RetryCancel);
+                    if (errorMess == DialogResult.Retry)
+                    {
+                        retry = true;
+                    }
+                    else
+                    {
+                        retry = false;
+                    }
+                }
+            } while (retry);
+        }
+
+        private void ReportWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MessageBox.Show("Done!");
+            this.Enabled = true;
+
+        }
+
+        private void CompareDoWork(object sender, DoWorkEventArgs e)
+        {
+            comp.Go();
+        }
+
+        private void CompareWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             if (comp.DiffLocations.Count > 0)
             {
                 MessageBox.Show($"There are {comp.DiffLocations.Count} inconsistent cells.");
+                var tmp = MessageBox.Show("Would you like to genarate a report?", "Generate Report", MessageBoxButtons.YesNo);
+                if (tmp == DialogResult.Yes)
+                {
+
+                    reportWorker.RunWorkerAsync();
+                }
             }
             else
             {
                 MessageBox.Show($"There are no differences between these documents.");
             }
             CompareBtn.Enabled = true;
-            CheckDocuments.Enabled = true;
-
-
+            System.Diagnostics.Process.Start(Output.FilePath);
         }
 
-        private void CheckDocuments_Click(object sender, EventArgs e)
-        {
 
-            if (FileOne.FilePath != null && FileTwo.FilePath != null && Output.FilePath != null)
-            { 
-                CompareBtn.Enabled = true;
-                return;
 
-            }
-            MessageBox.Show("Please select a vaild path.");
-        }
     }
 }

@@ -8,20 +8,25 @@ using System.Data.OleDb;
 
 namespace ComparisonLogic
 {
-    public class ExcelConverter
+    public class ExcelConverter : IConversion
     {
 
-     
-        public void GenerateXlsx(DataTable data, List<Tuple<int, int>> differences, string outputPath)
-        { 
+        public event Action<int> reportProgress;
+
+        public void GenerateReport(DataTable data, List<Tuple<int, int>> differences, string outputPath)
+        {
+
             XLWorkbook wb = new XLWorkbook();
             var workSheet = wb.Worksheets.Add(data, "Results");
-            
+
+            int count = data.Rows.Count / differences.Count * 100;
+            reportProgress(count);
+
             foreach (var item in differences)
             {
-                workSheet.Cell(item.Item1, item.Item2).Style.Fill.BackgroundColor = XLColor.Red;
+                workSheet.Cell(item.Item1, item.Item2).Style.Fill.BackgroundColor = XLColor.Red;        
             }
-            wb.SaveAs(outputPath);            
+            wb.SaveAs(outputPath);
 
         }
 
@@ -55,6 +60,7 @@ namespace ComparisonLogic
             return dt;
 
         }
+
 
     }
 }
