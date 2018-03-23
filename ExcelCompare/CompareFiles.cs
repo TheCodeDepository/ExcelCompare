@@ -13,19 +13,14 @@ namespace ExcelCompare
     {
         private string pathOne;
         private string pathTwo;
-        private string outputPath;
-        private string outputFormat;
+           
         public DataTable comparisonResult { get; set; }
-
         public List<Tuple<int, int>> DiffLocations { get; private set; }
 
-        public CompareFiles(string filePathOne, string filePathTwo, string outputFilePath)
+        public CompareFiles(string filePathOne, string filePathTwo)
         {
             pathOne = filePathOne;
-            pathTwo = filePathTwo;
-            outputPath = outputFilePath;
-            outputFormat = Path.GetExtension(outputFilePath);
-            DiffLocations = new List<Tuple<int, int>>();
+            pathTwo = filePathTwo;    
 
         }
 
@@ -35,6 +30,7 @@ namespace ExcelCompare
             DataTable docTwo = GetDataTable(pathTwo);
 
             comparisonResult = CompareDateSets(docOne, docTwo);
+
         }
 
 
@@ -69,10 +65,10 @@ namespace ExcelCompare
 
         }
 
-        public void GenerateReport()
+        public void GenerateReport(string outputPath)
         {
             IConversion converter;
-            switch (outputFormat)
+            switch (Path.GetExtension(outputPath))
             {
                 case ".xlsx":
                     converter = new ExcelConverter();
@@ -139,11 +135,11 @@ namespace ExcelCompare
                 }
             }
 
-
-            DataTable tmp = new DataTable();
+            DiffLocations = new List<Tuple<int, int>>();
+            DataTable resultTable = new DataTable();
             foreach (var item in docOne.Columns)
             {
-                tmp.Columns.Add(item.ToString());
+                resultTable.Columns.Add(item.ToString());
             }
 
             for (int row = 0; row < rowNum; row++)
@@ -156,7 +152,7 @@ namespace ExcelCompare
                 {
                     string docOneCell = rowOne[col].ToString();
                     string docTwoCell = rowTwo[col].ToString();
-                    Tuple<int, int> diffLoc = new Tuple<int, int>((row + 1), (col + 1));
+                    Tuple<int, int> diffLoc = new Tuple<int, int>(row, col);
 
                     if (docOneCell != string.Empty && docTwoCell != string.Empty)
                     {
@@ -190,10 +186,11 @@ namespace ExcelCompare
 
                 }
 
-                tmp.Rows.Add(tmpRow);
+                resultTable.Rows.Add(tmpRow);
             }
 
-            return tmp;
+
+            return resultTable;
         }
 
     }

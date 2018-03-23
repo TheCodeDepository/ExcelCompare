@@ -24,7 +24,7 @@ namespace ComparisonLogic
 
             foreach (var item in differences)
             {
-                workSheet.Cell(item.Item1, item.Item2).Style.Fill.BackgroundColor = XLColor.Red;        
+                workSheet.Cell((item.Item1+1), (item.Item2+1)).Style.Fill.BackgroundColor = XLColor.Red;        
             }
             wb.SaveAs(outputPath);
 

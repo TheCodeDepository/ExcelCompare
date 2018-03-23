@@ -28,57 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.path = new System.Windows.Forms.TextBox();
-            this.Label = new System.Windows.Forms.Label();
-            this.OpenDialog = new System.Windows.Forms.Button();
+            this.label = new MetroFramework.Controls.MetroLabel();
+            this.pathTextBox = new MetroFramework.Controls.MetroTextBox();
+            this.dialogBtn = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
-            // path
+            // label
             // 
-            this.path.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.label.AutoSize = true;
+            this.label.Location = new System.Drawing.Point(2, 4);
+            this.label.MaximumSize = new System.Drawing.Size(120, 19);
+            this.label.MinimumSize = new System.Drawing.Size(120, 19);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(120, 19);
+            this.label.TabIndex = 5;
+            this.label.Text = "Orginal Document:";
+            this.label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // pathTextBox
+            // 
+            this.pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.path.Location = new System.Drawing.Point(100, 1);
-            this.path.Name = "path";
-            this.path.ReadOnly = true;
-            this.path.Size = new System.Drawing.Size(174, 20);
-            this.path.TabIndex = 0;
-            this.path.TextChanged += new System.EventHandler(this.path_TextChanged);
+            this.pathTextBox.Location = new System.Drawing.Point(127, 3);
+            this.pathTextBox.Name = "pathTextBox";
+            this.pathTextBox.ReadOnly = true;
+            this.pathTextBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.pathTextBox.Size = new System.Drawing.Size(274, 23);
+            this.pathTextBox.TabIndex = 3;
+            this.pathTextBox.TextChanged += new System.EventHandler(this.path_TextChanged);
             // 
-            // Label
+            // dialogBtn
             // 
-            this.Label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.Label.Location = new System.Drawing.Point(3, 2);
-            this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(91, 17);
-            this.Label.TabIndex = 1;
-            this.Label.Text = "Document";
-            this.Label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Label.Click += new System.EventHandler(this.Label_Click);
-            // 
-            // OpenDialog
-            // 
-            this.OpenDialog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.OpenDialog.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.OpenDialog.Location = new System.Drawing.Point(251, 2);
-            this.OpenDialog.Name = "OpenDialog";
-            this.OpenDialog.Size = new System.Drawing.Size(22, 18);
-            this.OpenDialog.TabIndex = 2;
-            this.OpenDialog.Text = "...";
-            this.OpenDialog.UseVisualStyleBackColor = true;
-            this.OpenDialog.Click += new System.EventHandler(this.OpenDialog_Click);
+            this.dialogBtn.Location = new System.Drawing.Point(400, 3);
+            this.dialogBtn.Name = "dialogBtn";
+            this.dialogBtn.Size = new System.Drawing.Size(24, 23);
+            this.dialogBtn.TabIndex = 4;
+            this.dialogBtn.Text = "...";
+            this.dialogBtn.Click += new System.EventHandler(this.OpenDialog_Click);
             // 
             // OpenFileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.OpenDialog);
-            this.Controls.Add(this.Label);
-            this.Controls.Add(this.path);
+            this.Controls.Add(this.label);
+            this.Controls.Add(this.pathTextBox);
+            this.Controls.Add(this.dialogBtn);
             this.Name = "OpenFileControl";
-            this.Size = new System.Drawing.Size(277, 22);
+            this.Size = new System.Drawing.Size(427, 29);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,8 +82,8 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox path;
-        private System.Windows.Forms.Label Label;
-        private System.Windows.Forms.Button OpenDialog;
+        private MetroFramework.Controls.MetroLabel label;
+        private MetroFramework.Controls.MetroTextBox pathTextBox;
+        private MetroFramework.Controls.MetroButton dialogBtn;
     }
 }

@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework;
 
 namespace ExcelCompare
 {
-    public partial class SaveFileControl : UserControl
+    public partial class SaveFileControl : MetroFramework.Controls.MetroUserControl
     {
         public SaveFileControl()
         {
@@ -19,22 +20,17 @@ namespace ExcelCompare
 
         public string Title
         {
-            get { return Label.Text; }
-            set { Label.Text = value; }
+            get { return label.Text; }
+            set { label.Text = value; }
 
         }
 
         public string FilePath
         {
-            get { return path.Text; }
-            private set { path.Text = value; }
+            get { return pathTextBox.Text; }
+            private set { pathTextBox.Text = value; }
         }
 
-
-        private void Label_Click(object sender, EventArgs e)
-        {
-
-        }
 
         public event EventHandler _TextChanged;
         private void path_TextChanged(object sender, EventArgs e)
@@ -43,8 +39,6 @@ namespace ExcelCompare
             {
                 _TextChanged(this, e);
             }
-
-
         }
 
         private void SaveDialog_Click(object sender, EventArgs e)

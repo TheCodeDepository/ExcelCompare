@@ -28,56 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SaveDialog = new System.Windows.Forms.Button();
-            this.Label = new System.Windows.Forms.Label();
-            this.path = new System.Windows.Forms.TextBox();
+            this.dialogBtn = new MetroFramework.Controls.MetroButton();
+            this.pathTextBox = new MetroFramework.Controls.MetroTextBox();
+            this.label = new MetroFramework.Controls.MetroLabel();
             this.SuspendLayout();
             // 
-            // SaveDialog
+            // dialogBtn
             // 
-            this.SaveDialog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dialogBtn.Location = new System.Drawing.Point(402, 3);
+            this.dialogBtn.Name = "dialogBtn";
+            this.dialogBtn.Size = new System.Drawing.Size(24, 23);
+            this.dialogBtn.TabIndex = 1;
+            this.dialogBtn.Text = "...";
+            this.dialogBtn.Click += new System.EventHandler(this.SaveDialog_Click);
+            // 
+            // pathTextBox
+            // 
+            this.pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveDialog.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.SaveDialog.Location = new System.Drawing.Point(251, 2);
-            this.SaveDialog.Name = "SaveDialog";
-            this.SaveDialog.Size = new System.Drawing.Size(22, 18);
-            this.SaveDialog.TabIndex = 5;
-            this.SaveDialog.Text = "...";
-            this.SaveDialog.UseVisualStyleBackColor = true;
-            this.SaveDialog.Click += new System.EventHandler(this.SaveDialog_Click);
+            this.pathTextBox.Location = new System.Drawing.Point(129, 3);
+            this.pathTextBox.Name = "pathTextBox";
+            this.pathTextBox.ReadOnly = true;
+            this.pathTextBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.pathTextBox.Size = new System.Drawing.Size(274, 23);
+            this.pathTextBox.TabIndex = 0;
+            this.pathTextBox.TextChanged += new System.EventHandler(this.path_TextChanged);
             // 
-            // Label
+            // label
             // 
-            this.Label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.Label.Location = new System.Drawing.Point(3, 2);
-            this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(91, 17);
-            this.Label.TabIndex = 4;
-            this.Label.Text = "Document";
-            this.Label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // path
-            // 
-            this.path.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.path.Location = new System.Drawing.Point(100, 1);
-            this.path.Name = "path";
-            this.path.ReadOnly = true;
-            this.path.Size = new System.Drawing.Size(174, 20);
-            this.path.TabIndex = 3;
-            this.path.TextChanged += new System.EventHandler(this.path_TextChanged);
+            this.label.AutoSize = true;
+            this.label.Location = new System.Drawing.Point(4, 4);
+            this.label.MaximumSize = new System.Drawing.Size(120, 19);
+            this.label.MinimumSize = new System.Drawing.Size(120, 19);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(120, 19);
+            this.label.TabIndex = 2;
+            this.label.Text = "Orginal Document:";
+            this.label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // SaveFileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.SaveDialog);
-            this.Controls.Add(this.Label);
-            this.Controls.Add(this.path);
+            this.Controls.Add(this.label);
+            this.Controls.Add(this.pathTextBox);
+            this.Controls.Add(this.dialogBtn);
             this.Name = "SaveFileControl";
-            this.Size = new System.Drawing.Size(277, 22);
+            this.Size = new System.Drawing.Size(430, 30);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -85,8 +82,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button SaveDialog;
-        private System.Windows.Forms.Label Label;
-        private System.Windows.Forms.TextBox path;
+        private MetroFramework.Controls.MetroButton dialogBtn;
+        private MetroFramework.Controls.MetroTextBox pathTextBox;
+        private MetroFramework.Controls.MetroLabel label;
     }
 }
