@@ -21,7 +21,7 @@ namespace ExcelCompare
         public string docPathOne { get { return openFileControl1.FilePath; } }
         public string docPathTwo { get { return openFileControl2.FilePath; } }
         public string outputPath { get; private set; }
-        //public DataGridView ResultView { get; private set; }
+
 
         public MainForm()
         {
@@ -35,10 +35,22 @@ namespace ExcelCompare
             reportWorker.DoWork += ReportDoWork;
 
             openFileControl1._TextChanged += CheckDocumentsEvt;
-            openFileControl1._TextChanged += CheckDocumentsEvt;
-
+            openFileControl2._TextChanged += CheckDocumentsEvt;
+            sheetController.SelectTab(0);
+            SideBySideGrid1.MouseWheel += ScrollSideOne;
         }
 
+        private void ScrollSideOne(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0 && SideBySideGrid1.FirstDisplayedScrollingRowIndex > 0)
+            {
+                SideBySideGrid1.FirstDisplayedScrollingRowIndex--;
+            }
+            else if (e.Delta < 0)
+            {
+                SideBySideGrid1.FirstDisplayedScrollingRowIndex++;
+            }
+        }
 
         private void CompareBtn_Click(object sender, EventArgs e)
         {
@@ -49,10 +61,11 @@ namespace ExcelCompare
 
         private void CheckDocumentsEvt(object sender, EventArgs e)
         {
-            if (File.Exists(docPathOne) && File.Exists(docPathOne))
+            bool one = File.Exists(docPathOne);
+            bool two = File.Exists(docPathTwo);
+            if (one && two)
             {
                 CompareBtn.Enabled = true;
-                return;
             }
             else
             {
@@ -71,8 +84,11 @@ namespace ExcelCompare
         {
             if (comp.DiffLocations.Count > 0)
             {
-                
-                //PushTableToView(ResultView, comp);
+
+                PushTableToView(MergedViewGrid, comp.mergedResults);
+                PushTableToView(SideBySideGrid1, comp.docOne);
+                PushTableToView(SideBySideGrid2, comp.docTwo);
+
                 ScaleWindow();
                 QueryUserReport();
 
@@ -84,15 +100,16 @@ namespace ExcelCompare
 
         }
 
-
+        private bool cancel = false;
         private void ReportDoWork(object sender, DoWorkEventArgs e)
         {
             bool retry = false;
             do
             {
-                try{
-
+                try
+                {
                     comp.GenerateReport(outputPath);
+                    retry = false;
                 }
                 catch (Exception)
                 {
@@ -104,25 +121,27 @@ namespace ExcelCompare
                     else
                     {
                         retry = false;
+                        cancel = true;
+                        break;
                     }
                 }
             } while (retry);
-
-
         }
 
         private void ReportWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Enabled = true;
-            if (openSpeadcBox.Checked)
+            if (!cancel)
             {
-                System.Diagnostics.Process.Start(outputPath);
+                if (openSpeadcBox.Checked)
+                {
+                    System.Diagnostics.Process.Start(outputPath);
+                }
+            } 
 
-            }
-            MessageBox.Show("Done");
         }
 
-       
+
 
         private void QueryUserReport()
         {
@@ -130,36 +149,37 @@ namespace ExcelCompare
             if (genSpreadcBox.Checked)
             {
                 SaveFileDialog save = new SaveFileDialog();
-                save.Filter = "CSV Files (*.csv)|*.csv|Excel Files (*.xlsx)|*.xlsx|All files (*.*)|*.*";                
+                save.Filter = "CSV Files (*.csv)|*.csv|Excel Files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
                 if (save.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = save.FileName;
                     reportWorker.RunWorkerAsync();
-
-
                 }
             }
         }
 
-        private void PushTableToView(DataGridView ResultView, CompareFiles comp)
+        private void PushTableToView(DataGridView ResultView, DataTable table)
         {
             try
             {
-                ResultView.DataSource = comp.comparisonResult;
-
+                ResultView.DataSource = table;
             }
             catch (Exception m)
             {
-
                 throw m;
             }
+            ProcessDifferences(ResultView);
+        }
+
+        private void ProcessDifferences(DataGridView ResultView)
+        {
+            DataGridViewCellStyle diffStyle = new DataGridViewCellStyle();
+            diffStyle.BackColor = Color.DarkOliveGreen;
+            diffStyle.ForeColor = Color.White;
             foreach (var item in comp.DiffLocations)
             {
-                DataGridViewCellStyle background = new DataGridViewCellStyle();
-                background.BackColor = Color.Red;
-                ResultView.Rows[item.Item1].Cells[item.Item2].Style = background;
+                ResultView.Rows[item.Item1].Cells[item.Item2].Style = diffStyle;
             }
-
         }
 
         private void ScaleWindow()
@@ -186,9 +206,46 @@ namespace ExcelCompare
 
         }
 
-        private void CheckChanged(object sender, EventArgs e)
+        private void DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
+            MergedViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            SideBySideGrid1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            SideBySideGrid2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+        }
+
+        private void SideBySideGrid1_Scroll(object sender, ScrollEventArgs e)
+        {
+            this.SideBySideGrid2.FirstDisplayedScrollingRowIndex = this.SideBySideGrid1.FirstDisplayedScrollingRowIndex;
+            this.SideBySideGrid2.HorizontalScrollingOffset = this.SideBySideGrid1.HorizontalScrollingOffset;
+        }
+
+        private void SideBySideGrid2_Scroll(object sender, ScrollEventArgs e)
+        {
+            this.SideBySideGrid1.FirstDisplayedScrollingRowIndex = this.SideBySideGrid2.FirstDisplayedScrollingRowIndex;
+            this.SideBySideGrid1.HorizontalScrollingOffset = this.SideBySideGrid2.HorizontalScrollingOffset;
+        }
+
+        private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comp != null)
+            {
+                if (comp.DiffLocations!=null)
+                {
+                    switch (sheetController.SelectedIndex)
+                    {
+                        case 0: ProcessDifferences(MergedViewGrid);
+                            break;
+                        case 1:
+                            ProcessDifferences(SideBySideGrid1);
+                            ProcessDifferences(SideBySideGrid2);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
         }
     }
 }

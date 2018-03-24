@@ -28,16 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileControl2 = new ExcelCompare.OpenFileControl();
             this.openFileControl1 = new ExcelCompare.OpenFileControl();
             this.CompareBtn = new MetroFramework.Controls.MetroButton();
             this.genSpreadcBox = new MetroFramework.Controls.MetroCheckBox();
             this.openSpeadcBox = new MetroFramework.Controls.MetroCheckBox();
-            this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
-            this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
-            this.metroRadioButton1 = new MetroFramework.Controls.MetroRadioButton();
-            this.metroRadioButton2 = new MetroFramework.Controls.MetroRadioButton();
-            this.metroPanel1.SuspendLayout();
+            this.sheetController = new MetroFramework.Controls.MetroTabControl();
+            this.mergedViewTab = new MetroFramework.Controls.MetroTabPage();
+            this.MergedViewGrid = new System.Windows.Forms.DataGridView();
+            this.sideBySide = new MetroFramework.Controls.MetroTabPage();
+            this.TableSplitter = new System.Windows.Forms.SplitContainer();
+            this.SideBySideGrid1 = new System.Windows.Forms.DataGridView();
+            this.SideBySideGrid2 = new System.Windows.Forms.DataGridView();
+            this.sheetController.SuspendLayout();
+            this.mergedViewTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MergedViewGrid)).BeginInit();
+            this.sideBySide.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TableSplitter)).BeginInit();
+            this.TableSplitter.Panel1.SuspendLayout();
+            this.TableSplitter.Panel2.SuspendLayout();
+            this.TableSplitter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SideBySideGrid1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SideBySideGrid2)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileControl2
@@ -58,7 +71,8 @@
             // 
             // CompareBtn
             // 
-            this.CompareBtn.Location = new System.Drawing.Point(746, 104);
+            this.CompareBtn.Enabled = false;
+            this.CompareBtn.Location = new System.Drawing.Point(477, 104);
             this.CompareBtn.Name = "CompareBtn";
             this.CompareBtn.Size = new System.Drawing.Size(75, 23);
             this.CompareBtn.TabIndex = 2;
@@ -68,7 +82,7 @@
             // genSpreadcBox
             // 
             this.genSpreadcBox.AutoSize = true;
-            this.genSpreadcBox.Location = new System.Drawing.Point(681, 63);
+            this.genSpreadcBox.Location = new System.Drawing.Point(477, 63);
             this.genSpreadcBox.Name = "genSpreadcBox";
             this.genSpreadcBox.Size = new System.Drawing.Size(137, 15);
             this.genSpreadcBox.TabIndex = 4;
@@ -80,66 +94,143 @@
             // 
             this.openSpeadcBox.AutoSize = true;
             this.openSpeadcBox.Enabled = false;
-            this.openSpeadcBox.Location = new System.Drawing.Point(681, 84);
+            this.openSpeadcBox.Location = new System.Drawing.Point(477, 84);
             this.openSpeadcBox.Name = "openSpeadcBox";
             this.openSpeadcBox.Size = new System.Drawing.Size(119, 15);
             this.openSpeadcBox.TabIndex = 5;
             this.openSpeadcBox.Text = "Open Spreadsheet";
             this.openSpeadcBox.UseVisualStyleBackColor = true;
             // 
-            // metroTabControl1
+            // sheetController
             // 
-            this.metroTabControl1.Location = new System.Drawing.Point(23, 134);
-            this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.Size = new System.Drawing.Size(802, 372);
-            this.metroTabControl1.TabIndex = 6;
+            this.sheetController.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sheetController.Controls.Add(this.mergedViewTab);
+            this.sheetController.Controls.Add(this.sideBySide);
+            this.sheetController.Location = new System.Drawing.Point(23, 134);
+            this.sheetController.Name = "sheetController";
+            this.sheetController.SelectedIndex = 1;
+            this.sheetController.Size = new System.Drawing.Size(1234, 643);
+            this.sheetController.TabIndex = 6;
+            this.sheetController.SelectedIndexChanged += new System.EventHandler(this.sheetController_SelectedIndexChanged);
             // 
-            // metroPanel1
+            // mergedViewTab
             // 
-            this.metroPanel1.Controls.Add(this.metroRadioButton2);
-            this.metroPanel1.Controls.Add(this.metroRadioButton1);
-            this.metroPanel1.HorizontalScrollbarBarColor = true;
-            this.metroPanel1.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroPanel1.HorizontalScrollbarSize = 10;
-            this.metroPanel1.Location = new System.Drawing.Point(577, 60);
-            this.metroPanel1.Name = "metroPanel1";
-            this.metroPanel1.Size = new System.Drawing.Size(98, 52);
-            this.metroPanel1.TabIndex = 7;
-            this.metroPanel1.VerticalScrollbarBarColor = true;
-            this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
-            this.metroPanel1.VerticalScrollbarSize = 10;
+            this.mergedViewTab.Controls.Add(this.MergedViewGrid);
+            this.mergedViewTab.HorizontalScrollbarBarColor = true;
+            this.mergedViewTab.Location = new System.Drawing.Point(4, 35);
+            this.mergedViewTab.Name = "mergedViewTab";
+            this.mergedViewTab.Size = new System.Drawing.Size(1226, 604);
+            this.mergedViewTab.TabIndex = 0;
+            this.mergedViewTab.Text = "Filtered View";
+            this.mergedViewTab.VerticalScrollbarBarColor = true;
             // 
-            // metroRadioButton1
+            // MergedViewGrid
             // 
-            this.metroRadioButton1.AutoSize = true;
-            this.metroRadioButton1.Location = new System.Drawing.Point(4, 4);
-            this.metroRadioButton1.Name = "metroRadioButton1";
-            this.metroRadioButton1.Size = new System.Drawing.Size(55, 15);
-            this.metroRadioButton1.TabIndex = 2;
-            this.metroRadioButton1.TabStop = true;
-            this.metroRadioButton1.Text = "Single";
-            this.metroRadioButton1.UseVisualStyleBackColor = true;
-            this.metroRadioButton1.CheckedChanged += new System.EventHandler(this.CheckChanged);
+            this.MergedViewGrid.AllowUserToAddRows = false;
+            this.MergedViewGrid.AllowUserToDeleteRows = false;
+            this.MergedViewGrid.AllowUserToResizeRows = false;
+            this.MergedViewGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MergedViewGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.MergedViewGrid.BackgroundColor = System.Drawing.Color.White;
+            this.MergedViewGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.MergedViewGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.MergedViewGrid.GridColor = System.Drawing.Color.White;
+            this.MergedViewGrid.Location = new System.Drawing.Point(3, 3);
+            this.MergedViewGrid.Name = "MergedViewGrid";
+            this.MergedViewGrid.ReadOnly = true;
+            this.MergedViewGrid.RowHeadersVisible = false;
+            this.MergedViewGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
+            this.MergedViewGrid.Size = new System.Drawing.Size(1220, 598);
+            this.MergedViewGrid.TabIndex = 5;
             // 
-            // metroRadioButton2
+            // sideBySide
             // 
-            this.metroRadioButton2.AutoSize = true;
-            this.metroRadioButton2.Location = new System.Drawing.Point(4, 24);
-            this.metroRadioButton2.Name = "metroRadioButton2";
-            this.metroRadioButton2.Size = new System.Drawing.Size(86, 15);
-            this.metroRadioButton2.TabIndex = 3;
-            this.metroRadioButton2.TabStop = true;
-            this.metroRadioButton2.Text = "Side by Side";
-            this.metroRadioButton2.UseVisualStyleBackColor = true;
-            this.metroRadioButton2.CheckedChanged += new System.EventHandler(this.CheckChanged);
+            this.sideBySide.Controls.Add(this.TableSplitter);
+            this.sideBySide.HorizontalScrollbarBarColor = true;
+            this.sideBySide.Location = new System.Drawing.Point(4, 35);
+            this.sideBySide.Name = "sideBySide";
+            this.sideBySide.Size = new System.Drawing.Size(1226, 604);
+            this.sideBySide.TabIndex = 1;
+            this.sideBySide.Text = "Side by side";
+            this.sideBySide.VerticalScrollbarBarColor = true;
+            // 
+            // TableSplitter
+            // 
+            this.TableSplitter.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TableSplitter.Location = new System.Drawing.Point(3, 3);
+            this.TableSplitter.Name = "TableSplitter";
+            // 
+            // TableSplitter.Panel1
+            // 
+            this.TableSplitter.Panel1.Controls.Add(this.SideBySideGrid1);
+            // 
+            // TableSplitter.Panel2
+            // 
+            this.TableSplitter.Panel2.Controls.Add(this.SideBySideGrid2);
+            this.TableSplitter.Size = new System.Drawing.Size(1220, 598);
+            this.TableSplitter.SplitterDistance = 610;
+            this.TableSplitter.TabIndex = 2;
+            // 
+            // SideBySideGrid1
+            // 
+            this.SideBySideGrid1.AllowUserToAddRows = false;
+            this.SideBySideGrid1.AllowUserToDeleteRows = false;
+            this.SideBySideGrid1.AllowUserToResizeRows = false;
+            this.SideBySideGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.SideBySideGrid1.BackgroundColor = System.Drawing.Color.White;
+            this.SideBySideGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.DarkGreen;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SideBySideGrid1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.SideBySideGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.SideBySideGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SideBySideGrid1.GridColor = System.Drawing.Color.White;
+            this.SideBySideGrid1.Location = new System.Drawing.Point(0, 0);
+            this.SideBySideGrid1.Name = "SideBySideGrid1";
+            this.SideBySideGrid1.ReadOnly = true;
+            this.SideBySideGrid1.RowHeadersVisible = false;
+            this.SideBySideGrid1.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.SideBySideGrid1.Size = new System.Drawing.Size(610, 598);
+            this.SideBySideGrid1.TabIndex = 0;
+            this.SideBySideGrid1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataBindingComplete);
+            this.SideBySideGrid1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid1_Scroll);
+            // 
+            // SideBySideGrid2
+            // 
+            this.SideBySideGrid2.AllowUserToAddRows = false;
+            this.SideBySideGrid2.AllowUserToDeleteRows = false;
+            this.SideBySideGrid2.AllowUserToResizeRows = false;
+            this.SideBySideGrid2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.SideBySideGrid2.BackgroundColor = System.Drawing.Color.White;
+            this.SideBySideGrid2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.SideBySideGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.SideBySideGrid2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SideBySideGrid2.GridColor = System.Drawing.Color.White;
+            this.SideBySideGrid2.Location = new System.Drawing.Point(0, 0);
+            this.SideBySideGrid2.Name = "SideBySideGrid2";
+            this.SideBySideGrid2.ReadOnly = true;
+            this.SideBySideGrid2.RowHeadersVisible = false;
+            this.SideBySideGrid2.Size = new System.Drawing.Size(606, 598);
+            this.SideBySideGrid2.TabIndex = 0;
+            this.SideBySideGrid2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid2_Scroll);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(848, 529);
-            this.Controls.Add(this.metroPanel1);
-            this.Controls.Add(this.metroTabControl1);
+            this.ClientSize = new System.Drawing.Size(1280, 800);
+            this.Controls.Add(this.sheetController);
             this.Controls.Add(this.openSpeadcBox);
             this.Controls.Add(this.genSpreadcBox);
             this.Controls.Add(this.CompareBtn);
@@ -148,8 +239,16 @@
             this.Name = "MainForm";
             this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "Spreadsheet Compare";
-            this.metroPanel1.ResumeLayout(false);
-            this.metroPanel1.PerformLayout();
+            this.sheetController.ResumeLayout(false);
+            this.mergedViewTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MergedViewGrid)).EndInit();
+            this.sideBySide.ResumeLayout(false);
+            this.TableSplitter.Panel1.ResumeLayout(false);
+            this.TableSplitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.TableSplitter)).EndInit();
+            this.TableSplitter.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SideBySideGrid1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SideBySideGrid2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -162,9 +261,12 @@
         private MetroFramework.Controls.MetroButton CompareBtn;
         private MetroFramework.Controls.MetroCheckBox genSpreadcBox;
         private MetroFramework.Controls.MetroCheckBox openSpeadcBox;
-        private MetroFramework.Controls.MetroTabControl metroTabControl1;
-        private MetroFramework.Controls.MetroPanel metroPanel1;
-        private MetroFramework.Controls.MetroRadioButton metroRadioButton2;
-        private MetroFramework.Controls.MetroRadioButton metroRadioButton1;
+        private MetroFramework.Controls.MetroTabControl sheetController;
+        private MetroFramework.Controls.MetroTabPage mergedViewTab;
+        private MetroFramework.Controls.MetroTabPage sideBySide;
+        private System.Windows.Forms.SplitContainer TableSplitter;
+        private System.Windows.Forms.DataGridView SideBySideGrid1;
+        private System.Windows.Forms.DataGridView SideBySideGrid2;
+        private System.Windows.Forms.DataGridView MergedViewGrid;
     }
 }

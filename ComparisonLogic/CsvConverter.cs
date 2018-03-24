@@ -9,7 +9,6 @@ namespace ComparisonLogic
 {
     public class CsvConverter : IConversion
     {
-        public event Action<int> reportProgress;
 
         public void GenerateReport(DataTable data, List<Tuple<int, int>> differences, string outputPath)
         {            
@@ -24,11 +23,6 @@ namespace ComparisonLogic
                 csv.NextRecord();
 
                 // Write row values
-
-                int count = 0;
-                int rowCount = data.Rows.Count;
-                int onePercent = rowCount / 100;
-
                 foreach (DataRow row in data.Rows)
                 {
                     for (var i = 0; i < data.Columns.Count; i++)
@@ -40,10 +34,6 @@ namespace ComparisonLogic
                         else
                         {
                             csv.WriteField(row[i]);
-                        }
-                        if (rowCount % onePercent == 0)
-                        {
-                            reportProgress(count);
                         }
                     }
                     csv.NextRecord();

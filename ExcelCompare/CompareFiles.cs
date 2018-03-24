@@ -14,22 +14,22 @@ namespace ExcelCompare
         private string pathOne;
         private string pathTwo;
            
-        public DataTable comparisonResult { get; set; }
+        public DataTable mergedResults { get; set; }
+        public DataTable docOne { get; set; }
+        public DataTable docTwo { get; set; }
         public List<Tuple<int, int>> DiffLocations { get; private set; }
 
         public CompareFiles(string filePathOne, string filePathTwo)
         {
             pathOne = filePathOne;
-            pathTwo = filePathTwo;    
-
+            pathTwo = filePathTwo;
         }
 
         public void Go()
         {
-            DataTable docOne = GetDataTable(pathOne);
-            DataTable docTwo = GetDataTable(pathTwo);
-
-            comparisonResult = CompareDateSets(docOne, docTwo);
+            docOne = GetDataTable(pathOne);
+            docTwo = GetDataTable(pathTwo);
+            mergedResults = CompareDateSets(docOne, docTwo);
 
         }
 
@@ -72,17 +72,17 @@ namespace ExcelCompare
             {
                 case ".xlsx":
                     converter = new ExcelConverter();
-                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    converter.GenerateReport(mergedResults, DiffLocations, outputPath);
                     break;
 
                 case ".xls":
                     converter = new ExcelConverter();
-                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    converter.GenerateReport(mergedResults, DiffLocations, outputPath);
                     break;
 
                 case ".csv":
                     converter = new CsvConverter();
-                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    converter.GenerateReport(mergedResults, DiffLocations, outputPath);
                     break;
 
                 default:
@@ -93,7 +93,6 @@ namespace ExcelCompare
 
         private DataTable CompareDateSets(DataTable docOne, DataTable docTwo)
         {
-
             int docOneCol = docOne.Columns.Count;
             int docTwoCol = docTwo.Columns.Count;
             int docOneRow = docOne.Rows.Count;
