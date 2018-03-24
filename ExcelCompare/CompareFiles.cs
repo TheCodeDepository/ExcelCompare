@@ -13,68 +13,78 @@ namespace ExcelCompare
     {
         private string pathOne;
         private string pathTwo;
-        private string outputPath;
-        private string outputFormat;
-
+           
+        public DataTable comparisonResult { get; set; }
         public List<Tuple<int, int>> DiffLocations { get; private set; }
 
-        public CompareFiles(string filePathOne, string filePathTwo, string outputFilePath, string outputType)
+        public CompareFiles(string filePathOne, string filePathTwo)
         {
             pathOne = filePathOne;
-            pathTwo = filePathTwo;
-            outputPath = outputFilePath;
-            outputFormat = outputType;
+            pathTwo = filePathTwo;    
 
-            DiffLocations = new List<Tuple<int, int>>();
-            outputFormat = Path.GetExtension(filePathOne);
+        }
+
+        public void Go()
+        {
+            DataTable docOne = GetDataTable(pathOne);
+            DataTable docTwo = GetDataTable(pathTwo);
+
+            comparisonResult = CompareDateSets(docOne, docTwo);
+
         }
 
 
-        public void Compare()
+
+        private DataTable GetDataTable(string path)
         {
-            string fileExtOne = Path.GetExtension(pathOne);
+            string ext = Path.GetExtension(path);
+            DataTable tmp = new DataTable();
 
-            if (fileExtOne == Path.GetExtension(pathTwo))
-            {
-                DataTable tmp = new DataTable();
-
-
-                switch (fileExtOne)
-                {
-                    case ".xlsx":
-                        ExcelConverter xconverter = new ExcelConverter();
-                        tmp = CompareDateSets(xconverter.GetDataTable(pathOne), xconverter.GetDataTable(pathTwo));
-                        break;
-
-                    case ".xls":
-                        CsvConverter csvConverter = new CsvConverter();
-                        tmp = CompareDateSets(csvConverter.GetDataTable(pathOne), csvConverter.GetDataTable(pathTwo));
-                        break;
-
-                    case ".csv":
-                        break;
-                    case ".txt":
-                        break;
-                    default:
-                        break;
-                }
-
-                GenerateReport(tmp);
-            }
-        }
-
-        private void GenerateReport(DataTable data)
-        {
-            switch (outputFormat)
+            switch (ext)
             {
                 case ".xlsx":
-                    ExcelConverter converter = new ExcelConverter();
-                    converter.GenerateXlsx(data, DiffLocations, outputPath);
+                    ExcelConverter xconverter = new ExcelConverter();
+                    tmp = xconverter.GetDataTable(path);
                     break;
+
+                case ".xls":
+                    ExcelConverter exconverter = new ExcelConverter();
+                    tmp = exconverter.GetDataTable(path);
+                    break;
+
                 case ".csv":
-
-
+                    CsvConverter csvConverter = new CsvConverter();
+                    tmp = csvConverter.GetDataTable(path);
                     break;
+
+                case ".txt":
+                    break;
+
+            }
+            return tmp;
+
+        }
+
+        public void GenerateReport(string outputPath)
+        {
+            IConversion converter;
+            switch (Path.GetExtension(outputPath))
+            {
+                case ".xlsx":
+                    converter = new ExcelConverter();
+                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    break;
+
+                case ".xls":
+                    converter = new ExcelConverter();
+                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    break;
+
+                case ".csv":
+                    converter = new CsvConverter();
+                    converter.GenerateReport(comparisonResult, DiffLocations, outputPath);
+                    break;
+
                 default:
                     break;
             }
@@ -83,6 +93,7 @@ namespace ExcelCompare
 
         private DataTable CompareDateSets(DataTable docOne, DataTable docTwo)
         {
+
             int docOneCol = docOne.Columns.Count;
             int docTwoCol = docTwo.Columns.Count;
             int docOneRow = docOne.Rows.Count;
@@ -124,11 +135,11 @@ namespace ExcelCompare
                 }
             }
 
-
-            DataTable tmp = new DataTable();
+            DiffLocations = new List<Tuple<int, int>>();
+            DataTable resultTable = new DataTable();
             foreach (var item in docOne.Columns)
             {
-                tmp.Columns.Add(item.ToString());
+                resultTable.Columns.Add(item.ToString());
             }
 
             for (int row = 0; row < rowNum; row++)
@@ -141,7 +152,7 @@ namespace ExcelCompare
                 {
                     string docOneCell = rowOne[col].ToString();
                     string docTwoCell = rowTwo[col].ToString();
-                    Tuple<int, int> diffLoc = new Tuple<int, int>((row + 1), (col + 1));
+                    Tuple<int, int> diffLoc = new Tuple<int, int>(row, col);
 
                     if (docOneCell != string.Empty && docTwoCell != string.Empty)
                     {
@@ -157,8 +168,11 @@ namespace ExcelCompare
                     }
                     else
                     {
-
-                        if (docOneCell != string.Empty)
+                        if (docOneCell == docTwoCell)
+                        {
+                            tmpRow[col] = docOneCell;
+                        }
+                        else if (docOneCell != string.Empty)
                         {
                             tmpRow[col] = docOneCell;
                             DiffLocations.Add(diffLoc);
@@ -172,10 +186,11 @@ namespace ExcelCompare
 
                 }
 
-                tmp.Rows.Add(tmpRow);
+                resultTable.Rows.Add(tmpRow);
             }
 
-            return tmp;
+
+            return resultTable;
         }
 
     }
