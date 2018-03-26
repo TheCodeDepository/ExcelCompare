@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MetroFramework;
 using System.IO;
+using ComparisonLogic;
 
 namespace ExcelCompare
 {
@@ -26,6 +22,8 @@ namespace ExcelCompare
         public MainForm()
         {
             InitializeComponent();
+
+
             compareWorker = new BackgroundWorker();
             compareWorker.RunWorkerCompleted += CompareWorkerCompleted;
             compareWorker.DoWork += CompareDoWork;
@@ -36,8 +34,15 @@ namespace ExcelCompare
 
             openFileControl1._TextChanged += CheckDocumentsEvt;
             openFileControl2._TextChanged += CheckDocumentsEvt;
+
+
             sheetController.SelectTab(0);
             SideBySideGrid1.MouseWheel += ScrollSideOne;
+
+            openFileControl1.Title = "Compare:" + Environment.NewLine + "(older file)";
+            openFileControl2.Title = "To:" + Environment.NewLine + "(newer file)";
+
+
         }
 
         private void ScrollSideOne(object sender, MouseEventArgs e)
@@ -57,6 +62,7 @@ namespace ExcelCompare
             CompareBtn.Enabled = false;
             comp = new CompareFiles(docPathOne, docPathTwo);
             compareWorker.RunWorkerAsync();
+            CompareBtn.Enabled = true;
         }
 
         private void CheckDocumentsEvt(object sender, EventArgs e)
@@ -88,8 +94,13 @@ namespace ExcelCompare
                 PushTableToView(MergedViewGrid, comp.mergedResults);
                 PushTableToView(SideBySideGrid1, comp.docOne);
                 PushTableToView(SideBySideGrid2, comp.docTwo);
+                SetGridViewSortState(MergedViewGrid, DataGridViewColumnSortMode.NotSortable);
+                SetGridViewSortState(SideBySideGrid1, DataGridViewColumnSortMode.NotSortable);
+                SetGridViewSortState(SideBySideGrid2, DataGridViewColumnSortMode.NotSortable);
 
-                ScaleWindow();
+
+
+                //ScaleWindow();
                 QueryUserReport();
 
             }
@@ -98,6 +109,14 @@ namespace ExcelCompare
                 MessageBox.Show($"There are no differences between these documents.");
             }
 
+        }
+
+        public void SetGridViewSortState(DataGridView dgv, DataGridViewColumnSortMode sortMode)
+        {
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                col.SortMode = sortMode;
+            }
         }
 
         private bool cancel = false;
@@ -149,7 +168,7 @@ namespace ExcelCompare
             if (genSpreadcBox.Checked)
             {
                 SaveFileDialog save = new SaveFileDialog();
-                save.Filter = "CSV Files (*.csv)|*.csv|Excel Files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                save.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
                 if (save.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = save.FileName;
@@ -174,7 +193,7 @@ namespace ExcelCompare
         private void ProcessDifferences(DataGridView ResultView)
         {
             DataGridViewCellStyle diffStyle = new DataGridViewCellStyle();
-            diffStyle.BackColor = Color.DarkOliveGreen;
+            diffStyle.BackColor = Color.Green;
             diffStyle.ForeColor = Color.White;
             foreach (var item in comp.DiffLocations)
             {

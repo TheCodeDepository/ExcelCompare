@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ComparisonLogic;
 using System.Data;
+using System.IO;
 
-namespace ExcelCompare
+namespace ComparisonLogic
 {
     public class CompareFiles
     {

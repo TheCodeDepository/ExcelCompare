@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.openFileControl2 = new ExcelCompare.OpenFileControl();
-            this.openFileControl1 = new ExcelCompare.OpenFileControl();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CompareBtn = new MetroFramework.Controls.MetroButton();
             this.genSpreadcBox = new MetroFramework.Controls.MetroCheckBox();
             this.openSpeadcBox = new MetroFramework.Controls.MetroCheckBox();
@@ -41,6 +41,8 @@
             this.TableSplitter = new System.Windows.Forms.SplitContainer();
             this.SideBySideGrid1 = new System.Windows.Forms.DataGridView();
             this.SideBySideGrid2 = new System.Windows.Forms.DataGridView();
+            this.openFileControl2 = new ExcelCompare.OpenFileControl();
+            this.openFileControl1 = new ExcelCompare.OpenFileControl();
             this.sheetController.SuspendLayout();
             this.mergedViewTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MergedViewGrid)).BeginInit();
@@ -52,22 +54,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.SideBySideGrid1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SideBySideGrid2)).BeginInit();
             this.SuspendLayout();
-            // 
-            // openFileControl2
-            // 
-            this.openFileControl2.Location = new System.Drawing.Point(23, 98);
-            this.openFileControl2.Name = "openFileControl2";
-            this.openFileControl2.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl2.TabIndex = 1;
-            this.openFileControl2.Title = "Document:";
-            // 
-            // openFileControl1
-            // 
-            this.openFileControl1.Location = new System.Drawing.Point(23, 63);
-            this.openFileControl1.Name = "openFileControl1";
-            this.openFileControl1.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl1.TabIndex = 0;
-            this.openFileControl1.Title = "Orginal Document:";
             // 
             // CompareBtn
             // 
@@ -137,6 +123,16 @@
             this.MergedViewGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.MergedViewGrid.BackgroundColor = System.Drawing.Color.White;
             this.MergedViewGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.MergedViewGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.MergedViewGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.MergedViewGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.MergedViewGrid.GridColor = System.Drawing.Color.White;
             this.MergedViewGrid.Location = new System.Drawing.Point(3, 3);
@@ -185,14 +181,16 @@
             this.SideBySideGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.SideBySideGrid1.BackgroundColor = System.Drawing.Color.White;
             this.SideBySideGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.DarkGreen;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SideBySideGrid1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.SideBySideGrid1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SideBySideGrid1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.SideBySideGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SideBySideGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SideBySideGrid1.GridColor = System.Drawing.Color.White;
@@ -200,7 +198,7 @@
             this.SideBySideGrid1.Name = "SideBySideGrid1";
             this.SideBySideGrid1.ReadOnly = true;
             this.SideBySideGrid1.RowHeadersVisible = false;
-            this.SideBySideGrid1.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.SideBySideGrid1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
             this.SideBySideGrid1.Size = new System.Drawing.Size(610, 598);
             this.SideBySideGrid1.TabIndex = 0;
             this.SideBySideGrid1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataBindingComplete);
@@ -214,6 +212,16 @@
             this.SideBySideGrid2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.SideBySideGrid2.BackgroundColor = System.Drawing.Color.White;
             this.SideBySideGrid2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.SideBySideGrid2.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SideBySideGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.SideBySideGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SideBySideGrid2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SideBySideGrid2.GridColor = System.Drawing.Color.White;
@@ -224,6 +232,22 @@
             this.SideBySideGrid2.Size = new System.Drawing.Size(606, 598);
             this.SideBySideGrid2.TabIndex = 0;
             this.SideBySideGrid2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid2_Scroll);
+            // 
+            // openFileControl2
+            // 
+            this.openFileControl2.Location = new System.Drawing.Point(23, 98);
+            this.openFileControl2.Name = "openFileControl2";
+            this.openFileControl2.Size = new System.Drawing.Size(427, 29);
+            this.openFileControl2.TabIndex = 1;
+            this.openFileControl2.Title = "";
+            // 
+            // openFileControl1
+            // 
+            this.openFileControl1.Location = new System.Drawing.Point(23, 63);
+            this.openFileControl1.Name = "openFileControl1";
+            this.openFileControl1.Size = new System.Drawing.Size(427, 29);
+            this.openFileControl1.TabIndex = 0;
+            this.openFileControl1.Title = "";
             // 
             // MainForm
             // 
@@ -255,9 +279,6 @@
         }
 
         #endregion
-
-        private OpenFileControl openFileControl1;
-        private OpenFileControl openFileControl2;
         private MetroFramework.Controls.MetroButton CompareBtn;
         private MetroFramework.Controls.MetroCheckBox genSpreadcBox;
         private MetroFramework.Controls.MetroCheckBox openSpeadcBox;
@@ -268,5 +289,7 @@
         private System.Windows.Forms.DataGridView SideBySideGrid1;
         private System.Windows.Forms.DataGridView SideBySideGrid2;
         private System.Windows.Forms.DataGridView MergedViewGrid;
+        private OpenFileControl openFileControl2;
+        private OpenFileControl openFileControl1;
     }
 }

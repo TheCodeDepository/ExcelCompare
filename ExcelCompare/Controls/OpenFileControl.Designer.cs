@@ -36,13 +36,14 @@
             // label
             // 
             this.label.AutoSize = true;
-            this.label.Location = new System.Drawing.Point(2, 4);
+            this.label.Location = new System.Drawing.Point(3, 4);
             this.label.MaximumSize = new System.Drawing.Size(120, 19);
             this.label.MinimumSize = new System.Drawing.Size(120, 19);
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(120, 19);
+            this.label.Style = MetroFramework.MetroColorStyle.Black;
             this.label.TabIndex = 5;
-            this.label.Text = "Orginal Document:";
+            this.label.Text = "label";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // pathTextBox
