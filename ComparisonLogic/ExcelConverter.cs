@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
 
 
 
@@ -29,9 +28,9 @@ namespace ComparisonLogic
         public DataTable GetDataTable(string filePath)
         {
 
-
             using (XLWorkbook ws = new XLWorkbook(filePath))
             {
+                
                 IXLWorksheet workSheet = ws.Worksheet(1);
 
                 //Create a new DataTable.
@@ -65,31 +64,6 @@ namespace ComparisonLogic
                 return dt;
             }
 
-
-
-            //DataSet ds = new DataSet();
-            //string constring = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=YES;\"";
-
-            //OleDbConnection con = new OleDbConnection(constring);
-            //con.Open();
-
-
-            //DataTable obj = con.GetSchema("Tables");
-            //string tableName = "Sheet1";
-
-            //foreach (DataRow item in obj.Rows)
-            //{
-            //    tableName = item["TABLE_NAME"].ToString();
-            //}
-
-            //string sqlquery = $"Select * From [{tableName}]";
-            //con.Close();
-
-            //OleDbDataAdapter da = new OleDbDataAdapter(sqlquery, con);
-
-            //da.Fill(ds);
-            //DataTable dt = ds.Tables[0];
-            //return dt;
 
         }
 

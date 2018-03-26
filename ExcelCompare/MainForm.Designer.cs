@@ -96,8 +96,9 @@
             this.sheetController.Controls.Add(this.sideBySide);
             this.sheetController.Location = new System.Drawing.Point(23, 134);
             this.sheetController.Name = "sheetController";
-            this.sheetController.SelectedIndex = 1;
+            this.sheetController.SelectedIndex = 0;
             this.sheetController.Size = new System.Drawing.Size(1234, 643);
+            this.sheetController.Style = MetroFramework.MetroColorStyle.Green;
             this.sheetController.TabIndex = 6;
             this.sheetController.SelectedIndexChanged += new System.EventHandler(this.sheetController_SelectedIndexChanged);
             // 
@@ -109,7 +110,7 @@
             this.mergedViewTab.Name = "mergedViewTab";
             this.mergedViewTab.Size = new System.Drawing.Size(1226, 604);
             this.mergedViewTab.TabIndex = 0;
-            this.mergedViewTab.Text = "Filtered View";
+            this.mergedViewTab.Text = "Merged View";
             this.mergedViewTab.VerticalScrollbarBarColor = true;
             // 
             // MergedViewGrid
@@ -140,7 +141,7 @@
             this.MergedViewGrid.ReadOnly = true;
             this.MergedViewGrid.RowHeadersVisible = false;
             this.MergedViewGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            this.MergedViewGrid.Size = new System.Drawing.Size(1220, 598);
+            this.MergedViewGrid.Size = new System.Drawing.Size(186, 55);
             this.MergedViewGrid.TabIndex = 5;
             // 
             // sideBySide
@@ -239,7 +240,7 @@
             this.openFileControl2.Name = "openFileControl2";
             this.openFileControl2.Size = new System.Drawing.Size(427, 29);
             this.openFileControl2.TabIndex = 1;
-            this.openFileControl2.Title = "";
+            this.openFileControl2.Title = "To:";
             // 
             // openFileControl1
             // 
@@ -247,7 +248,7 @@
             this.openFileControl1.Name = "openFileControl1";
             this.openFileControl1.Size = new System.Drawing.Size(427, 29);
             this.openFileControl1.TabIndex = 0;
-            this.openFileControl1.Title = "";
+            this.openFileControl1.Title = "Compare:";
             // 
             // MainForm
             // 

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using ComparisonLogic;
+using System.Threading;
 
 namespace ExcelCompare
 {
@@ -23,7 +24,6 @@ namespace ExcelCompare
         {
             InitializeComponent();
 
-
             compareWorker = new BackgroundWorker();
             compareWorker.RunWorkerCompleted += CompareWorkerCompleted;
             compareWorker.DoWork += CompareDoWork;
@@ -35,14 +35,8 @@ namespace ExcelCompare
             openFileControl1._TextChanged += CheckDocumentsEvt;
             openFileControl2._TextChanged += CheckDocumentsEvt;
 
-
             sheetController.SelectTab(0);
             SideBySideGrid1.MouseWheel += ScrollSideOne;
-
-            openFileControl1.Title = "Compare:" + Environment.NewLine + "(older file)";
-            openFileControl2.Title = "To:" + Environment.NewLine + "(newer file)";
-
-
         }
 
         private void ScrollSideOne(object sender, MouseEventArgs e)
@@ -61,10 +55,52 @@ namespace ExcelCompare
         {
             CompareBtn.Enabled = false;
             comp = new CompareFiles(docPathOne, docPathTwo);
-            compareWorker.RunWorkerAsync();
-            CompareBtn.Enabled = true;
+            if (comp.AreFilesinUse())
+            {
+                MessageBox.Show("Please insure all files involved are closed.");
+            }
+            else
+            {
+                comp.OnComplete += Comp_OnComplete;
+                Thread thread = new Thread(new ThreadStart(comp.Go));
+                thread.Start();
+
+                CompareBtn.Enabled = true;
+            }
+
         }
 
+        private void Comp_OnComplete(object sender, EventArgs e)
+        {
+            var send = (CompareFiles)sender;
+            if (this.InvokeRequired)
+            {
+                this.Invoke();
+            }
+            else
+            {
+
+            }
+        }
+
+
+        //private void CompareBtn_Click(object sender, EventArgs e)
+        //{
+        //    CompareBtn.Enabled = false;
+        //    comp = new CompareFiles(docPathOne, docPathTwo);
+        //    if (comp.AreFilesinUse())
+        //    {
+        //        MessageBox.Show("Please insure all files involved are closed.");
+        //    }
+        //    else
+        //    {
+
+        //        await compareWorker.RunWorkerAsync();
+
+        //        CompareBtn.Enabled = true;
+        //    }
+
+        //}
         private void CheckDocumentsEvt(object sender, EventArgs e)
         {
             bool one = File.Exists(docPathOne);
@@ -86,8 +122,9 @@ namespace ExcelCompare
             comp.Go();
         }
 
-        private void CompareWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void CompareThreadCompleted()
         {
+
             if (comp.DiffLocations.Count > 0)
             {
 
@@ -160,8 +197,6 @@ namespace ExcelCompare
 
         }
 
-
-
         private void QueryUserReport()
         {
             MessageBox.Show($"There are {comp.DiffLocations.Count} inconsistent cells.");
@@ -200,15 +235,6 @@ namespace ExcelCompare
                 ResultView.Rows[item.Item1].Cells[item.Item2].Style = diffStyle;
             }
         }
-
-        private void ScaleWindow()
-        {
-            Rectangle screenHeight = Screen.GetWorkingArea(this);
-            this.DesktopLocation = new Point(0, 0);
-            this.SetClientSizeCore(screenHeight.Width, (screenHeight.Height - ((screenHeight.Height / 100) * 3)));
-            CompareBtn.Enabled = true;
-        }
-
 
         private void genSpreadcBox_CheckedChanged(object sender, EventArgs e)
         {

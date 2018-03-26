@@ -9,11 +9,12 @@ namespace ComparisonLogic
     {
         private string pathOne;
         private string pathTwo;
-           
+
         public DataTable mergedResults { get; set; }
         public DataTable docOne { get; set; }
         public DataTable docTwo { get; set; }
         public List<Tuple<int, int>> DiffLocations { get; private set; }
+        public event EventHandler<EventArgs> OnComplete;
 
         public CompareFiles(string filePathOne, string filePathTwo)
         {
@@ -26,10 +27,34 @@ namespace ComparisonLogic
             docOne = GetDataTable(pathOne);
             docTwo = GetDataTable(pathTwo);
             mergedResults = CompareDateSets(docOne, docTwo);
-
+            if (OnComplete != null)
+                OnComplete(this, EventArgs.Empty);
         }
 
+        public bool AreFilesinUse()
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = new FileStream(pathOne, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                stream = new FileStream(pathTwo, FileMode.Open, FileAccess.ReadWrite, FileShare.None);           
 
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+            return false;
+        }
 
         private DataTable GetDataTable(string path)
         {
