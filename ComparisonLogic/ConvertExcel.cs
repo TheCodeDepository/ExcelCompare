@@ -5,27 +5,15 @@ using System.Data;
 
 
 
-namespace ComparisonLogic
+namespace SpreadsheetLogic
 {
-    public class ExcelConverter : IConversion
+    public class ConvertExcel : IConvert
     {
 
 
-        public void GenerateReport(DataTable data, List<Tuple<int, int>> differences, string outputPath)
-        {
-
-            XLWorkbook wb = new XLWorkbook();
-            var workSheet = wb.Worksheets.Add(data, "Results");
-            foreach (var item in differences)
-            {
-                workSheet.Cell((item.Item1 + 2), (item.Item2 + 1)).Style.Fill.BackgroundColor = XLColor.Red;
-            }
-            wb.SaveAs(outputPath);
-
-        }
 
 
-        public DataTable GetDataTable(string filePath)
+        public DataTable ReadTable(string filePath)
         {
 
             using (XLWorkbook ws = new XLWorkbook(filePath))

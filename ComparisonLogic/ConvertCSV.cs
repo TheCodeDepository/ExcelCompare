@@ -5,12 +5,12 @@ using System.Data;
 using System.IO;
 using CsvHelper;
 
-namespace ComparisonLogic
+namespace SpreadsheetLogic
 {
-    public class CsvConverter : IConversion
+    public class ConvertCSV : IConvert
     {
 
-        public void GenerateReport(DataTable data, List<Tuple<int, int>> differences, string outputPath)
+        public void WriteTable(DataTable data, List<Tuple<int, int>> differences, string outputPath)
         {            
 
             using (var csv = new CsvWriter(new StreamWriter(outputPath, false)))
@@ -43,7 +43,7 @@ namespace ComparisonLogic
         }
 
 
-        public DataTable GetDataTable(string filePath)
+        public DataTable ReadTable(string filePath)
         {
             //StreamReader sr = new StreamReader(filePath, false);
 
@@ -51,7 +51,7 @@ namespace ComparisonLogic
 
             //using (var csv = new CsvReader(sr))
             //{
-            //    foreach (var header in csv.Hea)
+            //    foreach (var header in csv.)
             //    {
             //        personList.Columns.Add(header);
             //    }

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CompareBtn = new MetroFramework.Controls.MetroButton();
             this.genSpreadcBox = new MetroFramework.Controls.MetroCheckBox();
             this.openSpeadcBox = new MetroFramework.Controls.MetroCheckBox();
@@ -43,6 +43,8 @@
             this.SideBySideGrid2 = new System.Windows.Forms.DataGridView();
             this.openFileControl2 = new ExcelCompare.OpenFileControl();
             this.openFileControl1 = new ExcelCompare.OpenFileControl();
+            this.docOneSheetsList = new System.Windows.Forms.ListBox();
+            this.docTwoSheetsList = new System.Windows.Forms.ListBox();
             this.sheetController.SuspendLayout();
             this.mergedViewTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MergedViewGrid)).BeginInit();
@@ -58,7 +60,7 @@
             // CompareBtn
             // 
             this.CompareBtn.Enabled = false;
-            this.CompareBtn.Location = new System.Drawing.Point(477, 104);
+            this.CompareBtn.Location = new System.Drawing.Point(1083, 98);
             this.CompareBtn.Name = "CompareBtn";
             this.CompareBtn.Size = new System.Drawing.Size(75, 23);
             this.CompareBtn.TabIndex = 2;
@@ -68,7 +70,7 @@
             // genSpreadcBox
             // 
             this.genSpreadcBox.AutoSize = true;
-            this.genSpreadcBox.Location = new System.Drawing.Point(477, 63);
+            this.genSpreadcBox.Location = new System.Drawing.Point(1083, 57);
             this.genSpreadcBox.Name = "genSpreadcBox";
             this.genSpreadcBox.Size = new System.Drawing.Size(137, 15);
             this.genSpreadcBox.TabIndex = 4;
@@ -80,7 +82,7 @@
             // 
             this.openSpeadcBox.AutoSize = true;
             this.openSpeadcBox.Enabled = false;
-            this.openSpeadcBox.Location = new System.Drawing.Point(477, 84);
+            this.openSpeadcBox.Location = new System.Drawing.Point(1083, 78);
             this.openSpeadcBox.Name = "openSpeadcBox";
             this.openSpeadcBox.Size = new System.Drawing.Size(119, 15);
             this.openSpeadcBox.TabIndex = 5;
@@ -125,15 +127,15 @@
             this.MergedViewGrid.BackgroundColor = System.Drawing.Color.White;
             this.MergedViewGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.MergedViewGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.MergedViewGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.MergedViewGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.MergedViewGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.MergedViewGrid.GridColor = System.Drawing.Color.White;
             this.MergedViewGrid.Location = new System.Drawing.Point(3, 3);
@@ -141,7 +143,7 @@
             this.MergedViewGrid.ReadOnly = true;
             this.MergedViewGrid.RowHeadersVisible = false;
             this.MergedViewGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            this.MergedViewGrid.Size = new System.Drawing.Size(186, 55);
+            this.MergedViewGrid.Size = new System.Drawing.Size(1220, 598);
             this.MergedViewGrid.TabIndex = 5;
             // 
             // sideBySide
@@ -170,8 +172,8 @@
             // TableSplitter.Panel2
             // 
             this.TableSplitter.Panel2.Controls.Add(this.SideBySideGrid2);
-            this.TableSplitter.Size = new System.Drawing.Size(1220, 598);
-            this.TableSplitter.SplitterDistance = 610;
+            this.TableSplitter.Size = new System.Drawing.Size(54, 0);
+            this.TableSplitter.SplitterDistance = 25;
             this.TableSplitter.TabIndex = 2;
             // 
             // SideBySideGrid1
@@ -183,15 +185,15 @@
             this.SideBySideGrid1.BackgroundColor = System.Drawing.Color.White;
             this.SideBySideGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.SideBySideGrid1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SideBySideGrid1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SideBySideGrid1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.SideBySideGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SideBySideGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SideBySideGrid1.GridColor = System.Drawing.Color.White;
@@ -200,7 +202,7 @@
             this.SideBySideGrid1.ReadOnly = true;
             this.SideBySideGrid1.RowHeadersVisible = false;
             this.SideBySideGrid1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.SideBySideGrid1.Size = new System.Drawing.Size(610, 598);
+            this.SideBySideGrid1.Size = new System.Drawing.Size(25, 0);
             this.SideBySideGrid1.TabIndex = 0;
             this.SideBySideGrid1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataBindingComplete);
             this.SideBySideGrid1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid1_Scroll);
@@ -214,15 +216,15 @@
             this.SideBySideGrid2.BackgroundColor = System.Drawing.Color.White;
             this.SideBySideGrid2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.SideBySideGrid2.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(5);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SideBySideGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SideBySideGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.SideBySideGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SideBySideGrid2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SideBySideGrid2.GridColor = System.Drawing.Color.White;
@@ -230,7 +232,7 @@
             this.SideBySideGrid2.Name = "SideBySideGrid2";
             this.SideBySideGrid2.ReadOnly = true;
             this.SideBySideGrid2.RowHeadersVisible = false;
-            this.SideBySideGrid2.Size = new System.Drawing.Size(606, 598);
+            this.SideBySideGrid2.Size = new System.Drawing.Size(25, 0);
             this.SideBySideGrid2.TabIndex = 0;
             this.SideBySideGrid2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid2_Scroll);
             // 
@@ -250,11 +252,33 @@
             this.openFileControl1.TabIndex = 0;
             this.openFileControl1.Title = "Compare:";
             // 
+            // docOneSheetsList
+            // 
+            this.docOneSheetsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.docOneSheetsList.FormattingEnabled = true;
+            this.docOneSheetsList.Location = new System.Drawing.Point(539, 57);
+            this.docOneSheetsList.Name = "docOneSheetsList";
+            this.docOneSheetsList.Size = new System.Drawing.Size(247, 65);
+            this.docOneSheetsList.TabIndex = 7;
+            this.docOneSheetsList.SelectedIndexChanged += new System.EventHandler(this.docOneSheetsList_SelectedIndexChanged);
+            // 
+            // docTwoSheetsList
+            // 
+            this.docTwoSheetsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.docTwoSheetsList.FormattingEnabled = true;
+            this.docTwoSheetsList.Location = new System.Drawing.Point(792, 57);
+            this.docTwoSheetsList.Name = "docTwoSheetsList";
+            this.docTwoSheetsList.Size = new System.Drawing.Size(247, 65);
+            this.docTwoSheetsList.TabIndex = 8;
+            this.docTwoSheetsList.SelectedIndexChanged += new System.EventHandler(this.docTwoSheetsList_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1280, 800);
+            this.Controls.Add(this.docTwoSheetsList);
+            this.Controls.Add(this.docOneSheetsList);
             this.Controls.Add(this.sheetController);
             this.Controls.Add(this.openSpeadcBox);
             this.Controls.Add(this.genSpreadcBox);
@@ -292,5 +316,7 @@
         private System.Windows.Forms.DataGridView MergedViewGrid;
         private OpenFileControl openFileControl2;
         private OpenFileControl openFileControl1;
+        private System.Windows.Forms.ListBox docOneSheetsList;
+        private System.Windows.Forms.ListBox docTwoSheetsList;
     }
 }

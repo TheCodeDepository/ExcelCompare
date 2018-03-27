@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ComparisonLogic;
+using SpreadsheetLogic;
 using System.Data;
 
 namespace UnitTests
@@ -20,14 +20,14 @@ namespace UnitTests
             string path = @"C:\Users\mwhite\Documents\_A.csv";
             string refPath = @"C:\Users\mwhite\Documents\_A.xlsx";
 
-            ExcelConverter excelConverter = new ExcelConverter();
-            CsvConverter csvConverter = new CsvConverter();
+            ConvertExcel excelConverter = new ConvertExcel();
+            ConvertCSV csvConverter = new ConvertCSV();
 
 
 
             // act  
-            expectedTab = excelConverter.GetDataTable(refPath);
-            actualTab = csvConverter.GetDataTable(path);
+            expectedTab = excelConverter.ReadTable(refPath);
+            actualTab = csvConverter.ReadTable(path);
 
             var firstRowExpect = expectedTab.Rows[0].ItemArray;
             var firstRowActual = actualTab.Rows[0].ItemArray;

@@ -69,6 +69,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormController.cs" />
     <Compile Include="Controls\OpenFileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -123,9 +124,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ComparisonLogic\ComparisonLogic.csproj">
+    <ProjectReference Include="..\ComparisonLogic\SpreadsheetLogic.csproj">
       <Project>{f7b16c7d-bd8c-4587-bcbf-ae1ab9ddc674}</Project>
-      <Name>ComparisonLogic</Name>
+      <Name>SpreadsheetLogic</Name>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

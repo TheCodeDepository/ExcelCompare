@@ -40,7 +40,7 @@
             this.label.MaximumSize = new System.Drawing.Size(120, 19);
             this.label.MinimumSize = new System.Drawing.Size(120, 19);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(120, 19);
+            this.label.Size = new System.Drawing.Size(37, 19);
             this.label.Style = MetroFramework.MetroColorStyle.Black;
             this.label.TabIndex = 5;
             this.label.Text = "label";
@@ -60,6 +60,7 @@
             // 
             // dialogBtn
             // 
+            this.dialogBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.dialogBtn.Location = new System.Drawing.Point(400, 3);
             this.dialogBtn.Name = "dialogBtn";
             this.dialogBtn.Size = new System.Drawing.Size(24, 23);

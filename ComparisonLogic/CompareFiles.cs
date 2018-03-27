@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
-namespace ComparisonLogic
+namespace SpreadsheetLogic
 {
     public class CompareFiles
     {
@@ -14,7 +14,10 @@ namespace ComparisonLogic
         public DataTable docOne { get; set; }
         public DataTable docTwo { get; set; }
         public List<Tuple<int, int>> DiffLocations { get; private set; }
-        public event EventHandler<EventArgs> OnComplete;
+
+        public event EventHandler<EventArgs> CompareComplete;
+        public event EventHandler<EventArgs> ReportComplete;
+
 
         public CompareFiles(string filePathOne, string filePathTwo)
         {
@@ -22,95 +25,45 @@ namespace ComparisonLogic
             pathTwo = filePathTwo;
         }
 
-        public void Go()
+        public void CompareDocuments()
         {
-            docOne = GetDataTable(pathOne);
+            docOne = (pathOne);
             docTwo = GetDataTable(pathTwo);
+
             mergedResults = CompareDateSets(docOne, docTwo);
-            if (OnComplete != null)
-                OnComplete(this, EventArgs.Empty);
+
+            if (CompareComplete != null)
+                CompareComplete(this, EventArgs.Empty);
         }
 
         public bool AreFilesinUse()
         {
-            FileStream stream = null;
-            try
-            {
-                stream = new FileStream(pathOne, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-                stream = new FileStream(pathTwo, FileMode.Open, FileAccess.ReadWrite, FileShare.None);           
+            //FileStream stream = null;
+            //try
+            //{
+            //    stream = new FileStream(pathOne, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            //    stream = new FileStream(pathTwo, FileMode.Open, FileAccess.ReadWrite, FileShare.None);           
 
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
+            //}
+            //catch (IOException)
+            //{
+            //    //the file is unavailable because it is:
+            //    //still being written to
+            //    //or being processed by another thread
+            //    //or does not exist (has already been processed)
+            //    return true;
+            //}
+            //finally
+            //{
+            //    if (stream != null)
+            //        stream.Close();
+            //}
             return false;
         }
 
-        private DataTable GetDataTable(string path)
-        {
-            string ext = Path.GetExtension(path);
-            DataTable tmp = new DataTable();
 
-            switch (ext)
-            {
-                case ".xlsx":
-                    ExcelConverter xconverter = new ExcelConverter();
-                    tmp = xconverter.GetDataTable(path);
-                    break;
 
-                case ".xls":
-                    ExcelConverter exconverter = new ExcelConverter();
-                    tmp = exconverter.GetDataTable(path);
-                    break;
 
-                case ".csv":
-                    CsvConverter csvConverter = new CsvConverter();
-                    tmp = csvConverter.GetDataTable(path);
-                    break;
-
-                case ".txt":
-                    break;
-
-            }
-            return tmp;
-
-        }
-
-        public void GenerateReport(string outputPath)
-        {
-            IConversion converter;
-            switch (Path.GetExtension(outputPath))
-            {
-                case ".xlsx":
-                    converter = new ExcelConverter();
-                    converter.GenerateReport(mergedResults, DiffLocations, outputPath);
-                    break;
-
-                case ".xls":
-                    converter = new ExcelConverter();
-                    converter.GenerateReport(mergedResults, DiffLocations, outputPath);
-                    break;
-
-                case ".csv":
-                    converter = new CsvConverter();
-                    converter.GenerateReport(mergedResults, DiffLocations, outputPath);
-                    break;
-
-                default:
-                    break;
-            }
-
-        }
 
         private DataTable CompareDateSets(DataTable docOne, DataTable docTwo)
         {
@@ -143,7 +96,7 @@ namespace ComparisonLogic
                 colNum = docOneCol;
                 for (int i = 0; i < (colNum - docTwoCol); i++)
                 {
-                    docTwo.Rows.Add();
+                    docTwo.Columns.Add();
                 }
             }
             else

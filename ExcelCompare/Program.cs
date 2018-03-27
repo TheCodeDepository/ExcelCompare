@@ -13,15 +13,9 @@ namespace ExcelCompare
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            try
-            {
+
                 Application.Run(new MainForm());
 
-            }
-            catch (Exception m)
-            {
-                var exception = m.ToString(); ;
-            }
         }
     }
 }

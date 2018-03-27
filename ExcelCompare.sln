@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelCompare", "ExcelCompare\ExcelCompare.csproj", "{9C9FCC37-519C-4C14-BAEA-636E642A12FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparisonLogic", "ComparisonLogic\ComparisonLogic.csproj", "{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetLogic", "ComparisonLogic\SpreadsheetLogic.csproj", "{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{FB2066B0-E23F-4F49-A429-54571D9ADDCA}"
 EndProject

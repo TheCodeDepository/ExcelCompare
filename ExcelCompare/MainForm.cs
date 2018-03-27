@@ -4,40 +4,47 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using ComparisonLogic;
+using SpreadsheetLogic;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace ExcelCompare
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
     {
-        private BackgroundWorker compareWorker;
-        private BackgroundWorker reportWorker;
-        private CompareFiles comp;
+        private FormController ctrl;
+
+        Thread backgroundThread;
+
+        public delegate void CompareComplete();
+        CompareComplete compareHandler;
+
+        public delegate void ReportComplete();
+        ReportComplete reportHandler;
 
         public string docPathOne { get { return openFileControl1.FilePath; } }
         public string docPathTwo { get { return openFileControl2.FilePath; } }
         public string outputPath { get; private set; }
 
 
+
+
+
         public MainForm()
         {
             InitializeComponent();
 
-            compareWorker = new BackgroundWorker();
-            compareWorker.RunWorkerCompleted += CompareWorkerCompleted;
-            compareWorker.DoWork += CompareDoWork;
 
-            reportWorker = new BackgroundWorker();
-            reportWorker.RunWorkerCompleted += ReportWorkerCompleted;
-            reportWorker.DoWork += ReportDoWork;
-
-            openFileControl1._TextChanged += CheckDocumentsEvt;
-            openFileControl2._TextChanged += CheckDocumentsEvt;
+            openFileControl1._TextChanged += GetSheetNamesOne;
+            openFileControl2._TextChanged += GetSheetNamesTwo;
 
             sheetController.SelectTab(0);
             SideBySideGrid1.MouseWheel += ScrollSideOne;
+            ctrl = new FormController();
+
         }
+
+
 
         private void ScrollSideOne(object sender, MouseEventArgs e)
         {
@@ -54,98 +61,149 @@ namespace ExcelCompare
         private void CompareBtn_Click(object sender, EventArgs e)
         {
             CompareBtn.Enabled = false;
-            comp = new CompareFiles(docPathOne, docPathTwo);
-            if (comp.AreFilesinUse())
-            {
-                MessageBox.Show("Please insure all files involved are closed.");
-            }
-            else
-            {
-                comp.OnComplete += Comp_OnComplete;
-                Thread thread = new Thread(new ThreadStart(comp.Go));
-                thread.Start();
 
-                CompareBtn.Enabled = true;
-            }
+            compareHandler = CompareThreadCompleted;
+            ctrl.CompareComplete += Compare_OnComplete;
+
+            //reportHandler = ReportThreadCompleted;
+            //ctrl.ReportComplete += Report_OnComplete;
+
+
+            ThreadStart start = new ThreadStart(ctrl.CompareTables);
+            backgroundThread = new Thread(start);
+            backgroundThread.Start();
+
 
         }
 
-        private void Comp_OnComplete(object sender, EventArgs e)
+        private void Compare_OnComplete(object sender, EventArgs e)
         {
-            var send = (CompareFiles)sender;
+            var send = (FormController)sender;
             if (this.InvokeRequired)
             {
-                this.Invoke();
+                this.Invoke(compareHandler);
             }
             else
             {
-
+                CompareThreadCompleted();
             }
         }
 
-
-        //private void CompareBtn_Click(object sender, EventArgs e)
-        //{
-        //    CompareBtn.Enabled = false;
-        //    comp = new CompareFiles(docPathOne, docPathTwo);
-        //    if (comp.AreFilesinUse())
-        //    {
-        //        MessageBox.Show("Please insure all files involved are closed.");
-        //    }
-        //    else
-        //    {
-
-        //        await compareWorker.RunWorkerAsync();
-
-        //        CompareBtn.Enabled = true;
-        //    }
-
-        //}
-        private void CheckDocumentsEvt(object sender, EventArgs e)
+        private void Report_OnComplete(object sender, EventArgs e)
         {
-            bool one = File.Exists(docPathOne);
-            bool two = File.Exists(docPathTwo);
-            if (one && two)
-            {
-                CompareBtn.Enabled = true;
-            }
-            else
-            {
-                CompareBtn.Enabled = false;
-            }
-        }
-
-        //Worker Events
-
-        private void CompareDoWork(object sender, DoWorkEventArgs e)
-        {
-            comp.Go();
+            throw new NotImplementedException();
         }
 
         private void CompareThreadCompleted()
         {
-
-            if (comp.DiffLocations.Count > 0)
+            if (ctrl.DiffLocations.Count < 0)
             {
-
-                PushTableToView(MergedViewGrid, comp.mergedResults);
-                PushTableToView(SideBySideGrid1, comp.docOne);
-                PushTableToView(SideBySideGrid2, comp.docTwo);
-                SetGridViewSortState(MergedViewGrid, DataGridViewColumnSortMode.NotSortable);
-                SetGridViewSortState(SideBySideGrid1, DataGridViewColumnSortMode.NotSortable);
-                SetGridViewSortState(SideBySideGrid2, DataGridViewColumnSortMode.NotSortable);
-
-
-
-                //ScaleWindow();
-                QueryUserReport();
-
+                MessageBox.Show("There are no differences bwtween the two documents");
             }
             else
             {
-                MessageBox.Show($"There are no differences between these documents.");
+
+            }
+            PushTableToView(MergedViewGrid, ctrl.mergedView);
+            PushTableToView(SideBySideGrid1, ctrl.tableOne);
+            PushTableToView(SideBySideGrid2, ctrl.tableTwo);
+            SetGridViewSortState(MergedViewGrid, DataGridViewColumnSortMode.NotSortable);
+            SetGridViewSortState(SideBySideGrid1, DataGridViewColumnSortMode.NotSortable);
+            SetGridViewSortState(SideBySideGrid2, DataGridViewColumnSortMode.NotSortable);
+            QueryUserReport();
+
+            CompareBtn.Enabled = true;
+
+        }
+
+        private void ReportThreadCompleted()
+        {
+            this.Enabled = true;
+            if (!cancel)
+            {
+                if (openSpeadcBox.Checked)
+                {
+                    System.Diagnostics.Process.Start(outputPath);
+                }
             }
 
+        }
+
+        private bool cancel = false;
+        private void ReportDoWork(object sender, DoWorkEventArgs e)
+        {
+            //bool retry = false;
+            //do
+            //{
+            //    try
+            //    {
+            //        ctrl.GenerateReport(outputPath);
+            //        retry = false;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        var errorMess = MessageBox.Show("Please ensure the all involved documents are closed", "Error", MessageBoxButtons.RetryCancel);
+            //        if (errorMess == DialogResult.Retry)
+            //        {
+            //            retry = true;
+            //        }
+            //        else
+            //        {
+            //            retry = false;
+            //            cancel = true;
+            //            break;
+            //        }
+            //    }
+            //} while (retry);
+        }
+
+        private void GetSheetNamesOne(object sender, EventArgs e)
+        {
+            if (File.Exists(docPathOne))
+            {
+                if (Path.GetExtension(docPathOne) == ".xlsx")
+                {
+                    docOneSheetsList.Items.Clear();
+
+                    ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
+                    var tables = ctrl.GetTables(docPathOne);
+                    foreach (string item in tables)
+                    {
+                        docOneSheetsList.Items.Add(item);
+                    }
+
+                }
+                else
+                {
+                    ctrl.tableTwo = ctrl.GetDataTable(docPathOne);
+                }
+
+            }
+        }
+
+        private void GetSheetNamesTwo(object sender, EventArgs e)
+        {
+            if (File.Exists(docPathTwo))
+            {
+                if (Path.GetExtension(docPathTwo) == ".xlsx")
+                {
+                    docTwoSheetsList.Items.Clear();
+
+                    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+                    var tables = ctrl.GetTables(docPathTwo);
+
+                    foreach (string item in tables)
+                    {
+                        docTwoSheetsList.Items.Add(item);
+                    }
+                }
+                else
+                {
+                    ctrl.tableOne = ctrl.GetDataTable(docPathTwo);
+                }
+
+
+            }
         }
 
         public void SetGridViewSortState(DataGridView dgv, DataGridViewColumnSortMode sortMode)
@@ -156,50 +214,10 @@ namespace ExcelCompare
             }
         }
 
-        private bool cancel = false;
-        private void ReportDoWork(object sender, DoWorkEventArgs e)
-        {
-            bool retry = false;
-            do
-            {
-                try
-                {
-                    comp.GenerateReport(outputPath);
-                    retry = false;
-                }
-                catch (Exception)
-                {
-                    var errorMess = MessageBox.Show("Please ensure the all involved documents are closed", "Error", MessageBoxButtons.RetryCancel);
-                    if (errorMess == DialogResult.Retry)
-                    {
-                        retry = true;
-                    }
-                    else
-                    {
-                        retry = false;
-                        cancel = true;
-                        break;
-                    }
-                }
-            } while (retry);
-        }
-
-        private void ReportWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            this.Enabled = true;
-            if (!cancel)
-            {
-                if (openSpeadcBox.Checked)
-                {
-                    System.Diagnostics.Process.Start(outputPath);
-                }
-            } 
-
-        }
-
         private void QueryUserReport()
         {
-            MessageBox.Show($"There are {comp.DiffLocations.Count} inconsistent cells.");
+
+            MessageBox.Show($"There are {ctrl.DiffLocations.Count} inconsistent cells.");
             if (genSpreadcBox.Checked)
             {
                 SaveFileDialog save = new SaveFileDialog();
@@ -207,7 +225,7 @@ namespace ExcelCompare
                 if (save.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = save.FileName;
-                    reportWorker.RunWorkerAsync();
+                    // reportWorker.RunWorkerAsync();
                 }
             }
         }
@@ -222,7 +240,10 @@ namespace ExcelCompare
             {
                 throw m;
             }
-            ProcessDifferences(ResultView);
+            if (ctrl.DiffLocations.Count > 1)
+            {
+                ProcessDifferences(ResultView);
+            }
         }
 
         private void ProcessDifferences(DataGridView ResultView)
@@ -230,9 +251,10 @@ namespace ExcelCompare
             DataGridViewCellStyle diffStyle = new DataGridViewCellStyle();
             diffStyle.BackColor = Color.Green;
             diffStyle.ForeColor = Color.White;
-            foreach (var item in comp.DiffLocations)
+
+            foreach (var item in ctrl.DiffLocations)
             {
-                ResultView.Rows[item.Item1].Cells[item.Item2].Style = diffStyle;
+                ResultView.Rows[item.x].Cells[item.y].Style = diffStyle;
             }
         }
 
@@ -273,13 +295,14 @@ namespace ExcelCompare
 
         private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comp != null)
+            if (ctrl != null)
             {
-                if (comp.DiffLocations!=null)
+                if (ctrl.DiffLocations != null)
                 {
                     switch (sheetController.SelectedIndex)
                     {
-                        case 0: ProcessDifferences(MergedViewGrid);
+                        case 0:
+                            ProcessDifferences(MergedViewGrid);
                             break;
                         case 1:
                             ProcessDifferences(SideBySideGrid1);
@@ -290,6 +313,39 @@ namespace ExcelCompare
                             break;
                     }
                 }
+            }
+        }
+
+        private void docOneSheetsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            int selected = docOneSheetsList.SelectedIndex;
+            if (selected > -1)
+            {
+                ctrl.tableOne = ctrl.GetTableByIndex(selected, ctrl.workbookOne);
+                CheckSelections();
+            }
+        }
+
+        private void docTwoSheetsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selected = docTwoSheetsList.SelectedIndex;
+            if (docTwoSheetsList.SelectedItems.Count > 0)
+            {
+                ctrl.tableTwo = ctrl.GetTableByIndex(selected, ctrl.workbookTwo);
+                CheckSelections();
+            }
+        }
+
+        private void CheckSelections()
+        {
+            if (ctrl.tableOne != null && ctrl.tableTwo != null)
+            {
+                CompareBtn.Enabled = true;
+            }
+            else
+            {
+                CompareBtn.Enabled = false;
             }
         }
     }

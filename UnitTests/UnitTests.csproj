@@ -56,9 +56,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ComparisonLogic\ComparisonLogic.csproj">
+    <ProjectReference Include="..\ComparisonLogic\SpreadsheetLogic.csproj">
       <Project>{f7b16c7d-bd8c-4587-bcbf-ae1ab9ddc674}</Project>
-      <Name>ComparisonLogic</Name>
+      <Name>SpreadsheetLogic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
