@@ -78,7 +78,7 @@ namespace SpreadsheetImporter
                 {
                     bool hasHeader = HasHeader;
                     //Create a new DataTable.
-                    DataTable dt = new DataTable();
+                    DataTable dt = new DataTable(workSheet.Name);
 
                     //Loop through the Worksheet rows.
                     foreach (IXLRow row in workSheet.Rows())
@@ -86,9 +86,11 @@ namespace SpreadsheetImporter
                         //Use the first row to add columns to DataTable.
                         if (hasHeader)
                         {
+                            int i = 0;
                             foreach (IXLCell cell in row.Cells())
                             {
                                 dt.Columns.Add(cell.Value.ToString());
+                                dt.Columns[i].ColumnName = cell.Value.ToString();
                             }
                             hasHeader = false;
                         }

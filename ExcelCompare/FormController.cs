@@ -35,13 +35,6 @@ namespace ExcelCompare
             return wb;
         }
 
-        internal ICollection<string> GetTables(string path)
-        {
-            TableImport imp = new TableImport();
-            imp.HasHeader = true;
-            return imp.SheetNames(path);
-        }
-
         internal void CompareTables()
         {
             if (tableOne != null && tableTwo != null)
@@ -53,6 +46,7 @@ namespace ExcelCompare
             }
 
         }
+         
 
         public DataTable GetTableByIndex(int index,DataSet workbook)
         {
@@ -66,5 +60,7 @@ namespace ExcelCompare
             var tmp = imp.GetDataSet(docPathOne);
             return tmp.Tables[0];            
         }
+
+
     }
 }

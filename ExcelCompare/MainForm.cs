@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
-using MetroFramework.Fonts;
+
 namespace ExcelCompare
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
@@ -21,12 +21,12 @@ namespace ExcelCompare
         public string docPathTwo { get { return openFileControl2.FilePath; } }
         public string outputPath { get; private set; }
 
-        
+
         public MainForm()
         {
             InitializeComponent();
 
-
+            
 
             openFileControl1._TextChanged += GetSheetNamesOne;
             openFileControl2._TextChanged += GetSheetNamesTwo;
@@ -35,9 +35,6 @@ namespace ExcelCompare
             SideBySideGrid1.MouseWheel += ScrollSideOne;
             ctrl = new FormController();
 
-            Font tmp = new MetroFramework.MetroFonts.Textbox;
-
-     
         }
 
 
@@ -108,17 +105,21 @@ namespace ExcelCompare
             {
                 if (Path.GetExtension(docPathOne) == ".xlsx")
                 {
+                    docOneSheetsList.Enabled = true;
+
                     docOneSheetsList.Items.Clear();
                     ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
-                    var tables = ctrl.GetTables(docPathOne);
-                    foreach (string item in tables)
+            
+                    foreach (DataTable item in ctrl.workbookOne.Tables)
                     {
-                        docOneSheetsList.Items.Add(item);
+                        docOneSheetsList.Items.Add(item.TableName);
                     }
 
                 }
                 else
                 {
+                    docOneSheetsList.Enabled = false;
+                    docOneSheetsList.Items.Add("CSV file selected");
                     ctrl.tableOne = ctrl.GetDataTable(docPathOne);
                 }
 
@@ -131,17 +132,20 @@ namespace ExcelCompare
             {
                 if (Path.GetExtension(docPathTwo) == ".xlsx")
                 {
+                    docTwoSheetsList.Enabled = true;
                     docTwoSheetsList.Items.Clear();
-                    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
-                    var tables = ctrl.GetTables(docPathTwo);
 
-                    foreach (string item in tables)
+                    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+                  
+                    foreach (DataTable item in ctrl.workbookTwo.Tables)
                     {
-                        docTwoSheetsList.Items.Add(item);
+                        docTwoSheetsList.Items.Add(item.TableName);
                     }
                 }
                 else
                 {
+                    docTwoSheetsList.Enabled = false;
+                    docTwoSheetsList.Items.Add("CSV file selected");
                     ctrl.tableTwo = ctrl.GetDataTable(docPathTwo);
                 }
 
@@ -256,25 +260,21 @@ namespace ExcelCompare
 
         private void docOneSheetsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            int selected = docOneSheetsList.SelectedIndex;
-            if (selected > -1)
-            {
-                ctrl.tableOne = ctrl.GetTableByIndex(selected, ctrl.workbookOne);
-                CheckSelections();
-            }
+                if (docOneSheetsList.SelectedIndex > -1)
+                {
+                    ctrl.tableOne = ctrl.GetTableByIndex(docOneSheetsList.SelectedIndex, ctrl.workbookOne);
+                    CheckSelections();
+                }
         }
 
         private void docTwoSheetsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int selected = docTwoSheetsList.SelectedIndex;
-            if (docTwoSheetsList.SelectedItems.Count > 0)
-            {
-                ctrl.tableTwo = ctrl.GetTableByIndex(selected, ctrl.workbookTwo);
-                CheckSelections();
-            }
+                if (docTwoSheetsList.SelectedIndex > -1)
+                {
+                    ctrl.tableTwo = ctrl.GetTableByIndex(docTwoSheetsList.SelectedIndex, ctrl.workbookTwo);
+                    CheckSelections();
+                }
         }
-
         private void CheckSelections()
         {
             if (ctrl.tableOne != null && ctrl.tableTwo != null)

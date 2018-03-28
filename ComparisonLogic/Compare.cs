@@ -56,26 +56,47 @@ namespace SpreadsheetLogic
                 }
             }
 
-        //int colIndex = 0;
-            //for (; colIndex < hColumnCount; colIndex++)
-            //{
-            //    dt.Rows.Add();
-            //    int rowIndex = (dt.Rows.Count - 2);
-            //    string cellOne = compare.Rows[rowIndex][colIndex].ToString();
-            //    string cellTwo = to.Rows[rowIndex][colIndex].ToString();
-
-            //    if (cellOne != string.Empty)
-            //    {
-            //        dt.Rows[rowIndex][colIndex] = cellOne;
-            //    }
-            //    else
-            //    {
-            //        dt.Rows[rowIndex][colIndex] = cellTwo;
-            //    }
-            //}
-
-
             return dt;
+
+        }
+
+        private void NormaliseTables()
+        {
+            int compColCount = compare.Columns.Count;
+            int toColCount = to.Columns.Count;
+
+            if (compColCount >= toColCount)
+            {
+                for (int i = 0; i < (compColCount - toColCount); i++)
+                {
+                    to.Columns.Add();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < (toColCount - compColCount); i++)
+                {
+                    to.Columns.Add();
+                }
+            }
+
+            int compRowCount = compare.Rows.Count;
+            int toRowCount = to.Rows.Count;
+
+            if (compRowCount >= toRowCount)
+            {
+                for (int i = 0; i < (compRowCount - toRowCount); i++)
+                {
+                    to.Rows.Add();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < (toRowCount - compRowCount); i++)
+                {
+                    to.Rows.Add();
+                }
+            }
 
         }
 
@@ -106,6 +127,9 @@ namespace SpreadsheetLogic
 
             var tempListOfCells = new List<Cell>();
             int rowIndex = 0;
+
+          
+
             for (; rowIndex < lRowCount; rowIndex++)
             {
 
@@ -123,6 +147,40 @@ namespace SpreadsheetLogic
             }
             return tempListOfCells;
         }
+
+        //public ICollection<Cell> CompareColumns()
+        //{
+            
+        //    DataTable tmp = new DataTable();
+        //    if (compare.Columns.Count > to.Columns.Count)
+        //    {
+        //        for (int i = 0; i < compare.Columns.Count; i++)
+        //        {
+        //            if (compare.Columns[i].ColumnName == to.Columns[i].ColumnName)
+        //            {
+        //                tmp.Columns.Add(compare.Columns[i]);
+        //            }
+        //            else 
+        //            {
+        //                if (compare.Columns.Contains(to.Columns[i].ColumnName))
+        //                {
+        //                    compare.Columns.IndexOf(compare.Columns[i]);
+        //                }
+        //            }
+         
+
+                    
+        //        }
+        //    }
+        //    else if (compare.Columns.Count < to.Columns.Count)
+        //    {
+
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //}
 
         private int GetLowestColumnCount()
         {
