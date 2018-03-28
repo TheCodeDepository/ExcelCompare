@@ -4,10 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using SpreadsheetLogic;
 using System.Threading;
-using System.Collections.Generic;
-
+using MetroFramework.Fonts;
 namespace ExcelCompare
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
@@ -19,20 +17,15 @@ namespace ExcelCompare
         public delegate void CompareComplete();
         CompareComplete compareHandler;
 
-        public delegate void ReportComplete();
-        ReportComplete reportHandler;
-
         public string docPathOne { get { return openFileControl1.FilePath; } }
         public string docPathTwo { get { return openFileControl2.FilePath; } }
         public string outputPath { get; private set; }
 
-
-
-
-
+        
         public MainForm()
         {
             InitializeComponent();
+
 
 
             openFileControl1._TextChanged += GetSheetNamesOne;
@@ -42,6 +35,9 @@ namespace ExcelCompare
             SideBySideGrid1.MouseWheel += ScrollSideOne;
             ctrl = new FormController();
 
+            Font tmp = new MetroFramework.MetroFonts.Textbox;
+
+     
         }
 
 
@@ -65,10 +61,6 @@ namespace ExcelCompare
             compareHandler = CompareThreadCompleted;
             ctrl.CompareComplete += Compare_OnComplete;
 
-            //reportHandler = ReportThreadCompleted;
-            //ctrl.ReportComplete += Report_OnComplete;
-
-
             ThreadStart start = new ThreadStart(ctrl.CompareTables);
             backgroundThread = new Thread(start);
             backgroundThread.Start();
@@ -89,21 +81,14 @@ namespace ExcelCompare
             }
         }
 
-        private void Report_OnComplete(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void CompareThreadCompleted()
         {
             if (ctrl.DiffLocations.Count < 0)
             {
                 MessageBox.Show("There are no differences bwtween the two documents");
             }
-            else
-            {
 
-            }
+
             PushTableToView(MergedViewGrid, ctrl.mergedView);
             PushTableToView(SideBySideGrid1, ctrl.tableOne);
             PushTableToView(SideBySideGrid2, ctrl.tableTwo);
@@ -114,47 +99,7 @@ namespace ExcelCompare
 
             CompareBtn.Enabled = true;
 
-        }
 
-        private void ReportThreadCompleted()
-        {
-            this.Enabled = true;
-            if (!cancel)
-            {
-                if (openSpeadcBox.Checked)
-                {
-                    System.Diagnostics.Process.Start(outputPath);
-                }
-            }
-
-        }
-
-        private bool cancel = false;
-        private void ReportDoWork(object sender, DoWorkEventArgs e)
-        {
-            //bool retry = false;
-            //do
-            //{
-            //    try
-            //    {
-            //        ctrl.GenerateReport(outputPath);
-            //        retry = false;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        var errorMess = MessageBox.Show("Please ensure the all involved documents are closed", "Error", MessageBoxButtons.RetryCancel);
-            //        if (errorMess == DialogResult.Retry)
-            //        {
-            //            retry = true;
-            //        }
-            //        else
-            //        {
-            //            retry = false;
-            //            cancel = true;
-            //            break;
-            //        }
-            //    }
-            //} while (retry);
         }
 
         private void GetSheetNamesOne(object sender, EventArgs e)
@@ -164,7 +109,6 @@ namespace ExcelCompare
                 if (Path.GetExtension(docPathOne) == ".xlsx")
                 {
                     docOneSheetsList.Items.Clear();
-
                     ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
                     var tables = ctrl.GetTables(docPathOne);
                     foreach (string item in tables)
@@ -175,7 +119,7 @@ namespace ExcelCompare
                 }
                 else
                 {
-                    ctrl.tableTwo = ctrl.GetDataTable(docPathOne);
+                    ctrl.tableOne = ctrl.GetDataTable(docPathOne);
                 }
 
             }
@@ -188,7 +132,6 @@ namespace ExcelCompare
                 if (Path.GetExtension(docPathTwo) == ".xlsx")
                 {
                     docTwoSheetsList.Items.Clear();
-
                     ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
                     var tables = ctrl.GetTables(docPathTwo);
 
@@ -199,7 +142,7 @@ namespace ExcelCompare
                 }
                 else
                 {
-                    ctrl.tableOne = ctrl.GetDataTable(docPathTwo);
+                    ctrl.tableTwo = ctrl.GetDataTable(docPathTwo);
                 }
 
 
@@ -232,14 +175,9 @@ namespace ExcelCompare
 
         private void PushTableToView(DataGridView ResultView, DataTable table)
         {
-            try
-            {
-                ResultView.DataSource = table;
-            }
-            catch (Exception m)
-            {
-                throw m;
-            }
+
+            ResultView.DataSource = table;
+
             if (ctrl.DiffLocations.Count > 1)
             {
                 ProcessDifferences(ResultView);
@@ -347,6 +285,13 @@ namespace ExcelCompare
             {
                 CompareBtn.Enabled = false;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            MergedViewGrid.Refresh();
+
         }
     }
 }

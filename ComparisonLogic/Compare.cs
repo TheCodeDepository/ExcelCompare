@@ -15,47 +15,66 @@ namespace SpreadsheetLogic
         private readonly int hColumnCount;
         private readonly int hRowCount;
 
-        private DataTable compare { get; set; }        
-        private DataTable to { get; set; }   
+        private DataTable compare { get; set; }
+        private DataTable to { get; set; }
 
         public Compare(DataTable Compare, DataTable To)
         {
             this.compare = Compare;
             to = To;
-         
+
             lRowCount = GetLowestRowCount();
             lColumnCount = GetLowestColumnCount();
             hRowCount = GetHighestRowCount();
             hColumnCount = GetHighestColumnCount();
 
 
-        }       
-        
+        }
+
         public DataTable MergeTables()
         {
             DataTable dt = GetTableWithAllHeaders();
-
             int rowIndex = 0;
-            for (; rowIndex < hRowCount; rowIndex++)
+            for (; rowIndex < lRowCount; rowIndex++)
             {
-                string[] rowForInserting = new string[hColumnCount];
+                dt.Rows.Add();
                 int colIndex = 0;
-                for (; colIndex < hColumnCount; colIndex++)
+                for (; colIndex < lColumnCount; colIndex++)
                 {
                     string cellOne = compare.Rows[rowIndex][colIndex].ToString();
                     string cellTwo = to.Rows[rowIndex][colIndex].ToString();
 
+                   
                     if (cellOne != string.Empty)
                     {
-                        rowForInserting[colIndex] = cellOne;
+                        dt.Rows[rowIndex][colIndex] = cellOne;
                     }
                     else
                     {
-                        rowForInserting[colIndex] = cellTwo;
+                        dt.Rows[rowIndex][colIndex] = cellTwo;
                     }
                 }
-                dt.Rows.Add(dt);
             }
+
+        //int colIndex = 0;
+            //for (; colIndex < hColumnCount; colIndex++)
+            //{
+            //    dt.Rows.Add();
+            //    int rowIndex = (dt.Rows.Count - 2);
+            //    string cellOne = compare.Rows[rowIndex][colIndex].ToString();
+            //    string cellTwo = to.Rows[rowIndex][colIndex].ToString();
+
+            //    if (cellOne != string.Empty)
+            //    {
+            //        dt.Rows[rowIndex][colIndex] = cellOne;
+            //    }
+            //    else
+            //    {
+            //        dt.Rows[rowIndex][colIndex] = cellTwo;
+            //    }
+            //}
+
+
             return dt;
 
         }
@@ -84,7 +103,7 @@ namespace SpreadsheetLogic
 
         public ICollection<Cell> CompareDateSets()
         {
-            
+
             var tempListOfCells = new List<Cell>();
             int rowIndex = 0;
             for (; rowIndex < lRowCount; rowIndex++)

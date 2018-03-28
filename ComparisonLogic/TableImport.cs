@@ -67,48 +67,94 @@ namespace SpreadsheetImporter
             return tmp;
         }
 
-
-
         private DataSet ImportExcel()
         {
             using (XLWorkbook ws = new XLWorkbook(filePath))
             {
-                IXLWorksheet workSheet = ws.Worksheet(1);
+                DataSet ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
 
-                //Create a new DataTable.
-                DataTable dt = new DataTable();
-
-                //Loop through the Worksheet rows.
-                foreach (IXLRow row in workSheet.Rows())
+                //IXLWorksheet workSheet = ws.Worksheet(1);
+                foreach (IXLWorksheet workSheet in ws.Worksheets)
                 {
-                    //Use the first row to add columns to DataTable.
-                    if (HasHeader)
-                    {
-                        foreach (IXLCell cell in row.Cells())
-                        {
-                            dt.Columns.Add(cell.Value.ToString());
-                        }
-                        HasHeader = false;
-                    }
-                    else
-                    {
-                        //Add rows to DataTable.
-                        dt.Rows.Add();
-                        int i = 0;
-                        foreach (IXLCell cell in row.Cells())
-                        {
-                            dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
-                            i++;
-                        }
-                    }
-                }
+                    bool hasHeader = HasHeader;
+                    //Create a new DataTable.
+                    DataTable dt = new DataTable();
 
-                var ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
-                ds.Tables.Add(dt);
+                    //Loop through the Worksheet rows.
+                    foreach (IXLRow row in workSheet.Rows())
+                    {
+                        //Use the first row to add columns to DataTable.
+                        if (hasHeader)
+                        {
+                            foreach (IXLCell cell in row.Cells())
+                            {
+                                dt.Columns.Add(cell.Value.ToString());
+                            }
+                            hasHeader = false;
+                        }
+                        else
+                        {
+                            //Add rows to DataTable.
+                            dt.Rows.Add();
+                            int i = 0;
+                            foreach (IXLCell cell in row.Cells())
+                            {
+                                dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
+                                i++;
+                            }
+                        }
+                    }
+
+                    ds.Tables.Add(dt);
+                }
                 return ds;
+
+
             }
 
         }
+
+        //private DataSet ImportExcel()
+        //{
+        //    using (XLWorkbook ws = new XLWorkbook(filePath))
+        //    {
+        //        IXLWorksheet workSheet = ws.Worksheet(1);
+
+        //        bool hasHeader = HasHeader;
+        //        //Create a new DataTable.
+        //        DataTable dt = new DataTable();
+
+        //        //Loop through the Worksheet rows.
+        //        foreach (IXLRow row in workSheet.Rows())
+        //        {
+        //            //Use the first row to add columns to DataTable.
+        //            if (hasHeader)
+        //            {
+        //                foreach (IXLCell cell in row.Cells())
+        //                {
+        //                    dt.Columns.Add(cell.Value.ToString());
+        //                }
+        //                hasHeader = false;
+        //            }
+        //            else
+        //            {
+        //                //Add rows to DataTable.
+        //                dt.Rows.Add();
+        //                int i = 0;
+        //                foreach (IXLCell cell in row.Cells())
+        //                {
+        //                    dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
+        //                    i++;
+        //                }
+        //            }
+        //        }
+
+        //        var ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
+        //        ds.Tables.Add(dt);
+        //        return ds;
+        //    }
+
+        //}
 
         //public DataTable GetBySheetNames(string tableName, string path)
         //{

@@ -15,6 +15,8 @@ namespace ExcelCompare
 
         public DataTable mergedView { get; set; }
 
+        public bool GenerateSpreadsheet { get; set; }
+        public bool OpenSpreadsheet { get; set; }
 
         public DataTable tableOne { get; set; }
         public DataTable tableTwo { get; set; }
@@ -23,15 +25,8 @@ namespace ExcelCompare
 
 
         public event EventHandler<EventArgs> CompareComplete;
-        public event EventHandler<EventArgs> ExportComplete;
-
-        //public FormController(string filePathOne, string filePathTwo)
-        //{
-        //    pathOne = filePathOne;
-        //    pathTwo = filePathTwo;
-        //}
-
-
+        
+        
         internal DataSet GetWorkBook(string path)
         {
             TableImport imp = new TableImport();
@@ -69,8 +64,7 @@ namespace ExcelCompare
             TableImport imp = new TableImport();
             imp.HasHeader = true;
             var tmp = imp.GetDataSet(docPathOne);
-            return tmp.Tables[0];
-            
+            return tmp.Tables[0];            
         }
     }
 }
