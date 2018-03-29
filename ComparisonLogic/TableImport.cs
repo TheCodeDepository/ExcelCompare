@@ -90,7 +90,7 @@ namespace SpreadsheetImporter
                             foreach (IXLCell cell in row.Cells())
                             {
                                 dt.Columns.Add(cell.Value.ToString());
-                                dt.Columns[i].ColumnName = cell.Value.ToString();
+                                //dt.Columns[i].ColumnName = cell.Value.ToString();
                             }
                             hasHeader = false;
                         }

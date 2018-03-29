@@ -29,54 +29,76 @@
         private void InitializeComponent()
         {
             this.label = new MetroFramework.Controls.MetroLabel();
-            this.pathTextBox = new MetroFramework.Controls.MetroTextBox();
             this.dialogBtn = new MetroFramework.Controls.MetroButton();
+            this.pathTextBox = new MetroFramework.Controls.MetroTextBox();
             this.SuspendLayout();
             // 
             // label
             // 
             this.label.AutoSize = true;
-            this.label.Location = new System.Drawing.Point(3, 4);
+            this.label.Location = new System.Drawing.Point(3, 5);
             this.label.MaximumSize = new System.Drawing.Size(120, 19);
-            this.label.MinimumSize = new System.Drawing.Size(120, 19);
+            this.label.MinimumSize = new System.Drawing.Size(70, 19);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(37, 19);
+            this.label.Size = new System.Drawing.Size(70, 19);
             this.label.Style = MetroFramework.MetroColorStyle.Black;
-            this.label.TabIndex = 5;
-            this.label.Text = "label";
+            this.label.TabIndex = 8;
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // dialogBtn
+            // 
+            this.dialogBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.dialogBtn.Location = new System.Drawing.Point(351, 3);
+            this.dialogBtn.Name = "dialogBtn";
+            this.dialogBtn.Size = new System.Drawing.Size(24, 23);
+            this.dialogBtn.TabIndex = 7;
+            this.dialogBtn.Text = "...";
+            this.dialogBtn.UseSelectable = true;
             // 
             // pathTextBox
             // 
             this.pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pathTextBox.Location = new System.Drawing.Point(127, 3);
+            // 
+            // 
+            // 
+            this.pathTextBox.CustomButton.Image = null;
+            this.pathTextBox.CustomButton.Location = new System.Drawing.Point(255, 1);
+            this.pathTextBox.CustomButton.Name = "";
+            this.pathTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.pathTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.pathTextBox.CustomButton.TabIndex = 1;
+            this.pathTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.pathTextBox.CustomButton.UseSelectable = true;
+            this.pathTextBox.CustomButton.Visible = false;
+            this.pathTextBox.Enabled = false;
+            this.pathTextBox.Lines = new string[0];
+            this.pathTextBox.Location = new System.Drawing.Point(76, 3);
+            this.pathTextBox.MaxLength = 32767;
             this.pathTextBox.Name = "pathTextBox";
+            this.pathTextBox.PasswordChar = '\0';
             this.pathTextBox.ReadOnly = true;
             this.pathTextBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.pathTextBox.Size = new System.Drawing.Size(274, 23);
-            this.pathTextBox.TabIndex = 3;
-            this.pathTextBox.TextChanged += new System.EventHandler(this.path_TextChanged);
-            // 
-            // dialogBtn
-            // 
-            this.dialogBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.dialogBtn.Location = new System.Drawing.Point(400, 3);
-            this.dialogBtn.Name = "dialogBtn";
-            this.dialogBtn.Size = new System.Drawing.Size(24, 23);
-            this.dialogBtn.TabIndex = 4;
-            this.dialogBtn.Text = "...";
-            this.dialogBtn.Click += new System.EventHandler(this.OpenDialog_Click);
+            this.pathTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.pathTextBox.SelectedText = "";
+            this.pathTextBox.SelectionLength = 0;
+            this.pathTextBox.SelectionStart = 0;
+            this.pathTextBox.ShortcutsEnabled = true;
+            this.pathTextBox.Size = new System.Drawing.Size(277, 23);
+            this.pathTextBox.TabIndex = 6;
+            this.pathTextBox.UseSelectable = true;
+            this.pathTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.pathTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // OpenFileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label);
-            this.Controls.Add(this.pathTextBox);
             this.Controls.Add(this.dialogBtn);
+            this.Controls.Add(this.pathTextBox);
             this.Name = "OpenFileControl";
-            this.Size = new System.Drawing.Size(427, 29);
+            this.Size = new System.Drawing.Size(378, 29);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -85,7 +107,7 @@
         #endregion
 
         private MetroFramework.Controls.MetroLabel label;
-        private MetroFramework.Controls.MetroTextBox pathTextBox;
         private MetroFramework.Controls.MetroButton dialogBtn;
+        private MetroFramework.Controls.MetroTextBox pathTextBox;
     }
 }

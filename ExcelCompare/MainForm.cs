@@ -103,11 +103,12 @@ namespace ExcelCompare
         {
             if (File.Exists(docPathOne))
             {
+                docOneSheetsList.Items.Clear();
+
                 if (Path.GetExtension(docPathOne) == ".xlsx")
                 {
                     docOneSheetsList.Enabled = true;
 
-                    docOneSheetsList.Items.Clear();
                     ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
             
                     foreach (DataTable item in ctrl.workbookOne.Tables)
@@ -130,10 +131,11 @@ namespace ExcelCompare
         {
             if (File.Exists(docPathTwo))
             {
+                docTwoSheetsList.Items.Clear();
+
                 if (Path.GetExtension(docPathTwo) == ".xlsx")
                 {
                     docTwoSheetsList.Enabled = true;
-                    docTwoSheetsList.Items.Clear();
 
                     ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
                   
@@ -291,6 +293,16 @@ namespace ExcelCompare
         {
 
             MergedViewGrid.Refresh();
+
+        }
+
+        private void metroLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void metroLabel1_Click(object sender, EventArgs e)
+        {
 
         }
     }
