@@ -89,6 +89,7 @@
     <Compile Include="Controls\SaveFileControl.Designer.cs">
       <DependentUpon>SaveFileControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tables.cs" />
     <EmbeddedResource Include="Controls\OpenFileControl.resx">
       <DependentUpon>OpenFileControl.cs</DependentUpon>
     </EmbeddedResource>

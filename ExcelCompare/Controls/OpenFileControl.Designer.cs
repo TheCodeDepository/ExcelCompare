@@ -40,7 +40,7 @@
             this.label.MaximumSize = new System.Drawing.Size(120, 19);
             this.label.MinimumSize = new System.Drawing.Size(70, 19);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(70, 19);
+            this.label.Size = new System.Drawing.Size(0, 0);
             this.label.Style = MetroFramework.MetroColorStyle.Black;
             this.label.TabIndex = 8;
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -54,6 +54,7 @@
             this.dialogBtn.TabIndex = 7;
             this.dialogBtn.Text = "...";
             this.dialogBtn.UseSelectable = true;
+            this.dialogBtn.Click += new System.EventHandler(this.OpenDialog_Click);
             // 
             // pathTextBox
             // 
@@ -89,6 +90,7 @@
             this.pathTextBox.UseSelectable = true;
             this.pathTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.pathTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.pathTextBox.TextChanged += new System.EventHandler(this.path_TextChanged);
             // 
             // OpenFileControl
             // 

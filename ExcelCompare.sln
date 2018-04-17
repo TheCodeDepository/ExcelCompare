@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelCompare", "ExcelCompar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetLogic", "ComparisonLogic\SpreadsheetLogic.csproj", "{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{FB2066B0-E23F-4F49-A429-54571D9ADDCA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetCompare", "SpreadsheetCompare\SpreadsheetCompare.csproj", "{04478DC7-ED2B-4F0A-AC13-DFAA9813D658}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB2066B0-E23F-4F49-A429-54571D9ADDCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB2066B0-E23F-4F49-A429-54571D9ADDCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB2066B0-E23F-4F49-A429-54571D9ADDCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB2066B0-E23F-4F49-A429-54571D9ADDCA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04478DC7-ED2B-4F0A-AC13-DFAA9813D658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04478DC7-ED2B-4F0A-AC13-DFAA9813D658}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04478DC7-ED2B-4F0A-AC13-DFAA9813D658}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04478DC7-ED2B-4F0A-AC13-DFAA9813D658}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

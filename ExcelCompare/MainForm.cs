@@ -67,7 +67,7 @@ namespace ExcelCompare
 
         private void Compare_OnComplete(object sender, EventArgs e)
         {
-            var send = (FormController)sender;
+           
             if (this.InvokeRequired)
             {
                 this.Invoke(compareHandler);
@@ -98,60 +98,49 @@ namespace ExcelCompare
 
 
         }
-
         private void GetSheetNamesOne(object sender, EventArgs e)
         {
-            if (File.Exists(docPathOne))
+            if (!File.Exists(this.docPathOne))
+                return;
+            docOneSheetsList.Items.Clear();
+            if (Path.GetExtension(this.docPathOne) == ".xlsx")
             {
-                docOneSheetsList.Items.Clear();
-
-                if (Path.GetExtension(docPathOne) == ".xlsx")
+                docOneSheetsList.Enabled = true;
+                ctrl.workbookOne = this.ctrl.GetWorkBook(docPathOne);
+                foreach (DataTable table in ctrl.workbookOne.Tables)
                 {
-                    docOneSheetsList.Enabled = true;
-
-                    ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
-            
-                    foreach (DataTable item in ctrl.workbookOne.Tables)
-                    {
-                        docOneSheetsList.Items.Add(item.TableName);
-                    }
-
+                    docOneSheetsList.Items.Add(table.TableName);
                 }
-                else
-                {
-                    docOneSheetsList.Enabled = false;
-                    docOneSheetsList.Items.Add("CSV file selected");
-                    ctrl.tableOne = ctrl.GetDataTable(docPathOne);
-                }
-
+            }
+            else
+            {
+                docOneSheetsList.Enabled = false;
+                docOneSheetsList.Items.Add("CSV file selected");
+                ctrl.tableOne = ctrl.GetDataTable(docPathOne);
             }
         }
 
         private void GetSheetNamesTwo(object sender, EventArgs e)
         {
-            if (File.Exists(docPathTwo))
+            if (!File.Exists(docPathTwo))
             {
-                docTwoSheetsList.Items.Clear();
-
-                if (Path.GetExtension(docPathTwo) == ".xlsx")
+                return;
+            }
+            docTwoSheetsList.Items.Clear();
+            if (Path.GetExtension(docPathTwo) == ".xlsx")
+            {
+                docTwoSheetsList.Enabled = true;
+                ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+                foreach (DataTable table in ctrl.workbookTwo.Tables)
                 {
-                    docTwoSheetsList.Enabled = true;
-
-                    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
-                  
-                    foreach (DataTable item in ctrl.workbookTwo.Tables)
-                    {
-                        docTwoSheetsList.Items.Add(item.TableName);
-                    }
+                    docTwoSheetsList.Items.Add((object)table.TableName);
                 }
-                else
-                {
-                    docTwoSheetsList.Enabled = false;
-                    docTwoSheetsList.Items.Add("CSV file selected");
-                    ctrl.tableTwo = ctrl.GetDataTable(docPathTwo);
-                }
-
-
+            }
+            else
+            {
+                docTwoSheetsList.Enabled = false;
+                docTwoSheetsList.Items.Add("CSV file selected");
+                ctrl.tableTwo = ctrl.GetDataTable(docPathTwo);
             }
         }
 
@@ -174,7 +163,7 @@ namespace ExcelCompare
                 if (save.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = save.FileName;
-                    // reportWorker.RunWorkerAsync();
+                   
                 }
             }
         }
@@ -289,21 +278,5 @@ namespace ExcelCompare
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            MergedViewGrid.Refresh();
-
-        }
-
-        private void metroLabel2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void metroLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
