@@ -22,6 +22,7 @@ namespace SpreadsheetImporter
         public TableExport(string outputPath, DataTable worksheet)
         {
             this.outputPath = outputPath;
+            workbook = new DataSet();
             this.workbook.Tables.Add(worksheet);
         }
 
@@ -128,14 +129,17 @@ namespace SpreadsheetImporter
 
             if (differencesArr != null)
             {
-                for (int i = 0; i < wb.Worksheets.Count; i++)
+                int i = 0;
+                foreach (IXLWorksheet ws in wb.Worksheets)
                 {
-                    var diffList = differencesArr[i];
+                    IEnumerable<Cell> diffList = differencesArr[i];
                     foreach (Cell cell in diffList)
                     {
-                        wb.Worksheets.Worksheet(i).Cell((cell.y + 2), (cell.x + 1)).Style.Fill.BackgroundColor = XLColor.Red;
+                        wb.Worksheets.Worksheet(ws.Name).Cell((cell.x + 2), (cell.y + 1)).Style.Fill.BackgroundColor = XLColor.ForestGreen;
                     }
+                    i++;
                 }
+
             }
            
             wb.SaveAs(outputPath);

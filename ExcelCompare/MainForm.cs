@@ -62,7 +62,8 @@ namespace ExcelCompare
             backgroundThread = new Thread(start);
             backgroundThread.Start();
 
-
+            //ctrl.CompareTables();
+            //CompareThreadCompleted();
         }
 
         private void Compare_OnComplete(object sender, EventArgs e)
@@ -155,17 +156,39 @@ namespace ExcelCompare
         private void QueryUserReport()
         {
 
-            MessageBox.Show($"There are {ctrl.DiffLocations.Count} inconsistent cells.");
-            if (genSpreadcBox.Checked)
+            int num = (int)MessageBox.Show(string.Format("There are {0} inconsistent cells.", (object)this.ctrl.DiffLocations.Count));
+            if (!genSpreadcBox.Checked)
             {
-                SaveFileDialog save = new SaveFileDialog();
-                save.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
-                if (save.ShowDialog() == DialogResult.OK)
-                {
-                    outputPath = save.FileName;
-                   
-                }
+                return;
             }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            outputPath = saveFileDialog.FileName;
+            ctrl.ExportMergedTable(outputPath);
+            if (openSpeadcBox.Checked)
+            {
+              System.Diagnostics.Process.Start(outputPath);
+            }
+            
+
+
+            //MessageBox.Show($"There are {ctrl.DiffLocations.Count} inconsistent cells.");
+            //if (genSpreadcBox.Checked)
+            //{
+            //    SaveFileDialog save = new SaveFileDialog();
+            //    save.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+            //    if (save.ShowDialog() == DialogResult.OK)
+            //    {
+            //        outputPath = save.FileName;
+            //        ctrl.e
+            //    }
+            //}
         }
 
         private void PushTableToView(DataGridView ResultView, DataTable table)

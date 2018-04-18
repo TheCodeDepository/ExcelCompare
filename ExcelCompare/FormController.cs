@@ -46,7 +46,15 @@ namespace ExcelCompare
             }
 
         }
-         
+
+
+        public void ExportMergedTable(string path)
+        {
+            TableExport tableExport = new TableExport(path, this.mergedView);
+            tableExport.differencesArr = new IEnumerable<Cell>[1];
+            tableExport.differencesArr[0] = (IEnumerable<Cell>)this.DiffLocations;
+            tableExport.ExportXlsx();
+        }
 
         public DataTable GetTableByIndex(int index,DataSet workbook)
         {
