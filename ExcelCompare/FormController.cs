@@ -103,8 +103,7 @@ namespace ExcelCompare
         public void ExportMergedTable(string path)
         {
             TableExport tableExport = new TableExport(path, this.mergedView);
-            tableExport.differencesArr = new IEnumerable<Cell>[1];
-            tableExport.differencesArr[0] = DiffLocations;
+            tableExport.Cells = DiffLocations;
             tableExport.ExportXlsx();
         }
 
@@ -121,7 +120,13 @@ namespace ExcelCompare
             return tmp.Tables[0];
         }
 
-
+        internal void ExportMergedTableWithRowData(string outputPath)
+        {
+            TableExport tableExport = new TableExport(outputPath, mergedView);
+            tableExport.Cells = differencesID.meCells;
+            tableExport.ExportXlsxWithColorCoding(differencesID.meDeletedRows, differencesID.meAddedRows);
+      
+        }
     }
     public enum SortMethod
     {

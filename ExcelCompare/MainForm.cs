@@ -15,8 +15,6 @@ namespace ExcelCompare
     {
         private FormController ctrl;
 
-        Thread backgroundThread;
-
         public delegate void CompareComplete();
         CompareComplete compareHandler;
 
@@ -31,11 +29,12 @@ namespace ExcelCompare
             InitializeComponent();
             openFileControl1._TextChanged += GetSheetNamesOne;
             openFileControl2._TextChanged += GetSheetNamesTwo;
-            compareHandler = CompareThreadCompleted;
-            sheetController.SelectTab(0);
-            SideBySideGrid1.MouseWheel += ScrollSideOne;
-            ctrl = new FormController(Compare_OnComplete);
+          
             sortMethod = SortMethod.RowByRow;
+            SideBySideGrid1.MouseWheel += ScrollSideOne;
+
+            compareHandler = CompareThreadCompleted;
+            ctrl = new FormController(Compare_OnComplete);
         }
         private void ScrollSideOne(object sender, MouseEventArgs e)
         {
@@ -155,6 +154,7 @@ namespace ExcelCompare
                 CheckSelections();
             }
         }
+
         private void CompareThreadCompleted()
         {
 
@@ -249,7 +249,6 @@ namespace ExcelCompare
 
             }
         }
-
         public void SetGridViewSortState(DataGridView dgv, DataGridViewColumnSortMode sortMode)
         {
             foreach (DataGridViewColumn col in dgv.Columns)
@@ -274,7 +273,17 @@ namespace ExcelCompare
             }
 
             outputPath = saveFileDialog.FileName;
-            ctrl.ExportMergedTable(outputPath);
+            switch (sortMethod)
+            {
+                case SortMethod.CellbyCell:
+                    ctrl.ExportMergedTable(outputPath);
+                    break;
+                case SortMethod.RowByRow:
+                    ctrl.ExportMergedTableWithRowData(outputPath);
+                    break;
+                default:
+                    break;
+            }
             if (openSpeadcBox.Checked)
             {
                 System.Diagnostics.Process.Start(outputPath);

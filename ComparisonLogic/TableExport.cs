@@ -15,7 +15,7 @@ namespace SpreadsheetImporter
         public int tableIndex { get; set; }
 
         public DataSet workbook { get; }
-        public IEnumerable<Cell>[] differencesArr { get; set; }
+        public IEnumerable<Cell> Cells { get; set; }
 
     
 
@@ -32,6 +32,8 @@ namespace SpreadsheetImporter
             this.workbook = workbook;
 
         }
+
+
 
         public void Export()
         {
@@ -127,13 +129,13 @@ namespace SpreadsheetImporter
                 }
             }
 
-            if (differencesArr != null)
+            if (Cells != null)
             {
                 int i = 0;
                 foreach (IXLWorksheet ws in wb.Worksheets)
                 {
-                    IEnumerable<Cell> diffList = differencesArr[i];
-                    foreach (Cell cell in diffList)
+                    
+                    foreach (Cell cell in Cells)
                     {
                         wb.Worksheets.Worksheet(ws.Name).Cell((cell.x + 2), (cell.y + 1)).Style.Fill.BackgroundColor = XLColor.ForestGreen;
                     }
@@ -143,11 +145,59 @@ namespace SpreadsheetImporter
             }
            
             wb.SaveAs(outputPath);
+
+        }
+        public void ExportXlsxWithColorCoding(ICollection<int> meDeletedRows, ICollection<int> meAddedRows)
+        {
+
+            XLWorkbook wb = new XLWorkbook();
+
+            int sheetIndexer = 1;
+            foreach (DataTable table in workbook.Tables)
+            {
+                if (!string.IsNullOrEmpty(table.TableName.ToString()))
+                {
+                    wb.Worksheets.Add(table, table.TableName);
+                }
+                else
+                {
+                    wb.Worksheets.Add(table, $"Sheet{sheetIndexer}");
+                }
+            }
+
+            if (Cells != null)
+            {
+           
+                foreach (IXLWorksheet ws in wb.Worksheets)
+                {
+
+                    foreach (Cell cell in Cells)
+                    {
+                        wb.Worksheets.Worksheet(ws.Name).Cell((cell.x + 2), (cell.y + 1)).Style.Fill.BackgroundColor = XLColor.ForestGreen;
+                    }
+                    foreach (var item in meDeletedRows)
+                    {
+                        wb.Worksheets.Worksheet(ws.Name).Row(item).Style.Fill.BackgroundColor = XLColor.Orange;
+                    }
+                    foreach (var item in meAddedRows)
+                    {
+                        wb.Worksheets.Worksheet(ws.Name).Row(item).Style.Fill.BackgroundColor = XLColor.Green;
+
+                    }
+
+
+                }
+
+            }
+
+            wb.SaveAs(outputPath);
         }
     }
 
+   
 
-    public enum Format
+
+public enum Format
     {
         CSV,
         XLSX
