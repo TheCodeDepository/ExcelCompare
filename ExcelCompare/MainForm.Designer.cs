@@ -61,6 +61,7 @@
             // 
             // CompareBtn
             // 
+            this.CompareBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CompareBtn.Enabled = false;
             this.CompareBtn.Location = new System.Drawing.Point(1178, 105);
             this.CompareBtn.Name = "CompareBtn";
@@ -72,6 +73,7 @@
             // 
             // genSpreadcBox
             // 
+            this.genSpreadcBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.genSpreadcBox.AutoSize = true;
             this.genSpreadcBox.Location = new System.Drawing.Point(1109, 65);
             this.genSpreadcBox.Name = "genSpreadcBox";
@@ -83,6 +85,7 @@
             // 
             // openSpeadcBox
             // 
+            this.openSpeadcBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.openSpeadcBox.AutoSize = true;
             this.openSpeadcBox.Enabled = false;
             this.openSpeadcBox.Location = new System.Drawing.Point(1109, 84);

@@ -12,11 +12,9 @@ namespace SpreadsheetLogic
         private readonly int lColumnCount;
         private readonly int lRowCount;
 
-        private readonly int hColumnCount;
-        private readonly int hRowCount;
-
         private DataTable compare { get; set; }
         private DataTable to { get; set; }
+        public DataTable mergedView { get; private set; }
 
         public Compare(DataTable Compare, DataTable To)
         {
@@ -25,10 +23,6 @@ namespace SpreadsheetLogic
 
             lRowCount = GetLowestRowCount();
             lColumnCount = GetLowestColumnCount();
-            hRowCount = GetHighestRowCount();
-            hColumnCount = GetHighestColumnCount();
-
-
         }
 
         public DataTable MergeTables()
@@ -44,7 +38,7 @@ namespace SpreadsheetLogic
                     string cellOne = compare.Rows[rowIndex][colIndex].ToString();
                     string cellTwo = to.Rows[rowIndex][colIndex].ToString();
 
-                   
+
                     if (cellOne != string.Empty)
                     {
                         dt.Rows[rowIndex][colIndex] = cellOne;
@@ -60,45 +54,79 @@ namespace SpreadsheetLogic
 
         }
 
-        private void NormaliseTables()
-        {
-            int compColCount = compare.Columns.Count;
-            int toColCount = to.Columns.Count;
+        //public (ICollection<Cell> CompareDifferences, ICollection<Cell> ToDifferences, ICollection<int> DeletedRows, ICollection<int>AddedRows ,ICollection<Cell> mergedDiffCells, ICollection<int> mergedDeletedRows, ICollection<int> mergedAddedRows) CompareDateSetsByID(int idColIndex)
+        //{
+        //    mergedView = to.Copy();
 
-            if (compColCount >= toColCount)
-            {
-                for (int i = 0; i < (compColCount - toColCount); i++)
-                {
-                    to.Columns.Add();
-                }
-            }
-            else
-            {
-                for (int i = 0; i < (toColCount - compColCount); i++)
-                {
-                    to.Columns.Add();
-                }
-            }
+        //    List<Cell> compareDiffCells = new List<Cell>();
+        //    List<Cell> ToDiffCells = new List<Cell>();
+        //    List<int> compareDeletedRows = new List<int>();
+        //    List<int> toAddedRows = new List<int>();
 
-            int compRowCount = compare.Rows.Count;
-            int toRowCount = to.Rows.Count;
+        //    List<Cell> mergedDiffCells = new List<Cell>();
+        //    List<int> mergedDeletedRows = new List<int>();
+        //    List<int> mergedAddedRows = new List<int>();
 
-            if (compRowCount >= toRowCount)
-            {
-                for (int i = 0; i < (compRowCount - toRowCount); i++)
-                {
-                    to.Rows.Add();
-                }
-            }
-            else
-            {
-                for (int i = 0; i < (toRowCount - compRowCount); i++)
-                {
-                    to.Rows.Add();
-                }
-            }
+        //    int lastCommonRecord = 0;
+        //    int mergeIndex = 0;
 
-        }
+        //    foreach (DataRow row in compare.Rows)
+        //    {              
+        //        bool exists = false;
+        //        foreach (DataRow toRow in to.Rows)
+        //        {
+        //            if (row[idColIndex].ToString() == toRow[idColIndex].ToString())
+        //            {
+        //                exists = true;
+        //                lastCommonRecord = to.Rows.IndexOf(toRow);
+        //                for (int i = 0; i < lColumnCount; i++)
+        //                {
+        //                    if (row[i].ToString() != toRow[i].ToString())
+        //                    {
+        //                        compareDiffCells.Add(new Cell(compare.Rows.IndexOf(row), i));
+        //                        ToDiffCells.Add(new Cell(to.Rows.IndexOf(toRow), i));
+        //                        mergedDiffCells.Add(new Cell(lastCommonRecord,i));
+        //                    }
+        //                }
+        //                break;
+        //            }
+        //        }
+
+        //        if (!exists)
+        //        {
+
+        //            DataRow newRow = mergedView.NewRow();
+        //            newRow.ItemArray = row.ItemArray;
+        //            compareDeletedRows.Add(compare.Rows.IndexOf(row));
+        //            mergeIndex++;
+        //            mergedDeletedRows.Add(compare.Rows.IndexOf(row) + mergeIndex);
+        //            mergedView.Rows.InsertAt(newRow, lastCommonRecord);
+                    
+        //            lastCommonRecord++;
+        //        }
+        //    }  
+            
+        //    foreach (DataRow toRow in to.Rows)
+        //    {
+        //        bool exists = false;
+        //        foreach (DataRow coRow in compare.Rows)
+        //        {
+        //            if (toRow[idColIndex].ToString() == coRow[idColIndex].ToString())
+        //            {
+                        
+        //                exists = true;
+        //                break;
+        //            }
+
+        //        }
+        //        if (!exists)
+        //        {
+        //            mergedAddedRows.Add();
+        //            toAddedRows.Add(to.Rows.IndexOf(toRow));
+        //        }
+        //    }
+        //    return (compareDiffCells, ToDiffCells, compareDeletedRows, toAddedRows, mergedDiffCells,mergedAddedRows,mergedDeletedRows);                
+        //}
 
         private DataTable GetTableWithAllHeaders()
         {
@@ -124,15 +152,10 @@ namespace SpreadsheetLogic
 
         public ICollection<Cell> CompareDateSets()
         {
-
             var tempListOfCells = new List<Cell>();
             int rowIndex = 0;
-
-          
-
             for (; rowIndex < lRowCount; rowIndex++)
             {
-
                 int colIndex = 0;
                 for (; colIndex < lColumnCount; colIndex++)
                 {
@@ -147,40 +170,6 @@ namespace SpreadsheetLogic
             }
             return tempListOfCells;
         }
-
-        //public ICollection<Cell> CompareColumns()
-        //{
-            
-        //    DataTable tmp = new DataTable();
-        //    if (compare.Columns.Count > to.Columns.Count)
-        //    {
-        //        for (int i = 0; i < compare.Columns.Count; i++)
-        //        {
-        //            if (compare.Columns[i].ColumnName == to.Columns[i].ColumnName)
-        //            {
-        //                tmp.Columns.Add(compare.Columns[i]);
-        //            }
-        //            else 
-        //            {
-        //                if (compare.Columns.Contains(to.Columns[i].ColumnName))
-        //                {
-        //                    compare.Columns.IndexOf(compare.Columns[i]);
-        //                }
-        //            }
-         
-
-                    
-        //        }
-        //    }
-        //    else if (compare.Columns.Count < to.Columns.Count)
-        //    {
-
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
 
         private int GetLowestColumnCount()
         {
@@ -218,41 +207,45 @@ namespace SpreadsheetLogic
             return lowest;
         }
 
-        private int GetHighestColumnCount()
-        {
-            int columnCountOne = compare.Columns.Count;
-            int columnCountTwo = to.Columns.Count;
+        //private void NormaliseTables()
+        //{
+        //    int compColCount = compare.Columns.Count;
+        //    int toColCount = to.Columns.Count;
 
-            int highest;
+        //    if (compColCount >= toColCount)
+        //    {
+        //        for (int i = 0; i < (compColCount - toColCount); i++)
+        //        {
+        //            to.Columns.Add();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < (toColCount - compColCount); i++)
+        //        {
+        //            to.Columns.Add();
+        //        }
+        //    }
 
-            if (columnCountOne >= columnCountTwo)
-            {
-                highest = columnCountOne;
-            }
-            else
-            {
-                highest = columnCountTwo;
-            }
-            return highest;
-        }
+        //    int compRowCount = compare.Rows.Count;
+        //    int toRowCount = to.Rows.Count;
 
-        private int GetHighestRowCount()
-        {
-            int rowCountOne = compare.Rows.Count;
-            int rowCountTwo = to.Rows.Count;
-            int highest;
+        //    if (compRowCount >= toRowCount)
+        //    {
+        //        for (int i = 0; i < (compRowCount - toRowCount); i++)
+        //        {
+        //            to.Rows.Add();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < (toRowCount - compRowCount); i++)
+        //        {
+        //            to.Rows.Add();
+        //        }
+        //    }
 
-            if (rowCountOne >= rowCountTwo)
-            {
-                highest = rowCountOne;
-            }
-            else
-            {
-                highest = rowCountTwo;
-            }
-
-            return highest;
-        }
+        //}
 
     }
 

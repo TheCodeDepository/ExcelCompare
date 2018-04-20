@@ -72,25 +72,33 @@ namespace SpreadsheetImporter
             using (XLWorkbook ws = new XLWorkbook(filePath))
             {
                 DataSet ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
-
                 //IXLWorksheet workSheet = ws.Worksheet(1);
                 foreach (IXLWorksheet workSheet in ws.Worksheets)
                 {
+
                     bool hasHeader = HasHeader;
+                    bool nullTable = false;
                     //Create a new DataTable.
                     DataTable dt = new DataTable(workSheet.Name);
-
                     //Loop through the Worksheet rows.
                     foreach (IXLRow row in workSheet.Rows())
                     {
+
                         //Use the first row to add columns to DataTable.
                         if (hasHeader)
                         {
-                            int i = 0;
+                            if (row.Cells().Count() < 2 || workSheet.RowsUsed().Count() < 2)
+                            {
+
+                                nullTable = true;
+                                break;
+
+
+
+                            }
                             foreach (IXLCell cell in row.Cells())
                             {
                                 dt.Columns.Add(cell.Value.ToString());
-                                //dt.Columns[i].ColumnName = cell.Value.ToString();
                             }
                             hasHeader = false;
                         }
@@ -106,69 +114,16 @@ namespace SpreadsheetImporter
                             }
                         }
                     }
-
-                    ds.Tables.Add(dt);
+                    if (!nullTable)
+                    {
+                        ds.Tables.Add(dt);
+                    }
                 }
                 return ds;
-
-
             }
 
         }
 
-        //private DataSet ImportExcel()
-        //{
-        //    using (XLWorkbook ws = new XLWorkbook(filePath))
-        //    {
-        //        IXLWorksheet workSheet = ws.Worksheet(1);
-
-        //        bool hasHeader = HasHeader;
-        //        //Create a new DataTable.
-        //        DataTable dt = new DataTable();
-
-        //        //Loop through the Worksheet rows.
-        //        foreach (IXLRow row in workSheet.Rows())
-        //        {
-        //            //Use the first row to add columns to DataTable.
-        //            if (hasHeader)
-        //            {
-        //                foreach (IXLCell cell in row.Cells())
-        //                {
-        //                    dt.Columns.Add(cell.Value.ToString());
-        //                }
-        //                hasHeader = false;
-        //            }
-        //            else
-        //            {
-        //                //Add rows to DataTable.
-        //                dt.Rows.Add();
-        //                int i = 0;
-        //                foreach (IXLCell cell in row.Cells())
-        //                {
-        //                    dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
-        //                    i++;
-        //                }
-        //            }
-        //        }
-
-        //        var ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
-        //        ds.Tables.Add(dt);
-        //        return ds;
-        //    }
-
-        //}
-
-        //public DataTable GetBySheetNames(string tableName, string path)
-        //{
-        //    List<string> tmp = new List<string>();
-        //    using (XLWorkbook ws = new XLWorkbook(path))
-        //    {
-        //        foreach (var item in ws.Worksheets)
-        //        {
-        //            tmp.Add(item.Name);
-        //        }
-        //    }
-        //    return tmp;
-        //}
+   
     }
 }
