@@ -48,15 +48,20 @@ namespace ComparisonLogic
         {
             mergedView = to.Copy();
             DeletedRowsAndTables();
+            string lastindex = to.Rows[0][0].ToString();
+            int lastMeRow = 0;
+
 
             foreach (DataRow toRow in to.Rows)
             {
+
                 bool exists = false;
+                string toI = toRow[RefColIndex].ToString();
                 foreach (DataRow coRow in compare.Rows)
                 {
-                    if (toRow[RefColIndex].ToString() == coRow[RefColIndex].ToString())
+                    if (toI == coRow[RefColIndex].ToString())
                     {
-
+                        lastindex = toI;
                         exists = true;
                         break;
                     }
@@ -64,11 +69,27 @@ namespace ComparisonLogic
                 }
                 if (!exists)
                 {
-                    mergedAddedRows.Add(to.Rows.IndexOf(toRow));
+
+                    for (int i = lastMeRow; i < mergedView.Rows.Count; i++)
+                    {
+                        if (mergedView.Rows[i][0].ToString() == lastindex)
+                        {
+
+                            mergedAddedRows.Add((i + 1));
+                            lastMeRow = to.Rows.IndexOf(toRow);
+                            lastindex = mergedView.Rows[i + 1][0].ToString();
+
+
+                            break;
+
+                        }
+                    }
+
                     toAddedRows.Add(to.Rows.IndexOf(toRow));
                 }
             }
         }
+
         private void DeletedRowsAndTables()
         {
             int numOfColumns = compare.Columns.Count;
@@ -94,7 +115,7 @@ namespace ComparisonLogic
                             {
                                 CoCells.Add(new Cell(compare.Rows.IndexOf(coRow), i));
                                 ToCells.Add(new Cell(lastCommonRecord, i));
-                                MeCells.Add(new Cell(lastCommonRecord, i));
+                                MeCells.Add(new Cell(lastCommonRecord + mergeIndex, i));
                             }
 
                         }
@@ -109,13 +130,11 @@ namespace ComparisonLogic
                     DataRow newRow = mergedView.NewRow();
                     newRow.ItemArray = coRow.ItemArray;
 
-                    compareDeletedRows.Add(compare.Rows.IndexOf(coRow));
                     mergeIndex++;
+                    mergedView.Rows.InsertAt(newRow, lastCommonRecord + mergeIndex);
 
-                    mergedDeletedRows.Add(compare.Rows.IndexOf(coRow) + mergeIndex);
-
-                    mergedView.Rows.InsertAt(newRow, lastCommonRecord + 1);
-
+                    compareDeletedRows.Add(compare.Rows.IndexOf(coRow));
+                    mergedDeletedRows.Add(lastCommonRecord+ mergeIndex);
                     lastCommonRecord++;
                 }
                 exists = false;
