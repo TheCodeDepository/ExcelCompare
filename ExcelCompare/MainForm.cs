@@ -21,7 +21,7 @@ namespace ExcelCompare
         public string docPathOne { get { return openFileControl1.FilePath; } }
         public string docPathTwo { get { return openFileControl2.FilePath; } }
         public string outputPath { get; private set; }
-        public SortMethod sortMethod { get; private set; }
+
 
 
         public MainForm()
@@ -30,11 +30,14 @@ namespace ExcelCompare
             openFileControl1._TextChanged += GetSheetNamesOne;
             openFileControl2._TextChanged += GetSheetNamesTwo;
           
-            sortMethod = SortMethod.RowByRow;
+            
             SideBySideGrid1.MouseWheel += ScrollSideOne;
+            
 
             compareHandler = CompareThreadCompleted;
             ctrl = new FormController(Compare_OnComplete);
+            ctrl._hasHeader = false;
+            
         }
         private void ScrollSideOne(object sender, MouseEventArgs e)
         {
@@ -49,8 +52,23 @@ namespace ExcelCompare
         }
         private void CompareBtn_Click(object sender, EventArgs e)
         {
+
             CompareBtn.Enabled = false;
-            ctrl.CompareThreadGo(SortMethod.RowByRow);
+            if (ctrl.AreColumnsEqual())
+            {
+                try
+                {
+                    ctrl.CompareThreadGo();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Please Ensure the tables start in the top right of the spreadsheet and contain atleast 2 columns and 2 rows. Spreadsheets must contain the same number of columns.");                    
+                }
+            }
+            else
+            {
+                MessageBox.Show("Columns are not equal, please ensure table column count is equal.");
+            }
         }
         private void Compare_OnComplete(object sender, EventArgs e)
         {
@@ -65,22 +83,23 @@ namespace ExcelCompare
         }
         private void GetSheetNamesOne(object sender, EventArgs e)
         {
-            if (!File.Exists(this.docPathOne))
+            if (!File.Exists(docPathOne))
                 return;
-            docOneSheetsList.Items.Clear();
-            if (Path.GetExtension(this.docPathOne) == ".xlsx")
+            coSheetsCb.Items.Clear();
+            if (Path.GetExtension(docPathOne) == ".xlsx")
             {
-                docOneSheetsList.Enabled = true;
-                ctrl.workbookOne = this.ctrl.GetWorkBook(docPathOne);
+                coSheetsCb.Enabled = true;
+                ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
                 foreach (DataTable table in ctrl.workbookOne.Tables)
                 {
-                    docOneSheetsList.Items.Add(table.TableName);
+                    coSheetsCb.Items.Add(table.TableName);
                 }
+                coSheetsCb.SelectedIndex = 0;
             }
             else
             {
-                docOneSheetsList.Enabled = false;
-                docOneSheetsList.Items.Add("CSV file selected");
+                coSheetsCb.Enabled = false;
+                coSheetsCb.Items.Add("CSV file selected");
                 ctrl.tableOne = ctrl.GetDataTable(docPathOne);
             }
         }
@@ -90,20 +109,22 @@ namespace ExcelCompare
             {
                 return;
             }
-            docTwoSheetsList.Items.Clear();
+            toSheetsCb.Items.Clear();
             if (Path.GetExtension(docPathTwo) == ".xlsx")
             {
-                docTwoSheetsList.Enabled = true;
+                toSheetsCb.Enabled = true;
                 ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
                 foreach (DataTable table in ctrl.workbookTwo.Tables)
                 {
-                    docTwoSheetsList.Items.Add((object)table.TableName);
+                    toSheetsCb.Items.Add(table.TableName);
                 }
+                toSheetsCb.SelectedIndex = 0;
+
             }
             else
             {
-                docTwoSheetsList.Enabled = false;
-                docTwoSheetsList.Items.Add("CSV file selected");
+                toSheetsCb.Enabled = false;
+                toSheetsCb.Items.Add("CSV file selected");
                 ctrl.tableTwo = ctrl.GetDataTable(docPathTwo);
             }
         }
@@ -138,34 +159,26 @@ namespace ExcelCompare
                 }
             }
         }
-        private void docOneSheetsList_SelectedIndexChanged(object sender, EventArgs e)
+        private void coSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (docOneSheetsList.SelectedIndex > -1)
+            if (coSheetsCb.SelectedIndex > -1)
             {
-                ctrl.tableOne = ctrl.GetTableByIndex(docOneSheetsList.SelectedIndex, ctrl.workbookOne);
+                ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
                 CheckSelections();
             }
         }
-        private void docTwoSheetsList_SelectedIndexChanged(object sender, EventArgs e)
+        private void toSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (docTwoSheetsList.SelectedIndex > -1)
+            if (toSheetsCb.SelectedIndex > -1)
             {
-                ctrl.tableTwo = ctrl.GetTableByIndex(docTwoSheetsList.SelectedIndex, ctrl.workbookTwo);
+                ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
                 CheckSelections();
             }
         }
-
         private void CompareThreadCompleted()
         {
-
-            if (ctrl.diffrenceCount < 0)
-            {
-                MessageBox.Show("There are no differences between the two documents");
-            }
-
             PushTablesToView();
             CompareBtn.Enabled = true;
-
         }
         private void PushTablesToView()
         {
@@ -180,15 +193,15 @@ namespace ExcelCompare
         {
             MergedViewGrid.DataSource = ctrl.mergedView;
 
-            switch (sortMethod)
+            switch (ctrl.sortMethod)
             {
                 case SortMethod.CellbyCell:
                     ProcessDifferences(MergedViewGrid, ctrl.DiffLocations);
                     break;
                 case SortMethod.RowByRow:
-                    ProcessDeletedRows(MergedViewGrid, ctrl.differencesID.meDeletedRows);
-                    ProcessNewRows(MergedViewGrid, ctrl.differencesID.meAddedRows);
-                    ProcessDifferences(MergedViewGrid, ctrl.differencesID.meCells);
+                    ProcessDeletedRows(MergedViewGrid, ctrl.ViewContext.meDeletedRows);
+                    ProcessNewRows(MergedViewGrid, ctrl.ViewContext.meAddedRows);
+                    ProcessDifferences(MergedViewGrid, ctrl.ViewContext.meCells);
                     break;
                 default:
                     break;
@@ -201,7 +214,7 @@ namespace ExcelCompare
             SideBySideGrid2.DataSource = ctrl.tableTwo;
             
 
-            switch (sortMethod)
+            switch (ctrl.sortMethod)
             {
                 case SortMethod.CellbyCell:
                     ProcessDifferences(SideBySideGrid1, ctrl.DiffLocations);
@@ -209,12 +222,12 @@ namespace ExcelCompare
                     break;
                 case SortMethod.RowByRow:
                     SideBySideGrid1.DataSource = ctrl.tableOne;
-                    ProcessDeletedRows(SideBySideGrid1, ctrl.differencesID.DeletedRows);
-                    ProcessDifferences(SideBySideGrid1, ctrl.differencesID.coCells);
+                    ProcessDeletedRows(SideBySideGrid1, ctrl.ViewContext.DeletedRows);
+                    ProcessDifferences(SideBySideGrid1, ctrl.ViewContext.coCells);
 
                     SideBySideGrid2.DataSource = ctrl.tableTwo;
-                    ProcessNewRows(SideBySideGrid2, ctrl.differencesID.AddedRows);
-                    ProcessDifferences(SideBySideGrid2, ctrl.differencesID.toCells);
+                    ProcessNewRows(SideBySideGrid2, ctrl.ViewContext.AddedRows);
+                    ProcessDifferences(SideBySideGrid2, ctrl.ViewContext.toCells);
                     break;
                 default:
                     break;
@@ -258,37 +271,30 @@ namespace ExcelCompare
         }
         private void QueryUserReport()
         {
-
-            MessageBox.Show(string.Format("There are {0} inconsistent cells.", ctrl.diffrenceCount));
-            if (!genSpreadcBox.Checked)
+            if (genSpreadcBox.Checked)
             {
-                return;
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    outputPath = saveFileDialog.FileName;
+                    switch (ctrl.sortMethod)
+                    {
+                        case SortMethod.CellbyCell:
+                            ctrl.ExportMergedTable(outputPath);
+                            break;
+                        case SortMethod.RowByRow:
+                            ctrl.ExportMergedTableWithRowData(outputPath);
+                            break;
+                        default:
+                            break;
+                    }
+                    if (openSpeadcBox.Checked)
+                    {
+                        System.Diagnostics.Process.Start(outputPath);
+                    }
+                }
             }
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            outputPath = saveFileDialog.FileName;
-            switch (sortMethod)
-            {
-                case SortMethod.CellbyCell:
-                    ctrl.ExportMergedTable(outputPath);
-                    break;
-                case SortMethod.RowByRow:
-                    ctrl.ExportMergedTableWithRowData(outputPath);
-                    break;
-                default:
-                    break;
-            }
-            if (openSpeadcBox.Checked)
-            {
-                System.Diagnostics.Process.Start(outputPath);
-            }
-
         }
         private void ProcessDifferences(DataGridView ResultView, ICollection<Cell> collection)
         {
@@ -326,6 +332,57 @@ namespace ExcelCompare
         {
             if (ctrl.tableOne != null && ctrl.tableTwo != null)
             {
+                sortModeCb.Enabled = true;
+            }
+            else
+            {
+                sortModeCb.Enabled = false;
+            }
+        }
+
+        private void sortModeCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch ((SortMethod)sortModeCb.SelectedIndex)
+            {
+                case SortMethod.CellbyCell:
+                    CompareBtn.Enabled = true;
+                    uniqueIdColCb.Visible = false;
+                    idLbl.Visible = false;
+                    break;
+                case SortMethod.RowByRow:
+                    CompareBtn.Enabled = false;
+                    ColumnNamesforUID();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ColumnNamesforUID()
+        {
+
+            if (sortModeCb.SelectedIndex > -1)
+            {
+                ctrl.sortMethod = (SortMethod)sortModeCb.SelectedIndex;
+            }
+            if (ctrl.sortMethod == SortMethod.RowByRow)
+            {
+                uniqueIdColCb.Items.Clear();
+                uniqueIdColCb.Visible = true;
+                idLbl.Visible = true;
+                foreach (DataColumn item in ctrl.tableOne.Columns)
+                {
+                    uniqueIdColCb.Items.Add(item.ColumnName);
+                }
+                uniqueIdColCb.SelectedIndex = 0;
+            }
+
+        }
+
+        private void uniqueIdColCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (uniqueIdColCb.SelectedIndex > -1)
+            {
                 CompareBtn.Enabled = true;
             }
             else
@@ -334,5 +391,31 @@ namespace ExcelCompare
             }
         }
 
+        private void hasHeader_CheckedChanged(object sender, EventArgs e)
+        {
+            ctrl._hasHeader = hasHeader.Checked;
+
+            if (ctrl.workbookOne != null)
+            {
+                ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
+                ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
+
+            }
+            if (ctrl.workbookTwo != null)
+            {
+                ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+                ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
+            }
+            ColumnNamesforUID();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (!ctrl.ValidateDomain())
+            {
+                MessageBox.Show("You are not registered to company domain, please contain your system administrator.","Error",MessageBoxButtons.OK);
+                Application.Exit();
+            }
+        }
     }
 }

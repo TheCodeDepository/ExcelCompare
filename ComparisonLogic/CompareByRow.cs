@@ -69,19 +69,14 @@ namespace ComparisonLogic
                 }
                 if (!exists)
                 {
-
                     for (int i = lastMeRow; i < mergedView.Rows.Count; i++)
                     {
                         if (mergedView.Rows[i][0].ToString() == lastindex)
                         {
-
                             mergedAddedRows.Add((i + 1));
                             lastMeRow = to.Rows.IndexOf(toRow);
                             lastindex = mergedView.Rows[i + 1][0].ToString();
-
-
                             break;
-
                         }
                     }
 
@@ -132,9 +127,9 @@ namespace ComparisonLogic
 
                     mergeIndex++;
                     mergedView.Rows.InsertAt(newRow, lastCommonRecord + mergeIndex);
+                    mergedDeletedRows.Add(lastCommonRecord + mergeIndex);
 
                     compareDeletedRows.Add(compare.Rows.IndexOf(coRow));
-                    mergedDeletedRows.Add(lastCommonRecord+ mergeIndex);
                     lastCommonRecord++;
                 }
                 exists = false;

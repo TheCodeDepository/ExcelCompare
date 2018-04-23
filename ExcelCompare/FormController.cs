@@ -6,32 +6,57 @@ using System.Threading;
 using ComparisonLogic;
 using SpreadsheetImporter;
 using SpreadsheetLogic;
+using System.DirectoryServices.AccountManagement;
 
 namespace ExcelCompare
 {
     public class FormController
     {
-
+        public (ICollection<Cell> coCells,
+        ICollection<Cell> toCells,
+        ICollection<Cell> meCells,
+        ICollection<int> DeletedRows,
+        ICollection<int> AddedRows,
+        ICollection<int> meDeletedRows,
+        ICollection<int> meAddedRows) ViewContext
+        { get; private set; }
         public DataSet workbookOne { get; set; }
         public DataSet workbookTwo { get; set; }
         public DataTable mergedView { get; set; }
-        public bool GenerateSpreadsheet { get; set; }
-        public bool OpenSpreadsheet { get; set; }
         public DataTable tableOne { get; set; }
         public DataTable tableTwo { get; set; }
         public int diffrenceCount { get; private set; }
         public ICollection<Cell> DiffLocations { get; private set; }
 
-        public (ICollection<Cell> coCells,
-                ICollection<Cell> toCells,
-                ICollection<Cell> meCells,
-                ICollection<int> DeletedRows,
-                ICollection<int> AddedRows,
-                ICollection<int> meDeletedRows,
-                ICollection<int> meAddedRows)
-            differencesID
-        { get; private set; }
-        public int idIndex { get; private set; }
+
+        public bool _hasHeader
+        {
+            get { return Properties.Settings.Default.hasHeader; }
+            set { Properties.Settings.Default.hasHeader = value; }
+        }
+        public bool GenerateSpreadsheet
+        {
+            get { return Properties.Settings.Default.generateSpreadsheet; }
+            set { Properties.Settings.Default.generateSpreadsheet = value; }
+        }
+        public bool OpenSpreadsheet
+        {
+            get { return Properties.Settings.Default.openSpreadsheet; }
+            set { Properties.Settings.Default.openSpreadsheet = value; }
+        }
+        public SortMethod sortMethod {
+            get { return (SortMethod)Properties.Settings.Default.mode; }
+            set { Properties.Settings.Default.mode = (int)value; }
+        }
+
+        internal bool AreColumnsEqual()
+        {
+            if (tableOne.Columns.Count == tableTwo.Columns.Count)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public FormController(EventHandler<EventArgs> _compareComplete)
         {
@@ -44,9 +69,9 @@ namespace ExcelCompare
         private event EventHandler<EventArgs> CompareComplete;
 
 
-        public void CompareThreadGo(SortMethod method)
+        public void CompareThreadGo()
         {
-            switch (method)
+            switch (sortMethod)
             {
                 case SortMethod.CellbyCell:
                     backgroundThread = new Thread(new ThreadStart(CompareTables));
@@ -66,9 +91,16 @@ namespace ExcelCompare
         internal DataSet GetWorkBook(string path)
         {
             TableImport imp = new TableImport();
-            imp.HasHeader = true;
+            imp.HasHeader = _hasHeader;
             DataSet wb = imp.GetDataSet(path);
             return wb;
+        }
+        internal DataTable GetDataTable(string docPathOne)
+        {
+            TableImport imp = new TableImport();
+            imp.HasHeader = _hasHeader;
+            var tmp = imp.GetDataSet(docPathOne);
+            return tmp.Tables[0];
         }
 
         internal void CompareTables()
@@ -88,15 +120,21 @@ namespace ExcelCompare
 
         internal void CompareTableRows()
         {
-            if (tableOne != null && tableTwo != null)
+            if (tableOne.Columns.Count == tableTwo.Columns.Count)
             {
-                CompareByRow comp = new CompareByRow(tableOne, tableTwo, 0);
-                comp.CompareTables();
-                differencesID = (comp.CoCells, comp.ToCells, comp.MeCells, comp.compareDeletedRows, comp.toAddedRows, comp.mergedDeletedRows, comp.mergedAddedRows);             
-                mergedView = comp.mergedView;
-                diffrenceCount = differencesID.toCells.Count;
-                CompareComplete(this, EventArgs.Empty);
+                if (tableOne != null && tableTwo != null)
+                {
+                    CompareByRow comp = new CompareByRow(tableOne, tableTwo, 0);
+                    comp.CompareTables();
+                    ViewContext = (comp.CoCells, comp.ToCells, comp.MeCells, comp.compareDeletedRows, comp.toAddedRows, comp.mergedDeletedRows, comp.mergedAddedRows);
+                    mergedView = comp.mergedView;
+                    diffrenceCount = ViewContext.toCells.Count;
+                    CompareComplete(this, EventArgs.Empty);
+                    
+                }
             }
+
+            
         }
 
 
@@ -112,20 +150,43 @@ namespace ExcelCompare
             return workbook.Tables[index];
         }
 
-        internal DataTable GetDataTable(string docPathOne)
-        {
-            TableImport imp = new TableImport();
-            imp.HasHeader = true;
-            var tmp = imp.GetDataSet(docPathOne);
-            return tmp.Tables[0];
-        }
+
 
         internal void ExportMergedTableWithRowData(string outputPath)
         {
             TableExport tableExport = new TableExport(outputPath, mergedView);
-            tableExport.Cells = differencesID.meCells;
-            tableExport.ExportXlsxWithColorCoding(differencesID.meDeletedRows, differencesID.meAddedRows);
-      
+            tableExport.Cells = ViewContext.meCells;
+            tableExport.ExportXlsxWithColorCoding(ViewContext.meDeletedRows, ViewContext.meAddedRows);
+
+        }
+
+        internal bool ValidateDomain()
+        {
+
+            bool isValid = false;
+            try
+            {
+
+                using (var domainContext = new PrincipalContext(ContextType.Domain, "britsoft.co.uk"))
+                {
+                    using (var foundUser = UserPrincipal.FindByIdentity(domainContext, IdentityType.SamAccountName, Environment.UserName))
+                    {
+                        if (foundUser != null)
+                        {
+                            isValid = true;
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+
+            }
+            return isValid;
+
         }
     }
     public enum SortMethod

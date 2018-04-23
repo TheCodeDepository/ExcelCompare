@@ -173,15 +173,21 @@ namespace SpreadsheetImporter
 
                     foreach (Cell cell in Cells)
                     {
-                        wb.Worksheets.Worksheet(ws.Name).Cell((cell.x + 2), (cell.y + 1)).Style.Fill.BackgroundColor = XLColor.ForestGreen;
+                        wb.Worksheets.Worksheet(ws.Name).Cell((cell.x + 2), (cell.y + 1)).Style.Fill.BackgroundColor = XLColor.Orange;
                     }
                     foreach (var item in meDeletedRows)
                     {
-                        wb.Worksheets.Worksheet(ws.Name).Row(item).Style.Fill.BackgroundColor = XLColor.Orange;
+                        for (int i = 1; i <= workbook.Tables[0].Columns.Count; i++)
+                        {
+                            wb.Worksheets.Worksheet(ws.Name).Cell(item + 2, i).Style.Fill.BackgroundColor = XLColor.Red;
+                        }
                     }
                     foreach (var item in meAddedRows)
                     {
-                        wb.Worksheets.Worksheet(ws.Name).Row(item).Style.Fill.BackgroundColor = XLColor.Green;
+                        for (int i = 1; i <= workbook.Tables[0].Columns.Count; i++)
+                        {
+                            wb.Worksheets.Worksheet(ws.Name).Cell(item + 2, i).Style.Fill.BackgroundColor = XLColor.Green; 
+                        }
 
                     }
 

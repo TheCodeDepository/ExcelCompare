@@ -76,31 +76,57 @@ namespace SpreadsheetImporter
                 foreach (IXLWorksheet workSheet in ws.Worksheets)
                 {
 
-                    bool hasHeader = HasHeader;
+                     
                     bool nullTable = false;
                     //Create a new DataTable.
                     DataTable dt = new DataTable(workSheet.Name);
                     //Loop through the Worksheet rows.
+
+                    if (!HasHeader)
+                    {
+                        for (int i = 0; i < workSheet.ColumnsUsed().Count(); i++)
+                        {
+                            dt.Columns.Add($"Column{i}");
+                        }
+                    }
+
                     foreach (IXLRow row in workSheet.Rows())
                     {
 
                         //Use the first row to add columns to DataTable.
-                        if (hasHeader)
+                        if (HasHeader)
                         {
                             if (row.Cells().Count() < 2 || workSheet.RowsUsed().Count() < 2)
                             {
 
                                 nullTable = true;
                                 break;
-
-
-
                             }
-                            foreach (IXLCell cell in row.Cells())
+                            for (int i = 1; i <= workSheet.ColumnsUsed().Count(); i++)
                             {
-                                dt.Columns.Add(cell.Value.ToString());
+
+                                if (i <= row.CellsUsed().Count())
+                                {
+                                    dt.Columns.Add(row.Cell(i).Value.ToString());
+                                }
+                                else
+                                {
+                                    dt.Columns.Add($"Filler {i}");
+                                }
                             }
-                            hasHeader = false;
+                            //foreach (IXLCell cell in row.Cells())
+                            //{
+                            //    if (cell.Value.ToString().Length < 0)
+                            //    {
+                            //        dt.Columns.Add(cell.Value.ToString());
+
+                            //    }
+                            //    else
+                            //    {
+                            //        dt.Columns.Add(cell.Value.ToString());
+                            //    }
+                            //}
+                            HasHeader = false;
                         }
                         else
                         {
