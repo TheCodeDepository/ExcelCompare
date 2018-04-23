@@ -29,7 +29,7 @@ namespace ExcelCompare
         public ICollection<Cell> DiffLocations { get; private set; }
 
 
-        public bool _hasHeader
+        public bool hasHeader
         {
             get { return Properties.Settings.Default.hasHeader; }
             set { Properties.Settings.Default.hasHeader = value; }
@@ -44,9 +44,10 @@ namespace ExcelCompare
             get { return Properties.Settings.Default.openSpreadsheet; }
             set { Properties.Settings.Default.openSpreadsheet = value; }
         }
-        public SortMethod sortMethod {
-            get { return (SortMethod)Properties.Settings.Default.mode; }
-            set { Properties.Settings.Default.mode = (int)value; }
+        public SortMethod sortMethod
+        {
+            get;
+            set;
         }
 
         internal bool AreColumnsEqual()
@@ -91,14 +92,14 @@ namespace ExcelCompare
         internal DataSet GetWorkBook(string path)
         {
             TableImport imp = new TableImport();
-            imp.HasHeader = _hasHeader;
+            imp.HasHeader = hasHeader;
             DataSet wb = imp.GetDataSet(path);
             return wb;
         }
         internal DataTable GetDataTable(string docPathOne)
         {
             TableImport imp = new TableImport();
-            imp.HasHeader = _hasHeader;
+            imp.HasHeader = hasHeader;
             var tmp = imp.GetDataSet(docPathOne);
             return tmp.Tables[0];
         }
@@ -130,11 +131,11 @@ namespace ExcelCompare
                     mergedView = comp.mergedView;
                     diffrenceCount = ViewContext.toCells.Count;
                     CompareComplete(this, EventArgs.Empty);
-                    
+
                 }
             }
 
-            
+
         }
 
 
@@ -187,6 +188,11 @@ namespace ExcelCompare
             }
             return isValid;
 
+        }
+
+        internal void SaveConfig()
+        {
+            Properties.Settings.Default.Save();
         }
     }
     public enum SortMethod

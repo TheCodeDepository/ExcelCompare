@@ -36,7 +36,10 @@ namespace ExcelCompare
 
             compareHandler = CompareThreadCompleted;
             ctrl = new FormController(Compare_OnComplete);
-            ctrl._hasHeader = false;
+            hasHeader.Checked = ctrl.hasHeader;
+            sortModeCb.SelectedIndex = (int)ctrl.sortMethod;
+            genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
+            openSpeadcBox.Checked = ctrl.OpenSpreadsheet;
             
         }
         private void ScrollSideOne(object sender, MouseEventArgs e)
@@ -309,7 +312,9 @@ namespace ExcelCompare
         }
         private void genSpreadcBox_CheckedChanged(object sender, EventArgs e)
         {
-            switch (genSpreadcBox.Checked)
+            ctrl.GenerateSpreadsheet = genSpreadcBox.Checked;
+
+            switch (ctrl.GenerateSpreadsheet)
             {
                 case true:
                     openSpeadcBox.Enabled = true;
@@ -320,6 +325,10 @@ namespace ExcelCompare
                     break;
             }
 
+        }
+        private void openSpeadcBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ctrl.OpenSpreadsheet = openSpeadcBox.Checked;
         }
         private void DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -393,7 +402,7 @@ namespace ExcelCompare
 
         private void hasHeader_CheckedChanged(object sender, EventArgs e)
         {
-            ctrl._hasHeader = hasHeader.Checked;
+            ctrl.hasHeader = hasHeader.Checked;
 
             if (ctrl.workbookOne != null)
             {
@@ -416,6 +425,11 @@ namespace ExcelCompare
                 MessageBox.Show("You are not registered to company domain, please contain your system administrator.","Error",MessageBoxButtons.OK);
                 Application.Exit();
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctrl.SaveConfig();
         }
     }
 }
