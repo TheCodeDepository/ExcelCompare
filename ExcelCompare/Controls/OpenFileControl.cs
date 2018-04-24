@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework;
+using System.IO;
 
 namespace ExcelCompare
 {
@@ -37,23 +38,43 @@ namespace ExcelCompare
         public event EventHandler _TextChanged;
         private void path_TextChanged(object sender, EventArgs e)
         {
-            if (_TextChanged!=null)
+            if (_TextChanged != null)
             {
                 _TextChanged(this, e);
-            }      
+            }
 
-            
+
         }
 
         private void OpenDialog_Click(object sender, EventArgs e)
         {
+            bool retry = false;
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Supported Types|*.xlsx;*.csv;*.txt|Excel files (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv|Fixed-Width files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.Filter = "Supported Types|*.xlsx;*.csv;*.txt|Excel files (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv";
             openFileDialog.Multiselect = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            do
             {
-                FilePath = openFileDialog.FileName;
-            }
+                retry = false;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string ext = Path.GetExtension(openFileDialog.FileName).ToLower();
+                    if (ext == ".xlsx" || ext == ".csv")
+                    {
+                        FilePath = openFileDialog.FileName;
+
+                    }
+                    else
+                    {
+                        var mess = MessageBox.Show("Invalid file type", "Error", MessageBoxButtons.RetryCancel);
+                        if (mess == DialogResult.Retry)
+                        {
+                            retry = true;
+                        }
+                    }
+                }
+            } while (retry);
+
         }
     }
 }
