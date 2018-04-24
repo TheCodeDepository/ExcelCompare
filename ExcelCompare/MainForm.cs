@@ -1,76 +1,83 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using System.Threading;
-using System.Collections;
-using SpreadsheetLogic;
-using System.Collections.Generic;
 
 namespace ExcelCompare
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
     {
         private FormController ctrl;
+        private GridViewController view;
 
-        public delegate void CompareComplete();
+        private delegate void CompareComplete();
         CompareComplete compareHandler;
 
         public string docPathOne { get { return openFileControl1.FilePath; } }
         public string docPathTwo { get { return openFileControl2.FilePath; } }
         public string outputPath { get; private set; }
 
-
-
         public MainForm()
         {
             InitializeComponent();
             openFileControl1._TextChanged += GetSheetNamesOne;
             openFileControl2._TextChanged += GetSheetNamesTwo;
-          
-            
-            SideBySideGrid1.MouseWheel += ScrollSideOne;
-            
-
+            coViewGrid.MouseWheel += ScrollSideOne;
             compareHandler = CompareThreadCompleted;
             ctrl = new FormController(Compare_OnComplete);
             hasHeader.Checked = ctrl.hasHeader;
+
             sortModeCb.SelectedIndex = (int)ctrl.sortMethod;
             genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
             openSpeadcBox.Checked = ctrl.OpenSpreadsheet;
-            
+
+        }
+        private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ctrl != null)
+            {
+                switch (sheetController.SelectedIndex)
+                {
+                    case 0:
+                        view.PushMerged();
+                        break;
+                    case 1:
+                        view.PushSideBySide();
+                        break;
+
+                }
+            }
         }
         private void ScrollSideOne(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0 && SideBySideGrid1.FirstDisplayedScrollingRowIndex > 0)
+            if (e.Delta > 0 && coViewGrid.FirstDisplayedScrollingRowIndex > 0)
             {
-                SideBySideGrid1.FirstDisplayedScrollingRowIndex--;
+                coViewGrid.FirstDisplayedScrollingRowIndex--;
             }
             else if (e.Delta < 0)
             {
-                SideBySideGrid1.FirstDisplayedScrollingRowIndex++;
+                coViewGrid.FirstDisplayedScrollingRowIndex++;
             }
         }
         private void CompareBtn_Click(object sender, EventArgs e)
         {
 
             CompareBtn.Enabled = false;
-            if (ctrl.AreColumnsEqual())
+            if (ctrl.AreTablesValid())
             {
+                ctrl.CompareThreadGo();
+
                 try
                 {
-                    ctrl.CompareThreadGo();
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Please Ensure the tables start in the top right of the spreadsheet and contain atleast 2 columns and 2 rows. Spreadsheets must contain the same number of columns.");                    
+                    MessageBox.Show("Please Ensure the tables start in the top right of the spreadsheet and contain atleast 2 columns and 2 rows. Spreadsheets must contain the same number of columns.");
                 }
             }
             else
             {
-                MessageBox.Show("Columns are not equal, please ensure table column count is equal.");
+                MessageBox.Show("Invalid Tables. Please ensure tables have the same number of columns. Tables Should contain more than one Column and Row.");
             }
         }
         private void Compare_OnComplete(object sender, EventArgs e)
@@ -103,7 +110,8 @@ namespace ExcelCompare
             {
                 coSheetsCb.Enabled = false;
                 coSheetsCb.Items.Add("CSV file selected");
-                ctrl.tableOne = ctrl.GetDataTable(docPathOne);
+                ctrl.tableOne = ctrl.ReturnFirstDataTable(docPathOne);
+                CheckSelections();
             }
         }
         private void GetSheetNamesTwo(object sender, EventArgs e)
@@ -128,39 +136,19 @@ namespace ExcelCompare
             {
                 toSheetsCb.Enabled = false;
                 toSheetsCb.Items.Add("CSV file selected");
-                ctrl.tableTwo = ctrl.GetDataTable(docPathTwo);
+                ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
+                CheckSelections();
             }
         }
         private void SideBySideGrid1_Scroll(object sender, ScrollEventArgs e)
         {
-            this.SideBySideGrid2.FirstDisplayedScrollingRowIndex = this.SideBySideGrid1.FirstDisplayedScrollingRowIndex;
-            this.SideBySideGrid2.HorizontalScrollingOffset = this.SideBySideGrid1.HorizontalScrollingOffset;
+            this.toViewGrid.FirstDisplayedScrollingRowIndex = this.coViewGrid.FirstDisplayedScrollingRowIndex;
+            this.toViewGrid.HorizontalScrollingOffset = this.coViewGrid.HorizontalScrollingOffset;
         }
         private void SideBySideGrid2_Scroll(object sender, ScrollEventArgs e)
         {
-            this.SideBySideGrid1.FirstDisplayedScrollingRowIndex = this.SideBySideGrid2.FirstDisplayedScrollingRowIndex;
-            this.SideBySideGrid1.HorizontalScrollingOffset = this.SideBySideGrid2.HorizontalScrollingOffset;
-        }
-        private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ctrl != null)
-            {
-                if (ctrl.diffrenceCount > 0)
-                {
-                    switch (sheetController.SelectedIndex)
-                    {
-                        case 0:
-                            PushMergedDifferences();
-                            break;
-                        case 1:
-                            PushSideBySide();
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
+            this.coViewGrid.FirstDisplayedScrollingRowIndex = this.toViewGrid.FirstDisplayedScrollingRowIndex;
+            this.coViewGrid.HorizontalScrollingOffset = this.toViewGrid.HorizontalScrollingOffset;
         }
         private void coSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -180,134 +168,29 @@ namespace ExcelCompare
         }
         private void CompareThreadCompleted()
         {
-            PushTablesToView();
-            CompareBtn.Enabled = true;
-        }
-        private void PushTablesToView()
-        {
-            PushMergedDifferences();
-            PushSideBySide();
-            SetGridViewSortState(MergedViewGrid, DataGridViewColumnSortMode.NotSortable);
-            SetGridViewSortState(SideBySideGrid1, DataGridViewColumnSortMode.NotSortable);
-            SetGridViewSortState(SideBySideGrid2, DataGridViewColumnSortMode.NotSortable);
+            meViewGrid.DataSource = ctrl.mergedView;
+            coViewGrid.DataSource = ctrl.tableOne;
+            toViewGrid.DataSource = ctrl.tableTwo;
+            view = new GridViewController(meViewGrid,coViewGrid,toViewGrid,ctrl.resultContext);
+            view.PushTablesToView();
             QueryUserReport();
-        }
-        private void PushMergedDifferences()
-        {
-            MergedViewGrid.DataSource = ctrl.mergedView;
-
-            switch (ctrl.sortMethod)
-            {
-                case SortMethod.CellbyCell:
-                    ProcessDifferences(MergedViewGrid, ctrl.DiffLocations);
-                    break;
-                case SortMethod.RowByRow:
-                    ProcessDeletedRows(MergedViewGrid, ctrl.ViewContext.meDeletedRows);
-                    ProcessNewRows(MergedViewGrid, ctrl.ViewContext.meAddedRows);
-                    ProcessDifferences(MergedViewGrid, ctrl.ViewContext.meCells);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-        private void PushSideBySide()
-        {
-            SideBySideGrid1.DataSource = ctrl.tableOne;
-            SideBySideGrid2.DataSource = ctrl.tableTwo;
-            
-
-            switch (ctrl.sortMethod)
-            {
-                case SortMethod.CellbyCell:
-                    ProcessDifferences(SideBySideGrid1, ctrl.DiffLocations);
-                    ProcessDifferences(SideBySideGrid2, ctrl.DiffLocations);
-                    break;
-                case SortMethod.RowByRow:
-                    SideBySideGrid1.DataSource = ctrl.tableOne;
-                    ProcessDeletedRows(SideBySideGrid1, ctrl.ViewContext.DeletedRows);
-                    ProcessDifferences(SideBySideGrid1, ctrl.ViewContext.coCells);
-
-                    SideBySideGrid2.DataSource = ctrl.tableTwo;
-                    ProcessNewRows(SideBySideGrid2, ctrl.ViewContext.AddedRows);
-                    ProcessDifferences(SideBySideGrid2, ctrl.ViewContext.toCells);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-        private void ProcessNewRows(DataGridView grid, ICollection<int> indexList)
-        {
-            DataGridViewCellStyle diffStyle = new DataGridViewCellStyle();
-            diffStyle.BackColor = Color.Green;
-            diffStyle.ForeColor = Color.White;
-            foreach (int item in indexList)
-            {
-                for (int i = 0; i < grid.ColumnCount; i++)
-                {
-                    grid.Rows[item].Cells[i].Style = diffStyle;
-                }
-
-            }
-        }
-        private void ProcessDeletedRows(DataGridView grid, ICollection<int> indexList)
-        {
-            DataGridViewCellStyle diffStyle = new DataGridViewCellStyle();
-            diffStyle.BackColor = Color.Red;
-            diffStyle.ForeColor = Color.White;
-            foreach (int item in indexList)
-            {
-                for (int i = 0; i < grid.ColumnCount; i++)
-                {
-                    grid.Rows[item].Cells[i].Style = diffStyle;
-                }
-
-            }
-        }
-        public void SetGridViewSortState(DataGridView dgv, DataGridViewColumnSortMode sortMode)
-        {
-            foreach (DataGridViewColumn col in dgv.Columns)
-            {
-                col.SortMode = sortMode;
-            }
-        }
+            CompareBtn.Enabled = true;
+        }       
         private void QueryUserReport()
         {
             if (genSpreadcBox.Checked)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv";     
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = saveFileDialog.FileName;
-                    switch (ctrl.sortMethod)
-                    {
-                        case SortMethod.CellbyCell:
-                            ctrl.ExportMergedTable(outputPath);
-                            break;
-                        case SortMethod.RowByRow:
-                            ctrl.ExportMergedTableWithRowData(outputPath);
-                            break;
-                        default:
-                            break;
-                    }
+                    ctrl.ExportMergedTable(outputPath);
                     if (openSpeadcBox.Checked)
                     {
                         System.Diagnostics.Process.Start(outputPath);
                     }
                 }
-            }
-        }
-        private void ProcessDifferences(DataGridView ResultView, ICollection<Cell> collection)
-        {
-            DataGridViewCellStyle diffStyle = new DataGridViewCellStyle();
-            diffStyle.BackColor = Color.Orange;
-            diffStyle.ForeColor = Color.Black;
-
-            foreach (var item in collection)
-            {
-                ResultView.Rows[item.x].Cells[item.y].Style = diffStyle;
             }
         }
         private void genSpreadcBox_CheckedChanged(object sender, EventArgs e)
@@ -332,13 +215,15 @@ namespace ExcelCompare
         }
         private void DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            MergedViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            SideBySideGrid1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            SideBySideGrid2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            meViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            coViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            toViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
         }
         private void CheckSelections()
         {
+
+
             if (ctrl.tableOne != null && ctrl.tableTwo != null)
             {
                 sortModeCb.Enabled = true;
@@ -348,8 +233,11 @@ namespace ExcelCompare
                 sortModeCb.Enabled = false;
             }
         }
-
         private void sortModeCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckSortMethod();
+        }
+        private void CheckSortMethod()
         {
             switch ((SortMethod)sortModeCb.SelectedIndex)
             {
@@ -362,11 +250,8 @@ namespace ExcelCompare
                     CompareBtn.Enabled = false;
                     ColumnNamesforUID();
                     break;
-                default:
-                    break;
             }
         }
-
         private void ColumnNamesforUID()
         {
 
@@ -376,6 +261,7 @@ namespace ExcelCompare
             }
             if (ctrl.sortMethod == SortMethod.RowByRow)
             {
+
                 uniqueIdColCb.Items.Clear();
                 uniqueIdColCb.Visible = true;
                 idLbl.Visible = true;
@@ -383,11 +269,14 @@ namespace ExcelCompare
                 {
                     uniqueIdColCb.Items.Add(item.ColumnName);
                 }
-                uniqueIdColCb.SelectedIndex = 0;
+                if (uniqueIdColCb.Items.Count > 0)
+                {
+                    uniqueIdColCb.SelectedIndex = 0;
+                }
+
             }
 
         }
-
         private void uniqueIdColCb_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (uniqueIdColCb.SelectedIndex > -1)
@@ -399,34 +288,47 @@ namespace ExcelCompare
                 CompareBtn.Enabled = false;
             }
         }
-
         private void hasHeader_CheckedChanged(object sender, EventArgs e)
         {
             ctrl.hasHeader = hasHeader.Checked;
-
             if (ctrl.workbookOne != null)
             {
                 ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
-                ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
+                if (Path.GetExtension(docPathOne).ToLower() == ".xlsx")
+                {
+                    ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
+
+                }
+                else
+                {
+                    ctrl.tableOne = ctrl.ReturnFirstDataTable(docPathOne);
+                }
 
             }
             if (ctrl.workbookTwo != null)
             {
                 ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
-                ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
+                if (Path.GetExtension(docPathTwo).ToLower() == ".xlsx")
+                {
+                    ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
+
+                }
+                else
+                {
+                    ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
+
+                }
             }
             ColumnNamesforUID();
         }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (!ctrl.ValidateDomain())
+            if (!ctrl.isValidDomain())
             {
-                MessageBox.Show("You are not registered to company domain, please contain your system administrator.","Error",MessageBoxButtons.OK);
+                MessageBox.Show("You are not registered to company domain, please contain your system administrator.", "Error", MessageBoxButtons.OK);
                 Application.Exit();
             }
         }
-
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             ctrl.SaveConfig();

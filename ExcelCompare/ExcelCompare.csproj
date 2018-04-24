@@ -84,6 +84,7 @@
     <Compile Include="Controls\OpenFileControl.designer.cs">
       <DependentUpon>OpenFileControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="GridViewController.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,34 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Threading;
-using ComparisonLogic;
-using SpreadsheetImporter;
 using SpreadsheetLogic;
 using System.DirectoryServices.AccountManagement;
 
 namespace ExcelCompare
 {
+    /// <summary>
+    /// The form controller contains all the code the form needs to import compare and display the data.
+    /// All logic that does not control form behaviour will be based here.
+    /// Author: Martin White
+    /// Date created:
+    /// Last edit: 24/04/2018
+    /// </summary>
     public class FormController
     {
-        public (ICollection<Cell> coCells,
-        ICollection<Cell> toCells,
-        ICollection<Cell> meCells,
-        ICollection<int> DeletedRows,
-        ICollection<int> AddedRows,
-        ICollection<int> meDeletedRows,
-        ICollection<int> meAddedRows) ViewContext
-        { get; private set; }
+        public ResultContext resultContext { get; set; }
         public DataSet workbookOne { get; set; }
         public DataSet workbookTwo { get; set; }
         public DataTable mergedView { get; set; }
         public DataTable tableOne { get; set; }
         public DataTable tableTwo { get; set; }
-        public int diffrenceCount { get; private set; }
-        public ICollection<Cell> DiffLocations { get; private set; }
-
-
+        public SortMethod sortMethod { get; set; }
         public bool hasHeader
         {
             get { return Properties.Settings.Default.hasHeader; }
@@ -44,32 +37,24 @@ namespace ExcelCompare
             get { return Properties.Settings.Default.openSpreadsheet; }
             set { Properties.Settings.Default.openSpreadsheet = value; }
         }
-        public SortMethod sortMethod
-        {
-            get;
-            set;
-        }
 
-        internal bool AreColumnsEqual()
-        {
-            if (tableOne.Columns.Count == tableTwo.Columns.Count)
-            {
-                return true;
-            }
-            return false;
-        }
+        /// <summary>
+        /// Background thread callback fields
+        /// </summary>
+        Thread backgroundThread;
+        private event EventHandler<EventArgs> CompareComplete;
 
+        /// <summary>
+        /// "_compareComplete" Defines the callback method for the background thread. this will be called when the comparison method is complete.
+        /// </summary>
         public FormController(EventHandler<EventArgs> _compareComplete)
         {
             CompareComplete = _compareComplete;
         }
 
-
-        /*Threading*/
-        Thread backgroundThread;
-        private event EventHandler<EventArgs> CompareComplete;
-
-
+        /// <summary>
+        /// This is the entry point for the Compare process where it decides that method to use then deleigates it to a background thread.
+        /// </summary>
         public void CompareThreadGo()
         {
             switch (sortMethod)
@@ -80,45 +65,69 @@ namespace ExcelCompare
                     break;
                 case SortMethod.RowByRow:
                     backgroundThread = new Thread(new ThreadStart(CompareTableRows));
-                    backgroundThread.Start();
-                    break;
-                default:
+                    backgroundThread.Start();                   
                     break;
             }
-
         }
 
-
+        /// <summary>
+        /// Returns a DataSet that contains all the tables and sheets of the target Datasource
+        /// </summary>
         internal DataSet GetWorkBook(string path)
         {
-            TableImport imp = new TableImport();
-            imp.HasHeader = hasHeader;
-            DataSet wb = imp.GetDataSet(path);
+            TableImport imp = new TableImport(path.ToLower(), hasHeader);
+            DataSet wb = imp.GetDataSet();
             return wb;
         }
-        internal DataTable GetDataTable(string docPathOne)
+
+        /// <summary>
+        ///Return only the first Datatable in the DataSet 
+        /// </summary>
+        /// <param name="path"></param>
+        internal DataTable ReturnFirstDataTable(string path)
         {
-            TableImport imp = new TableImport();
-            imp.HasHeader = hasHeader;
-            var tmp = imp.GetDataSet(docPathOne);
+            TableImport imp = new TableImport(path.ToLower(), hasHeader);
+            DataSet tmp = imp.GetDataSet();
             return tmp.Tables[0];
         }
 
+        /// <summary>
+        /// Gets the DataTable from the DataSet using its index and returns it.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="workbook"></param>
+        public DataTable GetTableByIndex(int index, DataSet workbook)
+        {
+            return workbook.Tables[index];
+        }
+
+        /// <summary>
+        /// Exports Merged view to desired filepath 
+        /// </summary>
+        internal void ExportMergedTable(string path)
+        {
+            TableExport tableExport = new TableExport(path, mergedView, resultContext);
+            tableExport.Export();
+        }        
+
+        /// <summary>
+        /// Compare Cell by Cell using the cells index to compare it to another table. this assumes equal rows and columns
+        /// </summary>
         internal void CompareTables()
         {
             if (tableOne != null && tableTwo != null)
             {
-                Compare comp = new Compare(tableOne, tableTwo);
-                DiffLocations = comp.CompareDateSets();
-                mergedView = comp.MergeTables();
-                diffrenceCount = DiffLocations.Count;
-
+                CompareByCell comp = new CompareByCell(tableOne, tableTwo);
+                resultContext = comp.CompareDateSets();
+                mergedView = comp.MergeTables();                
                 CompareComplete(this, EventArgs.Empty);
-
             }
 
         }
 
+        /// <summary>
+        /// Compare Tables row by rows getting back row change Data and Cell changes.
+        /// </summary>
         internal void CompareTableRows()
         {
             if (tableOne.Columns.Count == tableTwo.Columns.Count)
@@ -127,47 +136,23 @@ namespace ExcelCompare
                 {
                     CompareByRow comp = new CompareByRow(tableOne, tableTwo, 0);
                     comp.CompareTables();
-                    ViewContext = (comp.CoCells, comp.ToCells, comp.MeCells, comp.compareDeletedRows, comp.toAddedRows, comp.mergedDeletedRows, comp.mergedAddedRows);
-                    mergedView = comp.mergedView;
-                    diffrenceCount = ViewContext.toCells.Count;
+                    resultContext = new ResultContext(comp.coCells, comp.toCells, comp.meCells, comp.coDeletedRows, comp.toAddedRows, comp.meDeletedRows, comp.meAddedRows);
+                    mergedView = comp.mergedView;                    
                     CompareComplete(this, EventArgs.Empty);
 
                 }
             }
-
-
         }
 
-
-        public void ExportMergedTable(string path)
-        {
-            TableExport tableExport = new TableExport(path, this.mergedView);
-            tableExport.Cells = DiffLocations;
-            tableExport.ExportXlsx();
-        }
-
-        public DataTable GetTableByIndex(int index, DataSet workbook)
-        {
-            return workbook.Tables[index];
-        }
-
-
-
-        internal void ExportMergedTableWithRowData(string outputPath)
-        {
-            TableExport tableExport = new TableExport(outputPath, mergedView);
-            tableExport.Cells = ViewContext.meCells;
-            tableExport.ExportXlsxWithColorCoding(ViewContext.meDeletedRows, ViewContext.meAddedRows);
-
-        }
-
-        internal bool ValidateDomain()
+        /// <summary>
+        /// Validates the user is part of the bristsoft.co.uk Domain, if they are not then the application will exit.
+        /// </summary>
+        internal bool isValidDomain()
         {
 
             bool isValid = false;
             try
             {
-
                 using (var domainContext = new PrincipalContext(ContextType.Domain, "britsoft.co.uk"))
                 {
                     using (var foundUser = UserPrincipal.FindByIdentity(domainContext, IdentityType.SamAccountName, Environment.UserName))
@@ -184,12 +169,34 @@ namespace ExcelCompare
             catch (Exception)
             {
 
-
             }
             return isValid;
 
         }
 
+        /// <summary>
+        /// used to confirm tables are valid and actually contain some Data.
+        /// </summary>
+        internal bool AreTablesValid()
+        {
+            if (tableOne.Columns.Count == tableTwo.Columns.Count)
+            {
+                if (tableOne.Columns.Count < 1 || tableTwo.Columns.Count < 1)
+                {
+                    return false;
+                }
+                if (tableOne.Rows.Count < 1 || tableTwo.Rows.Count < 1)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Saves configuration which are altered by user imput for furture use.
+        /// </summary>
         internal void SaveConfig()
         {
             Properties.Settings.Default.Save();
