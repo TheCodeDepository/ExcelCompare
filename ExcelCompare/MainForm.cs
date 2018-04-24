@@ -34,7 +34,7 @@ namespace ExcelCompare
         }
         private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ctrl != null)
+            if (view != null)
             {
                 switch (sheetController.SelectedIndex)
                 {
