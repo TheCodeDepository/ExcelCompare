@@ -27,7 +27,7 @@ namespace SpreadsheetImporter
 
             DataSet tmp = new DataSet();
 
-            switch (Path.GetExtension(filePath))
+            switch (Path.GetExtension(filePath).ToLower())
             {
                 case ".xlsx":
                     tmp = ImportExcel();
@@ -35,6 +35,7 @@ namespace SpreadsheetImporter
 
                 case ".csv":
                     tmp = ImportCSV();
+
                     break;
 
             }
