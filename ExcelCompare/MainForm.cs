@@ -8,13 +8,13 @@ namespace ExcelCompare
     public partial class MainForm : MetroFramework.Forms.MetroForm
     {
         private FormController ctrl;
-        private GridViewController view;
+        private GridColorController view;
 
         private delegate void CompareComplete();
         CompareComplete compareHandler;
 
-        public string docPathOne { get { return openFileControl1.FilePath; } }
-        public string docPathTwo { get { return openFileControl2.FilePath; } }
+        public string docPathOne { get { return openFileControl1.FilePath; } private set { openFileControl1.FilePath = value; } }
+        public string docPathTwo { get { return openFileControl2.FilePath; } private set { openFileControl2.FilePath = value; } }
         public string outputPath { get; private set; }
 
         public MainForm()
@@ -26,10 +26,11 @@ namespace ExcelCompare
             compareHandler = CompareThreadCompleted;
             ctrl = new FormController(Compare_OnComplete);
             hasHeader.Checked = ctrl.hasHeader;
-
             sortModeCb.SelectedIndex = (int)ctrl.sortMethod;
             genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
             openSpeadcBox.Checked = ctrl.OpenSpreadsheet;
+
+
 
         }
         private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
@@ -65,19 +66,20 @@ namespace ExcelCompare
             CompareBtn.Enabled = false;
             if (ctrl.AreTablesValid())
             {
+
                 ctrl.CompareThreadGo();
 
-                try
-                {
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Please Ensure the tables start in the top right of the spreadsheet and contain atleast 2 columns and 2 rows. Spreadsheets must contain the same number of columns.");
-                }
+                //try
+                //{
+                //}
+                //catch (Exception)
+                //{
+                //    MetroFramework.MetroMessageBox.Show(this, "Please Ensure the tables start in the top right of the spreadsheet and contain atleast 2 columns and 2 rows. Spreadsheets must contain the same number of columns.");
+                //}
             }
             else
             {
-                MessageBox.Show("Invalid Tables. Please ensure tables have the same number of columns. Tables Should contain more than one Column and Row.");
+                MetroFramework.MetroMessageBox.Show(this, "Invalid Tables. Please ensure tables have the same number of columns. Tables Should contain more than one Column and Row.");
             }
         }
         private void Compare_OnComplete(object sender, EventArgs e)
@@ -98,13 +100,24 @@ namespace ExcelCompare
             coSheetsCb.Items.Clear();
             if (Path.GetExtension(docPathOne) == ".xlsx")
             {
-                coSheetsCb.Enabled = true;
-                ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
+                try
+                {
+                    ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
+
+                }
+                catch (Exception)
+                {
+                    MetroFramework.MetroMessageBox.Show(this, "Please Ensure files are closed before importing.");
+                    docPathOne = string.Empty;
+                    return;
+                }
                 foreach (DataTable table in ctrl.workbookOne.Tables)
                 {
                     coSheetsCb.Items.Add(table.TableName);
                 }
+                coSheetsCb.Enabled = true;
                 coSheetsCb.SelectedIndex = 0;
+                CheckSortMethod();
             }
             else
             {
@@ -123,13 +136,24 @@ namespace ExcelCompare
             toSheetsCb.Items.Clear();
             if (Path.GetExtension(docPathTwo) == ".xlsx")
             {
-                toSheetsCb.Enabled = true;
-                ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+                try
+                {
+                    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+
+                }
+                catch (Exception)
+                {
+                    MetroFramework.MetroMessageBox.Show(this, "Please Ensure files are closed. Reselect the file before continuing.");
+                    docPathTwo = string.Empty;
+                    return;
+                }
                 foreach (DataTable table in ctrl.workbookTwo.Tables)
                 {
                     toSheetsCb.Items.Add(table.TableName);
                 }
+                toSheetsCb.Enabled = true;
                 toSheetsCb.SelectedIndex = 0;
+                CheckSortMethod();
 
             }
             else
@@ -168,20 +192,26 @@ namespace ExcelCompare
         }
         private void CompareThreadCompleted()
         {
+            if (meViewGrid.DataSource != null)
+            {
+                meViewGrid.DataSource = null;
+                coViewGrid.DataSource = null;
+                toViewGrid.DataSource = null;
+            }
+            view = new GridColorController(meViewGrid, coViewGrid, toViewGrid, ctrl.resultContext);
             meViewGrid.DataSource = ctrl.mergedView;
             coViewGrid.DataSource = ctrl.tableOne;
             toViewGrid.DataSource = ctrl.tableTwo;
-            view = new GridViewController(meViewGrid,coViewGrid,toViewGrid,ctrl.resultContext);
-            view.PushTablesToView();
+            view.PushColorsToTables();
             QueryUserReport();
             CompareBtn.Enabled = true;
-        }       
+        }
         private void QueryUserReport()
         {
             if (genSpreadcBox.Checked)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv";     
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = saveFileDialog.FileName;
@@ -215,15 +245,10 @@ namespace ExcelCompare
         }
         private void DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            meViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            coViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            toViewGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
+            view.SetColumnWidth();
         }
         private void CheckSelections()
         {
-
-
             if (ctrl.tableOne != null && ctrl.tableTwo != null)
             {
                 sortModeCb.Enabled = true;
@@ -235,14 +260,21 @@ namespace ExcelCompare
         }
         private void sortModeCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CheckSortMethod();
+            if (ctrl.tableOne != null && ctrl.tableTwo != null)
+            {
+                CheckSortMethod();
+
+            }
         }
         private void CheckSortMethod()
         {
             switch ((SortMethod)sortModeCb.SelectedIndex)
             {
                 case SortMethod.CellbyCell:
-                    CompareBtn.Enabled = true;
+                    if (ctrl.tableOne != null && ctrl.tableTwo != null)
+                    {
+                        CompareBtn.Enabled = true;
+                    }
                     uniqueIdColCb.Visible = false;
                     idLbl.Visible = false;
                     break;
@@ -325,13 +357,32 @@ namespace ExcelCompare
         {
             if (!ctrl.isValidDomain())
             {
-                MessageBox.Show("You are not registered to company domain, please contain your system administrator.", "Error", MessageBoxButtons.OK);
+                MetroFramework.MetroMessageBox.Show(this, "You are not registered to company domain, please contain your system administrator.", "Error", MessageBoxButtons.OK);
                 Application.Exit();
             }
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             ctrl.SaveConfig();
+        }
+        private void AboutLbl_Click(object sender, EventArgs e)
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+            string about = string.Format($"This is a spreadsheet comparison tool designed to compare spreadsheets and output the differences.\nVersion Number: {version}\nAuthor: Martin White");
+            MetroFramework.MetroMessageBox.Show(this, about, "About");
+        }
+
+        private void ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
+        {
+            view.SetColumnWidth();
+        }
+
+        private void meViewGrid_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            view.SetColumnWidth();
+
         }
     }
 }

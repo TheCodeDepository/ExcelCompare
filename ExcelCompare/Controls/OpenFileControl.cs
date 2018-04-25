@@ -30,7 +30,7 @@ namespace ExcelCompare
         public string FilePath
         {
             get { return pathTextBox.Text; }
-            private set { pathTextBox.Text = value; }
+            set { pathTextBox.Text = value; }
         }
 
 

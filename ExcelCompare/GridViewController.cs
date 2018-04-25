@@ -5,14 +5,14 @@ using System.Windows.Forms;
 
 namespace ExcelCompare
 {
-    public class GridViewController
+    public class GridColorController
     {
         DataGridView me;
         DataGridView co;
         DataGridView to;
         ResultContext result;
 
-        public GridViewController(DataGridView Me, DataGridView Co, DataGridView To, ResultContext Result)
+        public GridColorController(DataGridView Me, DataGridView Co, DataGridView To, ResultContext Result)
         {
             me = Me;
             co = Co;
@@ -20,15 +20,23 @@ namespace ExcelCompare
             result = Result;
         }
 
-        public void PushTablesToView()
+        public void PushColorsToTables()
         {
             PushMerged();
             PushSideBySide();
             SetGridViewSortState(me, DataGridViewColumnSortMode.NotSortable);
             SetGridViewSortState(co, DataGridViewColumnSortMode.NotSortable);
             SetGridViewSortState(to, DataGridViewColumnSortMode.NotSortable);
-            
+
         }
+
+        public void SetColumnWidth()
+        {
+            me.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            co.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            to.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
+
 
         public void PushMerged()
         {
@@ -52,7 +60,7 @@ namespace ExcelCompare
             {
                 ProcessDifferences(co, result.coCells);
             }
-            if (result.toCells !=null)
+            if (result.toCells != null)
             {
                 ProcessDifferences(to, result.toCells);
             }

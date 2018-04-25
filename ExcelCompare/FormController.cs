@@ -64,8 +64,9 @@ namespace ExcelCompare
                     backgroundThread.Start();
                     break;
                 case SortMethod.RowByRow:
-                    backgroundThread = new Thread(new ThreadStart(CompareTableRows));
-                    backgroundThread.Start();                   
+                    //backgroundThread = new Thread(new ThreadStart(CompareTableRows));
+                    //backgroundThread.Start();                   
+                    CompareTableRows();
                     break;
             }
         }
