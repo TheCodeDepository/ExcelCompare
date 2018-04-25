@@ -336,7 +336,7 @@ namespace ExcelCompare
         private void hasHeader_CheckedChanged(object sender, EventArgs e)
         {
             ctrl.hasHeader = hasHeader.Checked;
-            if (ctrl.workbookOne != null)
+            if (ctrl.workbookOne != null || ctrl.tableOne != null)
             {
                 ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
                 if (Path.GetExtension(docPathOne).ToLower() == ".xlsx")
@@ -350,7 +350,7 @@ namespace ExcelCompare
                 }
 
             }
-            if (ctrl.workbookTwo != null)
+            if (ctrl.workbookTwo != null || ctrl.tableTwo != null)
             {
                 ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
                 if (Path.GetExtension(docPathTwo).ToLower() == ".xlsx")
@@ -386,16 +386,10 @@ namespace ExcelCompare
             string about = string.Format($"This is a spreadsheet comparison tool designed to compare spreadsheets and output the differences.\nVersion Number: {version}\nAuthor: Martin White");
             MetroFramework.MetroMessageBox.Show(this, about, "About");
         }
-
         private void ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
         {
             view.SetColumnWidth();
         }
-
-        private void meViewGrid_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            view.SetColumnWidth();
-
-        }
+      
     }
 }
