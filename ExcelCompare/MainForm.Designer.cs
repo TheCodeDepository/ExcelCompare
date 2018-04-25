@@ -89,7 +89,7 @@
             this.CompareBtn.Location = new System.Drawing.Point(1095, 127);
             this.CompareBtn.Name = "CompareBtn";
             this.CompareBtn.Size = new System.Drawing.Size(75, 23);
-            this.CompareBtn.TabIndex = 2;
+            this.CompareBtn.TabIndex = 9;
             this.CompareBtn.Text = "Compare";
             this.CompareBtn.UseSelectable = true;
             this.CompareBtn.Click += new System.EventHandler(this.CompareBtn_Click);
@@ -101,7 +101,7 @@
             this.genSpreadcBox.Location = new System.Drawing.Point(3, 30);
             this.genSpreadcBox.Name = "genSpreadcBox";
             this.genSpreadcBox.Size = new System.Drawing.Size(137, 15);
-            this.genSpreadcBox.TabIndex = 4;
+            this.genSpreadcBox.TabIndex = 7;
             this.genSpreadcBox.Text = "Generate Spreadsheet";
             this.genSpreadcBox.UseSelectable = true;
             this.genSpreadcBox.CheckedChanged += new System.EventHandler(this.genSpreadcBox_CheckedChanged);
@@ -114,7 +114,7 @@
             this.openSpeadcBox.Location = new System.Drawing.Point(3, 51);
             this.openSpeadcBox.Name = "openSpeadcBox";
             this.openSpeadcBox.Size = new System.Drawing.Size(119, 15);
-            this.openSpeadcBox.TabIndex = 5;
+            this.openSpeadcBox.TabIndex = 8;
             this.openSpeadcBox.Text = "Open Spreadsheet";
             this.openSpeadcBox.UseSelectable = true;
             this.openSpeadcBox.CheckedChanged += new System.EventHandler(this.openSpeadcBox_CheckedChanged);
@@ -128,10 +128,10 @@
             this.sheetController.Controls.Add(this.sideBySide);
             this.sheetController.Location = new System.Drawing.Point(23, 166);
             this.sheetController.Name = "sheetController";
-            this.sheetController.SelectedIndex = 0;
+            this.sheetController.SelectedIndex = 1;
             this.sheetController.Size = new System.Drawing.Size(1154, 611);
             this.sheetController.Style = MetroFramework.MetroColorStyle.Green;
-            this.sheetController.TabIndex = 6;
+            this.sheetController.TabIndex = 10;
             this.sheetController.UseSelectable = true;
             this.sheetController.SelectedIndexChanged += new System.EventHandler(this.sheetController_SelectedIndexChanged);
             // 
@@ -188,7 +188,7 @@
             this.meViewGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.meViewGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.meViewGrid.Size = new System.Drawing.Size(1140, 563);
-            this.meViewGrid.TabIndex = 5;
+            this.meViewGrid.TabIndex = 11;
             this.meViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
             // 
             // sideBySide
@@ -260,7 +260,7 @@
             this.coViewGrid.RowHeadersVisible = false;
             this.coViewGrid.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
             this.coViewGrid.Size = new System.Drawing.Size(573, 566);
-            this.coViewGrid.TabIndex = 0;
+            this.coViewGrid.TabIndex = 12;
             this.coViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
             this.coViewGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataBindingComplete);
             this.coViewGrid.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid1_Scroll);
@@ -299,7 +299,7 @@
             this.toViewGrid.ReadOnly = true;
             this.toViewGrid.RowHeadersVisible = false;
             this.toViewGrid.Size = new System.Drawing.Size(563, 566);
-            this.toViewGrid.TabIndex = 0;
+            this.toViewGrid.TabIndex = 13;
             this.toViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
             this.toViewGrid.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid2_Scroll);
             // 
@@ -313,7 +313,7 @@
             this.coSheetsCb.Location = new System.Drawing.Point(59, 27);
             this.coSheetsCb.Name = "coSheetsCb";
             this.coSheetsCb.Size = new System.Drawing.Size(121, 25);
-            this.coSheetsCb.TabIndex = 12;
+            this.coSheetsCb.TabIndex = 3;
             this.ToolTips.SetToolTip(this.coSheetsCb, "Select Table from the older document (Compare)");
             this.coSheetsCb.UseSelectable = true;
             this.coSheetsCb.SelectedValueChanged += new System.EventHandler(this.coSheetsCb_SelectedIndexChanged);
@@ -328,7 +328,7 @@
             this.toSheetsCb.Location = new System.Drawing.Point(59, 62);
             this.toSheetsCb.Name = "toSheetsCb";
             this.toSheetsCb.Size = new System.Drawing.Size(121, 25);
-            this.toSheetsCb.TabIndex = 13;
+            this.toSheetsCb.TabIndex = 4;
             this.ToolTips.SetToolTip(this.toSheetsCb, "Select Table from the newer document (To)");
             this.toSheetsCb.UseSelectable = true;
             this.toSheetsCb.SelectedValueChanged += new System.EventHandler(this.toSheetsCb_SelectedIndexChanged);
@@ -346,7 +346,7 @@
             this.sortModeCb.Location = new System.Drawing.Point(75, 27);
             this.sortModeCb.Name = "sortModeCb";
             this.sortModeCb.Size = new System.Drawing.Size(121, 25);
-            this.sortModeCb.TabIndex = 15;
+            this.sortModeCb.TabIndex = 5;
             this.sortModeCb.UseSelectable = true;
             this.sortModeCb.SelectedIndexChanged += new System.EventHandler(this.sortModeCb_SelectedIndexChanged);
             // 
@@ -362,7 +362,7 @@
             this.openFileControl1.Location = new System.Drawing.Point(1, 25);
             this.openFileControl1.Name = "openFileControl1";
             this.openFileControl1.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl1.TabIndex = 0;
+            this.openFileControl1.TabIndex = 1;
             this.openFileControl1.Title = "Compare";
             this.ToolTips.SetToolTip(this.openFileControl1, "Original document");
             this.openFileControl1.UseSelectable = true;
@@ -373,7 +373,7 @@
             this.openFileControl2.Location = new System.Drawing.Point(1, 60);
             this.openFileControl2.Name = "openFileControl2";
             this.openFileControl2.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl2.TabIndex = 1;
+            this.openFileControl2.TabIndex = 2;
             this.openFileControl2.Title = "To";
             this.ToolTips.SetToolTip(this.openFileControl2, "Newer document");
             this.openFileControl2.UseSelectable = true;
@@ -406,7 +406,7 @@
             this.uniqueIdColCb.Location = new System.Drawing.Point(75, 62);
             this.uniqueIdColCb.Name = "uniqueIdColCb";
             this.uniqueIdColCb.Size = new System.Drawing.Size(121, 25);
-            this.uniqueIdColCb.TabIndex = 17;
+            this.uniqueIdColCb.TabIndex = 6;
             this.uniqueIdColCb.UseSelectable = true;
             this.uniqueIdColCb.Visible = false;
             this.uniqueIdColCb.SelectedIndexChanged += new System.EventHandler(this.uniqueIdColCb_SelectedIndexChanged);
@@ -435,7 +435,7 @@
             this.hasHeader.Location = new System.Drawing.Point(330, 3);
             this.hasHeader.Name = "hasHeader";
             this.hasHeader.Size = new System.Drawing.Size(89, 15);
-            this.hasHeader.TabIndex = 7;
+            this.hasHeader.TabIndex = 0;
             this.hasHeader.Text = "Has Header?";
             this.hasHeader.UseSelectable = true;
             this.hasHeader.CheckedChanged += new System.EventHandler(this.hasHeader_CheckedChanged);
@@ -558,7 +558,7 @@
             this.AboutLbl.Location = new System.Drawing.Point(1079, 8);
             this.AboutLbl.Name = "AboutLbl";
             this.AboutLbl.Size = new System.Drawing.Size(39, 15);
-            this.AboutLbl.TabIndex = 24;
+            this.AboutLbl.TabIndex = 14;
             this.AboutLbl.Text = "About";
             this.AboutLbl.Click += new System.EventHandler(this.AboutLbl_Click);
             // 

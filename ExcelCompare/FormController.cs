@@ -22,6 +22,7 @@ namespace ExcelCompare
         public DataTable tableOne { get; set; }
         public DataTable tableTwo { get; set; }
         public SortMethod sortMethod { get; set; }
+        public int columnIndex { get; set; }
         public bool hasHeader
         {
             get { return Properties.Settings.Default.hasHeader; }
@@ -64,9 +65,8 @@ namespace ExcelCompare
                     backgroundThread.Start();
                     break;
                 case SortMethod.RowByRow:
-                    //backgroundThread = new Thread(new ThreadStart(CompareTableRows));
-                    //backgroundThread.Start();                   
-                    CompareTableRows();
+                    backgroundThread = new Thread(new ThreadStart(CompareTableRows));
+                    backgroundThread.Start();
                     break;
             }
         }
@@ -135,7 +135,7 @@ namespace ExcelCompare
             {
                 if (tableOne != null && tableTwo != null)
                 {
-                    CompareByRow comp = new CompareByRow(tableOne, tableTwo, 0);
+                    CompareByRow comp = new CompareByRow(tableOne, tableTwo, columnIndex);
                     comp.CompareTables();
                     resultContext = new ResultContext(comp.coCells, comp.toCells, comp.meCells, comp.coDeletedRows, comp.toAddedRows, comp.meDeletedRows, comp.meAddedRows);
                     mergedView = comp.mergedView;                    

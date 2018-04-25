@@ -66,16 +66,14 @@ namespace ExcelCompare
             CompareBtn.Enabled = false;
             if (ctrl.AreTablesValid())
             {
-
-                ctrl.CompareThreadGo();
-
-                //try
-                //{
-                //}
-                //catch (Exception)
-                //{
-                //    MetroFramework.MetroMessageBox.Show(this, "Please Ensure the tables start in the top right of the spreadsheet and contain atleast 2 columns and 2 rows. Spreadsheets must contain the same number of columns.");
-                //}
+                try
+                {
+                    ctrl.CompareThreadGo();
+                }
+                catch (Exception m)
+                {
+                    MetroFramework.MetroMessageBox.Show(this, $"An Exception has occured, please close the application and try again./n{m.Message}");
+                }
             }
             else
             {
@@ -84,9 +82,16 @@ namespace ExcelCompare
         }
         private void Compare_OnComplete(object sender, EventArgs e)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(compareHandler);
+                try
+                {
+                    Invoke(compareHandler);
+                }
+                catch (Exception m)
+                {
+                    MetroFramework.MetroMessageBox.Show(this, $"An Exception has occured, please close the application and try again./n{m.Message}");
+                }
             }
             else
             {
@@ -117,7 +122,6 @@ namespace ExcelCompare
                 }
                 coSheetsCb.Enabled = true;
                 coSheetsCb.SelectedIndex = 0;
-                CheckSortMethod();
             }
             else
             {
@@ -126,6 +130,8 @@ namespace ExcelCompare
                 ctrl.tableOne = ctrl.ReturnFirstDataTable(docPathOne);
                 CheckSelections();
             }
+            CheckSortMethod();
+
         }
         private void GetSheetNamesTwo(object sender, EventArgs e)
         {
@@ -153,7 +159,6 @@ namespace ExcelCompare
                 }
                 toSheetsCb.Enabled = true;
                 toSheetsCb.SelectedIndex = 0;
-                CheckSortMethod();
 
             }
             else
@@ -163,16 +168,23 @@ namespace ExcelCompare
                 ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
                 CheckSelections();
             }
+            CheckSortMethod();
+
         }
         private void SideBySideGrid1_Scroll(object sender, ScrollEventArgs e)
         {
-            this.toViewGrid.FirstDisplayedScrollingRowIndex = this.coViewGrid.FirstDisplayedScrollingRowIndex;
-            this.toViewGrid.HorizontalScrollingOffset = this.coViewGrid.HorizontalScrollingOffset;
+            if (toViewGrid.Rows.Count > coViewGrid.FirstDisplayedScrollingRowIndex)
+            {
+                this.toViewGrid.FirstDisplayedScrollingRowIndex = this.coViewGrid.FirstDisplayedScrollingRowIndex;
+            }
+
         }
         private void SideBySideGrid2_Scroll(object sender, ScrollEventArgs e)
         {
-            this.coViewGrid.FirstDisplayedScrollingRowIndex = this.toViewGrid.FirstDisplayedScrollingRowIndex;
-            this.coViewGrid.HorizontalScrollingOffset = this.toViewGrid.HorizontalScrollingOffset;
+            if (coViewGrid.Rows.Count > toViewGrid.FirstDisplayedScrollingRowIndex)
+            {
+                this.coViewGrid.FirstDisplayedScrollingRowIndex = this.toViewGrid.FirstDisplayedScrollingRowIndex;
+            }
         }
         private void coSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -313,6 +325,7 @@ namespace ExcelCompare
         {
             if (uniqueIdColCb.SelectedIndex > -1)
             {
+                ctrl.columnIndex = uniqueIdColCb.SelectedIndex;
                 CompareBtn.Enabled = true;
             }
             else

@@ -43,7 +43,7 @@ namespace SpreadsheetLogic
         {
             mergedView = to.Copy();
             DeletedRowsAndTables();
-            string lastindex = to.Rows[0][0].ToString();
+            string lastindex = to.Rows[0][RefColIndex].ToString();
             int lastMeRow = 0;
 
             foreach (DataRow toRow in to.Rows)
@@ -65,11 +65,11 @@ namespace SpreadsheetLogic
                 {
                     for (int i = lastMeRow; i < mergedView.Rows.Count; i++)
                     {
-                        if (mergedView.Rows[i][0].ToString() == lastindex)
+                        if (mergedView.Rows[i][RefColIndex].ToString() == lastindex)
                         {
                             meAddedRows.Add((i + 1));
                             lastMeRow = to.Rows.IndexOf(toRow);
-                            lastindex = mergedView.Rows[i + 1][0].ToString();
+                            lastindex = mergedView.Rows[i + 1][RefColIndex].ToString();
                             break;
                         }
                     }
