@@ -30,6 +30,7 @@ namespace ExcelCompare
             genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
             openSpeadcBox.Checked = ctrl.OpenSpreadsheet;
             selectedView.SelectedIndex = ctrl.SelectedSingleView;
+            sheetController.SelectedIndex = 0;
 
 
 
@@ -398,6 +399,7 @@ namespace ExcelCompare
         }
         private void selectedView_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ctrl.SelectedSingleView = selectedView.SelectedIndex;
             UpdateSingleView();
         }
 
