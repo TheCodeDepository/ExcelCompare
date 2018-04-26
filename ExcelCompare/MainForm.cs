@@ -29,6 +29,7 @@ namespace ExcelCompare
             sortModeCb.SelectedIndex = (int)ctrl.sortMethod;
             genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
             openSpeadcBox.Checked = ctrl.OpenSpreadsheet;
+            selectedView.SelectedIndex = ctrl.SelectedSingleView;
 
 
 
@@ -44,6 +45,9 @@ namespace ExcelCompare
                         break;
                     case 1:
                         view.PushSideBySide();
+                        break;
+                    case 2:
+                        UpdateSingleView();
                         break;
 
                 }
@@ -210,11 +214,12 @@ namespace ExcelCompare
                 coViewGrid.DataSource = null;
                 toViewGrid.DataSource = null;
             }
-            view = new GridColorController(meViewGrid, coViewGrid, toViewGrid, ctrl.resultContext);
+            view = new GridColorController(meViewGrid, coViewGrid, toViewGrid, singleViewGrid, ctrl.resultContext);
             meViewGrid.DataSource = ctrl.mergedView;
             coViewGrid.DataSource = ctrl.tableOne;
             toViewGrid.DataSource = ctrl.tableTwo;
             view.PushColorsToTables();
+            UpdateSingleView();
             QueryUserReport();
             CompareBtn.Enabled = true;
         }
@@ -274,6 +279,7 @@ namespace ExcelCompare
         {
             if (ctrl.tableOne != null && ctrl.tableTwo != null)
             {
+                ctrl.sortMethod = (SortMethod)sortModeCb.SelectedIndex;
                 CheckSortMethod();
 
             }
@@ -390,6 +396,30 @@ namespace ExcelCompare
         {
             view.SetColumnWidth();
         }
-      
+        private void selectedView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSingleView();
+        }
+
+        private void UpdateSingleView()
+        {
+            singleViewGrid.DataSource = null;
+
+            if (ctrl.resultContext != null)
+            {
+                switch (selectedView.SelectedIndex)
+                {
+                    case 0:
+                        singleViewGrid.DataSource = ctrl.tableOne;
+                        break;
+                    case 1:
+                        singleViewGrid.DataSource = ctrl.tableTwo;
+                        break;
+
+                }
+                view.PushSingleView(selectedView.SelectedIndex);
+
+            }
+        }
     }
 }

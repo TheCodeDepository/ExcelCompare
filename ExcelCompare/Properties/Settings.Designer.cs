@@ -58,5 +58,17 @@ namespace ExcelCompare.Properties {
                 this["openSpreadsheet"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int selectedSingleView {
+            get {
+                return ((int)(this["selectedSingleView"]));
+            }
+            set {
+                this["selectedSingleView"] = value;
+            }
+        }
     }
 }

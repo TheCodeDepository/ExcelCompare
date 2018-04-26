@@ -38,6 +38,11 @@ namespace ExcelCompare
             get { return Properties.Settings.Default.openSpreadsheet; }
             set { Properties.Settings.Default.openSpreadsheet = value; }
         }
+        public int SelectedSingleView
+        {
+            get { return Properties.Settings.Default.selectedSingleView; }
+            set { Properties.Settings.Default.selectedSingleView = value; }
+        }
 
         /// <summary>
         /// Background thread callback fields
