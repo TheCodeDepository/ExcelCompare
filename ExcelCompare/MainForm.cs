@@ -77,7 +77,7 @@ namespace ExcelCompare
                 }
                 catch (Exception m)
                 {
-                    MetroFramework.MetroMessageBox.Show(this, $"An Exception has occured, please close the application and try again.\n{m.Message}");
+                    MetroFramework.MetroMessageBox.Show(this, $"An Exception has occured, please close the application and try again./n{m.Message}");
                 }
             }
             else
@@ -228,32 +228,17 @@ namespace ExcelCompare
         {
             if (genSpreadcBox.Checked)
             {
-                var shouldRetry = DialogResult.Cancel;
-
-                do
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    shouldRetry = DialogResult.Cancel;
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv";
-                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    outputPath = saveFileDialog.FileName;
+                    ctrl.ExportMergedTable(outputPath);
+                    if (openSpeadcBox.Checked)
                     {
-                        outputPath = saveFileDialog.FileName;
-                        try
-                        {
-                            ctrl.ExportMergedTable(outputPath);
-                            if (openSpeadcBox.Checked)
-                            {
-                                System.Diagnostics.Process.Start(outputPath);
-                            }
-                        }
-                        catch (Exception m)
-                        {
-                            shouldRetry = MetroFramework.MetroMessageBox.Show(this, $"{m.Message}\nPlease ensure the target file is closed.","An Error has occured",MessageBoxButtons.RetryCancel);
-                        }
-
+                        System.Diagnostics.Process.Start(outputPath);
                     }
-                } while (shouldRetry == DialogResult.Retry);
-
+                }
             }
         }
         private void genSpreadcBox_CheckedChanged(object sender, EventArgs e)
