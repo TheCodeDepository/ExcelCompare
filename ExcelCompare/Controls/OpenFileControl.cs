@@ -50,7 +50,7 @@ namespace ExcelCompare
         {
             bool retry = false;
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Supported Types|*.xlsx;*.csv;*.txt|Excel files (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv";
+            openFileDialog.Filter = "Supported Types|*.xlsx;*.csv;|Excel files (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv";
             openFileDialog.Multiselect = false;
             do
             {

@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
@@ -41,12 +41,12 @@
             this.genSpreadcBox = new MetroFramework.Controls.MetroCheckBox();
             this.openSpeadcBox = new MetroFramework.Controls.MetroCheckBox();
             this.sheetController = new MetroFramework.Controls.MetroTabControl();
+            this.mergedViewTab = new MetroFramework.Controls.MetroTabPage();
+            this.meViewGrid = new System.Windows.Forms.DataGridView();
             this.sideBySide = new MetroFramework.Controls.MetroTabPage();
             this.TableSplitter = new System.Windows.Forms.SplitContainer();
             this.coViewGrid = new System.Windows.Forms.DataGridView();
             this.toViewGrid = new System.Windows.Forms.DataGridView();
-            this.mergedViewTab = new MetroFramework.Controls.MetroTabPage();
-            this.meViewGrid = new System.Windows.Forms.DataGridView();
             this.singleViewTab = new System.Windows.Forms.TabPage();
             this.metroPanel5 = new MetroFramework.Controls.MetroPanel();
             this.selectedView = new MetroFramework.Controls.MetroComboBox();
@@ -73,6 +73,8 @@
             this.openFileControl1 = new ExcelCompare.OpenFileControl();
             this.openFileControl2 = new ExcelCompare.OpenFileControl();
             this.sheetController.SuspendLayout();
+            this.mergedViewTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).BeginInit();
             this.sideBySide.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TableSplitter)).BeginInit();
             this.TableSplitter.Panel1.SuspendLayout();
@@ -80,8 +82,6 @@
             this.TableSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.coViewGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.toViewGrid)).BeginInit();
-            this.mergedViewTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).BeginInit();
             this.singleViewTab.SuspendLayout();
             this.metroPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.singleViewGrid)).BeginInit();
@@ -138,12 +138,66 @@
             this.sheetController.Controls.Add(this.singleViewTab);
             this.sheetController.Location = new System.Drawing.Point(23, 166);
             this.sheetController.Name = "sheetController";
-            this.sheetController.SelectedIndex = 2;
+            this.sheetController.SelectedIndex = 0;
             this.sheetController.Size = new System.Drawing.Size(1154, 611);
             this.sheetController.Style = MetroFramework.MetroColorStyle.Green;
             this.sheetController.TabIndex = 10;
             this.sheetController.UseSelectable = true;
             this.sheetController.SelectedIndexChanged += new System.EventHandler(this.sheetController_SelectedIndexChanged);
+            // 
+            // mergedViewTab
+            // 
+            this.mergedViewTab.Controls.Add(this.meViewGrid);
+            this.mergedViewTab.HorizontalScrollbarBarColor = true;
+            this.mergedViewTab.HorizontalScrollbarHighlightOnWheel = false;
+            this.mergedViewTab.HorizontalScrollbarSize = 10;
+            this.mergedViewTab.Location = new System.Drawing.Point(4, 38);
+            this.mergedViewTab.Name = "mergedViewTab";
+            this.mergedViewTab.Size = new System.Drawing.Size(1146, 569);
+            this.mergedViewTab.TabIndex = 0;
+            this.mergedViewTab.Text = "Merged View";
+            this.mergedViewTab.VerticalScrollbarBarColor = true;
+            this.mergedViewTab.VerticalScrollbarHighlightOnWheel = false;
+            this.mergedViewTab.VerticalScrollbarSize = 10;
+            // 
+            // meViewGrid
+            // 
+            this.meViewGrid.AllowUserToAddRows = false;
+            this.meViewGrid.AllowUserToDeleteRows = false;
+            this.meViewGrid.AllowUserToResizeRows = false;
+            this.meViewGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.meViewGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.meViewGrid.BackgroundColor = System.Drawing.Color.White;
+            this.meViewGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.meViewGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.meViewGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.meViewGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.LightGray;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.meViewGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            this.meViewGrid.GridColor = System.Drawing.Color.White;
+            this.meViewGrid.Location = new System.Drawing.Point(-1, 3);
+            this.meViewGrid.Name = "meViewGrid";
+            this.meViewGrid.ReadOnly = true;
+            this.meViewGrid.RowHeadersVisible = false;
+            this.meViewGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.meViewGrid.Size = new System.Drawing.Size(1147, 563);
+            this.meViewGrid.TabIndex = 13;
             // 
             // sideBySide
             // 
@@ -256,60 +310,6 @@
             this.toViewGrid.TabIndex = 13;
             this.toViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
             this.toViewGrid.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid2_Scroll);
-            // 
-            // mergedViewTab
-            // 
-            this.mergedViewTab.Controls.Add(this.meViewGrid);
-            this.mergedViewTab.HorizontalScrollbarBarColor = true;
-            this.mergedViewTab.HorizontalScrollbarHighlightOnWheel = false;
-            this.mergedViewTab.HorizontalScrollbarSize = 10;
-            this.mergedViewTab.Location = new System.Drawing.Point(4, 38);
-            this.mergedViewTab.Name = "mergedViewTab";
-            this.mergedViewTab.Size = new System.Drawing.Size(1146, 569);
-            this.mergedViewTab.TabIndex = 0;
-            this.mergedViewTab.Text = "Merged View";
-            this.mergedViewTab.VerticalScrollbarBarColor = true;
-            this.mergedViewTab.VerticalScrollbarHighlightOnWheel = false;
-            this.mergedViewTab.VerticalScrollbarSize = 10;
-            // 
-            // meViewGrid
-            // 
-            this.meViewGrid.AllowUserToAddRows = false;
-            this.meViewGrid.AllowUserToDeleteRows = false;
-            this.meViewGrid.AllowUserToResizeRows = false;
-            this.meViewGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.meViewGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.meViewGrid.BackgroundColor = System.Drawing.Color.White;
-            this.meViewGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.meViewGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.meViewGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.meViewGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.LightGray;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.meViewGrid.DefaultCellStyle = dataGridViewCellStyle2;
-            this.meViewGrid.GridColor = System.Drawing.Color.White;
-            this.meViewGrid.Location = new System.Drawing.Point(-1, 3);
-            this.meViewGrid.Name = "meViewGrid";
-            this.meViewGrid.ReadOnly = true;
-            this.meViewGrid.RowHeadersVisible = false;
-            this.meViewGrid.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.meViewGrid.Size = new System.Drawing.Size(1147, 563);
-            this.meViewGrid.TabIndex = 13;
             // 
             // singleViewTab
             // 
@@ -670,6 +670,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.sheetController.ResumeLayout(false);
+            this.mergedViewTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).EndInit();
             this.sideBySide.ResumeLayout(false);
             this.TableSplitter.Panel1.ResumeLayout(false);
             this.TableSplitter.Panel2.ResumeLayout(false);
@@ -677,8 +679,6 @@
             this.TableSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.coViewGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.toViewGrid)).EndInit();
-            this.mergedViewTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).EndInit();
             this.singleViewTab.ResumeLayout(false);
             this.metroPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.singleViewGrid)).EndInit();
