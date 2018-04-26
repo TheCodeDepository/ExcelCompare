@@ -30,11 +30,21 @@ namespace ExcelCompare
             genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
             openSpeadcBox.Checked = ctrl.OpenSpreadsheet;
             selectedView.SelectedIndex = ctrl.SelectedSingleView;
-            sheetController.SelectedIndex = 0;
-
-
-
         }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (!ctrl.isValidDomain())
+            {
+                MetroFramework.MetroMessageBox.Show(this, "You are not registered to company domain, please contain your system administrator.", "Error", MessageBoxButtons.OK);
+                Application.Exit();
+            }
+            sheetController.SelectedIndex = 0;
+        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ctrl.SaveConfig();
+        }
+
         private void sheetController_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (view != null)
@@ -386,19 +396,7 @@ namespace ExcelCompare
                 }
             }
             ColumnNamesforUID();
-        }
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            if (!ctrl.isValidDomain())
-            {
-                MetroFramework.MetroMessageBox.Show(this, "You are not registered to company domain, please contain your system administrator.", "Error", MessageBoxButtons.OK);
-                Application.Exit();
-            }
-        }
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            ctrl.SaveConfig();
-        }
+        }       
         private void AboutLbl_Click(object sender, EventArgs e)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -416,11 +414,9 @@ namespace ExcelCompare
             ctrl.SelectedSingleView = selectedView.SelectedIndex;
             UpdateSingleView();
         }
-
         private void UpdateSingleView()
         {
             singleViewGrid.DataSource = null;
-
             if (ctrl.resultContext != null)
             {
                 switch (selectedView.SelectedIndex)
@@ -431,10 +427,8 @@ namespace ExcelCompare
                     case 1:
                         singleViewGrid.DataSource = ctrl.tableTwo;
                         break;
-
                 }
                 view.PushSingleView(selectedView.SelectedIndex);
-
             }
         }
     }
