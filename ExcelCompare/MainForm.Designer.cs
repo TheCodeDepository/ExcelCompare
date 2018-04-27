@@ -1,4 +1,4 @@
-﻿namespace ExcelCompare
+﻿namespace SpreadsheetCompare
 {
     partial class MainForm
     {
@@ -70,8 +70,8 @@
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.AboutLbl = new MetroFramework.Controls.MetroLabel();
-            this.openFileControl1 = new ExcelCompare.OpenFileControl();
-            this.openFileControl2 = new ExcelCompare.OpenFileControl();
+            this.openFileControl1 = new SpreadsheetCompare.OpenFileControl();
+            this.openFileControl2 = new SpreadsheetCompare.OpenFileControl();
             this.sheetController.SuspendLayout();
             this.mergedViewTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).BeginInit();

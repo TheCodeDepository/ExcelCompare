@@ -3,7 +3,9 @@ using System.Data;
 using System.Windows.Forms;
 using System.IO;
 
-namespace ExcelCompare
+
+
+namespace SpreadsheetCompare
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
     {
@@ -174,7 +176,6 @@ namespace ExcelCompare
                 }
                 toSheetsCb.Enabled = true;
                 toSheetsCb.SelectedIndex = 0;
-
             }
             else
             {
@@ -192,7 +193,6 @@ namespace ExcelCompare
             {
                 this.toViewGrid.FirstDisplayedScrollingRowIndex = this.coViewGrid.FirstDisplayedScrollingRowIndex;
             }
-
         }
         private void SideBySideGrid2_Scroll(object sender, ScrollEventArgs e)
         {
@@ -242,7 +242,6 @@ namespace ExcelCompare
                 do
                 {
                     shouldRetry = DialogResult.Cancel;
-
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv";
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -260,7 +259,7 @@ namespace ExcelCompare
                         {
                             shouldRetry = MetroFramework.MetroMessageBox.Show(this, $"{m.Message}\nPlease ensure the target file is closed.", "An Error has occured", MessageBoxButtons.RetryCancel);
                         }
-     
+
                     }
                 } while (shouldRetry == DialogResult.Retry);
             }
@@ -306,7 +305,6 @@ namespace ExcelCompare
             {
                 ctrl.sortMethod = (SortMethod)sortModeCb.SelectedIndex;
                 CheckSortMethod();
-
             }
         }
         private void CheckSortMethod()
@@ -329,14 +327,12 @@ namespace ExcelCompare
         }
         private void ColumnNamesforUID()
         {
-
             if (sortModeCb.SelectedIndex > -1)
             {
                 ctrl.sortMethod = (SortMethod)sortModeCb.SelectedIndex;
             }
             if (ctrl.sortMethod == SortMethod.RowByRow)
             {
-
                 uniqueIdColCb.Items.Clear();
                 uniqueIdColCb.Visible = true;
                 idLbl.Visible = true;
@@ -348,9 +344,7 @@ namespace ExcelCompare
                 {
                     uniqueIdColCb.SelectedIndex = 0;
                 }
-
             }
-
         }
         private void uniqueIdColCb_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -373,7 +367,6 @@ namespace ExcelCompare
                 if (Path.GetExtension(docPathOne).ToLower() == ".xlsx")
                 {
                     ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
-
                 }
                 else
                 {
@@ -387,23 +380,22 @@ namespace ExcelCompare
                 if (Path.GetExtension(docPathTwo).ToLower() == ".xlsx")
                 {
                     ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
-
                 }
                 else
                 {
                     ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
-
                 }
             }
             ColumnNamesforUID();
-        }       
+        }
         private void AboutLbl_Click(object sender, EventArgs e)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
             string about = string.Format($"This is a spreadsheet comparison tool designed to compare spreadsheets and output the differences.\nVersion Number: {version}\nAuthor: Martin White");
-            MetroFramework.MetroMessageBox.Show(this, about, "About");
+            MetroFramework.MetroMessageBox.Show(this, about, "About", MessageBoxButtons.OK, MessageBoxIcon.Information);           
+            
         }
         private void ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
         {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ExcelCompare.Properties {
+namespace SpreadsheetCompare.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

@@ -1,4 +1,4 @@
-﻿namespace ExcelCompare
+﻿namespace SpreadsheetCompare
 {
     partial class SaveFileControl
     {

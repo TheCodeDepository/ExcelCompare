@@ -4,7 +4,7 @@ using System.Threading;
 using SpreadsheetLogic;
 using System.DirectoryServices.AccountManagement;
 
-namespace ExcelCompare
+namespace SpreadsheetCompare
 {
     /// <summary>
     /// The form controller contains all the code the form needs to import compare and display the data.

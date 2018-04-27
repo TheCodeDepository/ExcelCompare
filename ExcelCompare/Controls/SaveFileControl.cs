@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework;
 
-namespace ExcelCompare
+namespace SpreadsheetCompare
 {
     public partial class SaveFileControl : MetroFramework.Controls.MetroUserControl
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ExcelCompare
+namespace SpreadsheetCompare
 {
     static class Program
     {

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9C9FCC37-519C-4C14-BAEA-636E642A12FE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ExcelCompare</RootNamespace>
-    <AssemblyName>ExcelCompare</AssemblyName>
+    <RootNamespace>SpreadsheetCompare</RootNamespace>
+    <AssemblyName>SpreadsheetCompare</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
