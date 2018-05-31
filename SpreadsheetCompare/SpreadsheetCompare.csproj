@@ -133,38 +133,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ComparisonLogic\SpreadsheetLogic.csproj">
+    <ProjectReference Include="..\ComparisonLogic\SpreadsheetParser.csproj">
       <Project>{f7b16c7d-bd8c-4587-bcbf-ae1ab9ddc674}</Project>
-      <Name>SpreadsheetLogic</Name>
+      <Name>SpreadsheetParser</Name>
       <Private>True</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\DocumentFormat.OpenXml.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\ExcelNumberFormat.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\FastMember.Signed.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\GenericParsing.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\MetroFramework.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\MetroFramework.Fonts.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\ClosedXML.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\ComparisonLogic.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\CsvHelper.dll" />
+    <ProjectReference Include="..\TableCompare\TableCompare.csproj">
+      <Project>{6b7dbf6d-a05c-486d-9573-228edd1a531f}</Project>
+      <Name>TableCompare</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="spreadsheet_l5z_icon.ico" />

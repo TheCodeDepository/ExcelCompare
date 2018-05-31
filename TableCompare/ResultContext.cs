@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace SpreadsheetLogic
+namespace TableCompare
+
 {
     public class ResultContext
     {

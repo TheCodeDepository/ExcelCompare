@@ -2,6 +2,7 @@
 using CsvHelper;
 using System.Data;
 using System.IO;
+using TableCompare;
 
 namespace SpreadsheetLogic
 {

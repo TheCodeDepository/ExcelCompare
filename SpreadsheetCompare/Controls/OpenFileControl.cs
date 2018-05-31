@@ -41,6 +41,8 @@ namespace SpreadsheetCompare
 
 
         }
+
+        //Removed .txt format 05/04/2018
         private void OpenDialog_Click(object sender, EventArgs e)
         {
             bool retry = false;

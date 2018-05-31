@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetLogic", "ComparisonLogic\SpreadsheetLogic.csproj", "{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetParser", "ComparisonLogic\SpreadsheetParser.csproj", "{F7B16C7D-BD8C-4587-BCBF-AE1AB9DDC674}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetCompare", "SpreadsheetCompare\SpreadsheetCompare.csproj", "{9C9FCC37-519C-4C14-BAEA-636E642A12FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableCompare", "TableCompare\TableCompare.csproj", "{6B7DBF6D-A05C-486D-9573-228EDD1A531F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9C9FCC37-519C-4C14-BAEA-636E642A12FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C9FCC37-519C-4C14-BAEA-636E642A12FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C9FCC37-519C-4C14-BAEA-636E642A12FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B7DBF6D-A05C-486D-9573-228EDD1A531F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B7DBF6D-A05C-486D-9573-228EDD1A531F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B7DBF6D-A05C-486D-9573-228EDD1A531F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B7DBF6D-A05C-486D-9573-228EDD1A531F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

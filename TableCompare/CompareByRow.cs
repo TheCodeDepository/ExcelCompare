@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace SpreadsheetLogic
+namespace TableCompare
 {
     /// <summary>
     /// This Class contain the logic that compare both the "Compare" and "To" documents together outputting lists of indexes that corresponding with changes on the table.
@@ -89,10 +89,8 @@ namespace SpreadsheetLogic
 
             foreach (DataRow coRow in compare.Rows)
             {
-
                 foreach (DataRow toRow in to.Rows)
                 {
-
                     if (coRow[RefColIndex].ToString() == toRow[RefColIndex].ToString())
                     {
                         exists = true;
@@ -110,7 +108,6 @@ namespace SpreadsheetLogic
 
                         }
                         break;
-
                     }
                 }
 

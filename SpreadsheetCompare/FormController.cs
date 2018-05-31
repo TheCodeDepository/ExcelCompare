@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading;
 using SpreadsheetLogic;
 using System.DirectoryServices.AccountManagement;
+using TableCompare;
 
 namespace SpreadsheetCompare
 {
@@ -141,8 +142,7 @@ namespace SpreadsheetCompare
                 if (tableOne != null && tableTwo != null)
                 {
                     CompareByRow comp = new CompareByRow(tableOne, tableTwo, columnIndex);
-                    comp.CompareTables();
-                    resultContext = new ResultContext(comp.coCells, comp.toCells, comp.meCells, comp.coDeletedRows, comp.toAddedRows, comp.meDeletedRows, comp.meAddedRows);
+                    resultContext = comp.CompareTables();
                     mergedView = comp.mergedView;                    
                     CompareComplete(this, EventArgs.Empty);
 
