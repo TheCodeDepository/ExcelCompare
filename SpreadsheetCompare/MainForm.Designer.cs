@@ -55,6 +55,8 @@
             this.toSheetsCb = new MetroFramework.Controls.MetroComboBox();
             this.sortModeCb = new MetroFramework.Controls.MetroComboBox();
             this.ToolTips = new MetroFramework.Components.MetroToolTip();
+            this.openFileControl1 = new SpreadsheetCompare.OpenFileControl();
+            this.openFileControl2 = new SpreadsheetCompare.OpenFileControl();
             this.ModeLbl = new MetroFramework.Controls.MetroLabel();
             this.idLbl = new MetroFramework.Controls.MetroLabel();
             this.uniqueIdColCb = new MetroFramework.Controls.MetroComboBox();
@@ -70,8 +72,6 @@
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.AboutLbl = new MetroFramework.Controls.MetroLabel();
-            this.openFileControl1 = new SpreadsheetCompare.OpenFileControl();
-            this.openFileControl2 = new SpreadsheetCompare.OpenFileControl();
             this.sheetController.SuspendLayout();
             this.mergedViewTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).BeginInit();
@@ -112,6 +112,7 @@
             this.genSpreadcBox.Size = new System.Drawing.Size(137, 15);
             this.genSpreadcBox.TabIndex = 7;
             this.genSpreadcBox.Text = "Generate Spreadsheet";
+            this.ToolTips.SetToolTip(this.genSpreadcBox, "Generate a .xlsx file containing merged results");
             this.genSpreadcBox.UseSelectable = true;
             this.genSpreadcBox.CheckedChanged += new System.EventHandler(this.genSpreadcBox_CheckedChanged);
             // 
@@ -125,6 +126,7 @@
             this.openSpeadcBox.Size = new System.Drawing.Size(119, 15);
             this.openSpeadcBox.TabIndex = 8;
             this.openSpeadcBox.Text = "Open Spreadsheet";
+            this.ToolTips.SetToolTip(this.openSpeadcBox, "Open exported spreadsheet on completion");
             this.openSpeadcBox.UseSelectable = true;
             this.openSpeadcBox.CheckedChanged += new System.EventHandler(this.openSpeadcBox_CheckedChanged);
             // 
@@ -230,7 +232,8 @@
             // 
             this.TableSplitter.Panel2.Controls.Add(this.toViewGrid);
             this.TableSplitter.Size = new System.Drawing.Size(1140, 566);
-            this.TableSplitter.SplitterDistance = 573;
+            this.TableSplitter.SplitterDistance = 566;
+            this.TableSplitter.SplitterWidth = 8;
             this.TableSplitter.TabIndex = 2;
             // 
             // coViewGrid
@@ -267,7 +270,7 @@
             this.coViewGrid.ReadOnly = true;
             this.coViewGrid.RowHeadersVisible = false;
             this.coViewGrid.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.coViewGrid.Size = new System.Drawing.Size(573, 566);
+            this.coViewGrid.Size = new System.Drawing.Size(566, 566);
             this.coViewGrid.TabIndex = 12;
             this.coViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
             this.coViewGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataBindingComplete);
@@ -306,7 +309,7 @@
             this.toViewGrid.Name = "toViewGrid";
             this.toViewGrid.ReadOnly = true;
             this.toViewGrid.RowHeadersVisible = false;
-            this.toViewGrid.Size = new System.Drawing.Size(563, 566);
+            this.toViewGrid.Size = new System.Drawing.Size(566, 566);
             this.toViewGrid.TabIndex = 13;
             this.toViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
             this.toViewGrid.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SideBySideGrid2_Scroll);
@@ -434,6 +437,7 @@
             this.sortModeCb.Name = "sortModeCb";
             this.sortModeCb.Size = new System.Drawing.Size(121, 25);
             this.sortModeCb.TabIndex = 5;
+            this.ToolTips.SetToolTip(this.sortModeCb, "Comparison Options");
             this.sortModeCb.UseSelectable = true;
             this.sortModeCb.SelectedIndexChanged += new System.EventHandler(this.sortModeCb_SelectedIndexChanged);
             // 
@@ -443,6 +447,28 @@
             this.ToolTips.StyleManager = null;
             this.ToolTips.Theme = MetroFramework.MetroThemeStyle.Light;
             // 
+            // openFileControl1
+            // 
+            this.openFileControl1.FilePath = "";
+            this.openFileControl1.Location = new System.Drawing.Point(1, 25);
+            this.openFileControl1.Name = "openFileControl1";
+            this.openFileControl1.Size = new System.Drawing.Size(427, 29);
+            this.openFileControl1.TabIndex = 1;
+            this.openFileControl1.Title = "Compare";
+            this.ToolTips.SetToolTip(this.openFileControl1, "Original document");
+            this.openFileControl1.UseSelectable = true;
+            // 
+            // openFileControl2
+            // 
+            this.openFileControl2.FilePath = "";
+            this.openFileControl2.Location = new System.Drawing.Point(1, 60);
+            this.openFileControl2.Name = "openFileControl2";
+            this.openFileControl2.Size = new System.Drawing.Size(427, 29);
+            this.openFileControl2.TabIndex = 2;
+            this.openFileControl2.Title = "To";
+            this.ToolTips.SetToolTip(this.openFileControl2, "Newer document");
+            this.openFileControl2.UseSelectable = true;
+            // 
             // ModeLbl
             // 
             this.ModeLbl.AutoSize = true;
@@ -451,6 +477,7 @@
             this.ModeLbl.Size = new System.Drawing.Size(44, 19);
             this.ModeLbl.TabIndex = 16;
             this.ModeLbl.Text = "Mode";
+            this.ToolTips.SetToolTip(this.ModeLbl, "Comparison Options");
             // 
             // idLbl
             // 
@@ -460,6 +487,7 @@
             this.idLbl.Size = new System.Drawing.Size(66, 19);
             this.idLbl.TabIndex = 18;
             this.idLbl.Text = "Unique ID";
+            this.ToolTips.SetToolTip(this.idLbl, "Select unique identifier column");
             this.idLbl.Visible = false;
             // 
             // uniqueIdColCb
@@ -472,6 +500,7 @@
             this.uniqueIdColCb.Name = "uniqueIdColCb";
             this.uniqueIdColCb.Size = new System.Drawing.Size(121, 25);
             this.uniqueIdColCb.TabIndex = 6;
+            this.ToolTips.SetToolTip(this.uniqueIdColCb, "Select unique identifier column");
             this.uniqueIdColCb.UseSelectable = true;
             this.uniqueIdColCb.Visible = false;
             this.uniqueIdColCb.SelectedIndexChanged += new System.EventHandler(this.uniqueIdColCb_SelectedIndexChanged);
@@ -502,6 +531,7 @@
             this.hasHeader.Size = new System.Drawing.Size(89, 15);
             this.hasHeader.TabIndex = 0;
             this.hasHeader.Text = "Has Header?";
+            this.ToolTips.SetToolTip(this.hasHeader, "Use first row as column names");
             this.hasHeader.UseSelectable = true;
             this.hasHeader.CheckedChanged += new System.EventHandler(this.hasHeader_CheckedChanged);
             // 
@@ -541,6 +571,7 @@
             this.metroLabel6.Size = new System.Drawing.Size(50, 19);
             this.metroLabel6.TabIndex = 28;
             this.metroLabel6.Text = "Table 2";
+            this.ToolTips.SetToolTip(this.metroLabel6, "Select Table from the newer document (To)");
             // 
             // metroLabel5
             // 
@@ -550,6 +581,7 @@
             this.metroLabel5.Size = new System.Drawing.Size(48, 19);
             this.metroLabel5.TabIndex = 27;
             this.metroLabel5.Text = "Table 1";
+            this.ToolTips.SetToolTip(this.metroLabel5, "Select Table from the older document (Compare)");
             // 
             // metroPanel3
             // 
@@ -626,28 +658,6 @@
             this.AboutLbl.TabIndex = 14;
             this.AboutLbl.Text = "About";
             this.AboutLbl.Click += new System.EventHandler(this.AboutLbl_Click);
-            // 
-            // openFileControl1
-            // 
-            this.openFileControl1.FilePath = "";
-            this.openFileControl1.Location = new System.Drawing.Point(1, 25);
-            this.openFileControl1.Name = "openFileControl1";
-            this.openFileControl1.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl1.TabIndex = 1;
-            this.openFileControl1.Title = "Compare";
-            this.ToolTips.SetToolTip(this.openFileControl1, "Original document");
-            this.openFileControl1.UseSelectable = true;
-            // 
-            // openFileControl2
-            // 
-            this.openFileControl2.FilePath = "";
-            this.openFileControl2.Location = new System.Drawing.Point(1, 60);
-            this.openFileControl2.Name = "openFileControl2";
-            this.openFileControl2.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl2.TabIndex = 2;
-            this.openFileControl2.Title = "To";
-            this.ToolTips.SetToolTip(this.openFileControl2, "Newer document");
-            this.openFileControl2.UseSelectable = true;
             // 
             // MainForm
             // 
