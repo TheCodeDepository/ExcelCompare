@@ -134,14 +134,5 @@ namespace TableCompare
       
     }
 
-    public class Cell
-    {
-        public Cell(int X, int Y)
-        {
-            x = X;
-            y = Y;
-        }
-        public int x { get; }
-        public int y { get; }
-    }
+    
 }
