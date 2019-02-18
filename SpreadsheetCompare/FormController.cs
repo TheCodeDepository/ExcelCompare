@@ -145,7 +145,6 @@ namespace SpreadsheetCompare
                     resultContext = comp.CompareTables();
                     mergedView = comp.mergedView;                    
                     CompareComplete(this, EventArgs.Empty);
-
                 }
             }
         }
@@ -155,7 +154,6 @@ namespace SpreadsheetCompare
         /// </summary>
         internal bool isValidDomain()
         {
-
             bool isValid = false;
             try
             {
@@ -166,15 +164,13 @@ namespace SpreadsheetCompare
                         if (foundUser != null)
                         {
                             isValid = true;
-
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
-
+                isValid = false;
             }
             return isValid;
 

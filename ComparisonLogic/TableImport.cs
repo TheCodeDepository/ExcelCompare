@@ -2,6 +2,7 @@
 using GenericParsing;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
@@ -70,7 +71,7 @@ namespace SpreadsheetLogic
                 DataSet ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
                 //IXLWorksheet workSheet = ws.Worksheet(1);
                 foreach (IXLWorksheet workSheet in ws.Worksheets)
-                {                    
+                {
                     bool nullTable = false;
                     //Create a new DataTable.
                     DataTable dt = new DataTable(workSheet.Name);
@@ -94,7 +95,6 @@ namespace SpreadsheetLogic
                             }
                             for (int i = 1; i <= workSheet.ColumnsUsed().Count(); i++)
                             {
-
                                 if (i <= row.CellsUsed().Count())
                                 {
                                     dt.Columns.Add(row.Cell(i).Value.ToString());
@@ -103,7 +103,7 @@ namespace SpreadsheetLogic
                                 {
                                     dt.Columns.Add($"Filler {i}");
                                 }
-                            }                         
+                            }
                             hasHeader = false;
                         }
                         else
@@ -128,6 +128,29 @@ namespace SpreadsheetLogic
 
         }
 
-   
+        private DataSet ImportSql(string server, string database, string tableName, bool trustedConnection = false, string username = null, string password = null)
+        {
+            string connectionString;
+            if (trustedConnection)
+            {
+                connectionString = $"Server={server};Database={database};Trusted_Connection=True;";
+            }
+            else
+            {
+                connectionString = $"Server={server};Database={database};User Id={username};Password={password};";
+            }
+            DataSet ds = new DataSet();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand($"SELECT * FROM [{tableName}];",connection))
+                {
+                    DataTable table = new DataTable();
+                    SqlDataAdapter da = new SqlDataAdapter(command);
+                    da.Fill(table);
+                    ds.Tables.Add(table);
+                }                
+            }
+            return ds;
+        }
     }
 }

@@ -127,9 +127,9 @@ namespace SpreadsheetCompare
                     ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
 
                 }
-                catch (Exception)
+                catch (Exception m )
                 {
-                    MetroFramework.MetroMessageBox.Show(this, "Please Ensure files are closed before importing.");
+                    MetroFramework.MetroMessageBox.Show(this, "Please Ensure files are closed before importing." + m.Message);
                     docPathOne = string.Empty;
                     return;
                 }
@@ -422,6 +422,12 @@ namespace SpreadsheetCompare
                 }
                 view.PushSingleView(selectedView.SelectedIndex);
             }
+        }
+
+        private void metroButton2_Click(object sender, EventArgs e)
+        {
+            SqlSelect show = new SqlSelect();
+            show.Show();
         }
     }
 }
