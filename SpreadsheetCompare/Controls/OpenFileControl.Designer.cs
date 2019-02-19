@@ -31,6 +31,7 @@
             this.label = new MetroFramework.Controls.MetroLabel();
             this.dialogBtn = new MetroFramework.Controls.MetroButton();
             this.pathTextBox = new MetroFramework.Controls.MetroTextBox();
+            this.OpenSqlDialog = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
             // label
@@ -48,9 +49,9 @@
             // dialogBtn
             // 
             this.dialogBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.dialogBtn.Location = new System.Drawing.Point(351, 3);
+            this.dialogBtn.Location = new System.Drawing.Point(348, 3);
             this.dialogBtn.Name = "dialogBtn";
-            this.dialogBtn.Size = new System.Drawing.Size(24, 23);
+            this.dialogBtn.Size = new System.Drawing.Size(27, 23);
             this.dialogBtn.TabIndex = 7;
             this.dialogBtn.Text = "...";
             this.dialogBtn.UseSelectable = true;
@@ -64,7 +65,7 @@
             // 
             // 
             this.pathTextBox.CustomButton.Image = null;
-            this.pathTextBox.CustomButton.Location = new System.Drawing.Point(255, 1);
+            this.pathTextBox.CustomButton.Location = new System.Drawing.Point(226, 1);
             this.pathTextBox.CustomButton.Name = "";
             this.pathTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.pathTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -85,17 +86,29 @@
             this.pathTextBox.SelectionLength = 0;
             this.pathTextBox.SelectionStart = 0;
             this.pathTextBox.ShortcutsEnabled = true;
-            this.pathTextBox.Size = new System.Drawing.Size(277, 23);
+            this.pathTextBox.Size = new System.Drawing.Size(248, 23);
             this.pathTextBox.TabIndex = 6;
             this.pathTextBox.UseSelectable = true;
             this.pathTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.pathTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             this.pathTextBox.TextChanged += new System.EventHandler(this.path_TextChanged);
             // 
+            // OpenSqlDialog
+            // 
+            this.OpenSqlDialog.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.OpenSqlDialog.Location = new System.Drawing.Point(322, 3);
+            this.OpenSqlDialog.Name = "OpenSqlDialog";
+            this.OpenSqlDialog.Size = new System.Drawing.Size(27, 23);
+            this.OpenSqlDialog.TabIndex = 9;
+            this.OpenSqlDialog.Text = "SQL";
+            this.OpenSqlDialog.UseSelectable = true;
+            this.OpenSqlDialog.Click += new System.EventHandler(this.OpenSqlDialog_Click);
+            // 
             // OpenFileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.OpenSqlDialog);
             this.Controls.Add(this.label);
             this.Controls.Add(this.dialogBtn);
             this.Controls.Add(this.pathTextBox);
@@ -111,5 +124,6 @@
         private MetroFramework.Controls.MetroLabel label;
         private MetroFramework.Controls.MetroButton dialogBtn;
         private MetroFramework.Controls.MetroTextBox pathTextBox;
+        private MetroFramework.Controls.MetroButton OpenSqlDialog;
     }
 }

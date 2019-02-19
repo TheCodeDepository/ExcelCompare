@@ -14,7 +14,6 @@ namespace SpreadsheetCompare
 {
     public partial class OpenFileControl : MetroFramework.Controls.MetroUserControl
     {
-
         public OpenFileControl()
         {
             InitializeComponent();
@@ -25,6 +24,7 @@ namespace SpreadsheetCompare
             set { label.Text = value; }
 
         }
+        public string ConnectionPath { get; set; }
         public string FilePath
         {
             get { return pathTextBox.Text; }
@@ -38,8 +38,6 @@ namespace SpreadsheetCompare
             {
                 _TextChanged(this, e);
             }
-
-
         }
 
         //Removed .txt format 05/04/2018
@@ -58,6 +56,7 @@ namespace SpreadsheetCompare
                     if (ext == ".xlsx" || ext == ".csv")
                     {
                         FilePath = openFileDialog.FileName;
+                        ConnectionPath = openFileDialog.FileName;
                     }
                     else
                     {
@@ -69,6 +68,16 @@ namespace SpreadsheetCompare
                     }
                 }
             } while (retry);
+        }
+        private void OpenSqlDialog_Click(object sender, EventArgs e)
+        {
+            SqlSelect select = new SqlSelect();
+            select.ShowDialog();
+            if (select.DialogResult == DialogResult.OK)
+            {
+                ConnectionPath = select.DatabaseConnectionString;
+                FilePath = $"{select.Server} - {select.DatabaseName}";
+            }
 
         }
     }

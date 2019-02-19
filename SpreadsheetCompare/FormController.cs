@@ -16,10 +16,10 @@ namespace SpreadsheetCompare
     /// </summary>
     public class FormController
     {
+        
         public ResultContext resultContext { get; set; }
-        public DataSet workbookOne { get; set; }
-        public DataSet workbookTwo { get; set; }
         public DataTable mergedView { get; set; }
+
         public DataTable tableOne { get; set; }
         public DataTable tableTwo { get; set; }
         public SortMethod sortMethod { get; set; }
@@ -49,6 +49,7 @@ namespace SpreadsheetCompare
         /// Background thread callback fields
         /// </summary>
         Thread backgroundThread;
+
         private event EventHandler<EventArgs> CompareComplete;
 
         /// <summary>
@@ -77,36 +78,6 @@ namespace SpreadsheetCompare
             }
         }
 
-        /// <summary>
-        /// Returns a DataSet that contains all the tables and sheets of the target Datasource
-        /// </summary>
-        internal DataSet GetWorkBook(string path)
-        {
-            TableImport imp = new TableImport(path.ToLower(), hasHeader);
-            DataSet wb = imp.GetDataSet();
-            return wb;
-        }
-
-        /// <summary>
-        ///Return only the first Datatable in the DataSet 
-        /// </summary>
-        /// <param name="path"></param>
-        internal DataTable ReturnFirstDataTable(string path)
-        {
-            TableImport imp = new TableImport(path.ToLower(), hasHeader);
-            DataSet tmp = imp.GetDataSet();
-            return tmp.Tables[0];
-        }
-
-        /// <summary>
-        /// Gets the DataTable from the DataSet using its index and returns it.
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="workbook"></param>
-        public DataTable GetTableByIndex(int index, DataSet workbook)
-        {
-            return workbook.Tables[index];
-        }
 
         /// <summary>
         /// Exports Merged view to desired filepath 

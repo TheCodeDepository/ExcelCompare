@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using GenericParsing;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,146 +12,186 @@ namespace SpreadsheetLogic
     public class TableImport
     {
 
-        public bool hasHeader { get; set; }
-        public string filePath { get; private set; }
+        public bool hasHeader { get; private set; }
+        public string path { get; private set; }
 
         public TableImport(string filePath, bool hasHeader)
         {
-            this.filePath = filePath;
+            this.path = filePath;
             this.hasHeader = hasHeader;
+
         }
 
-        public DataSet GetDataSet()
+        public List<string> GetTableNames()
         {
-            DataSet tmp = new DataSet();
+            List<string> names = new List<string>();
 
-            switch (Path.GetExtension(filePath))
+            switch (Path.GetExtension(path))
             {
                 case ".xlsx":
-                    tmp = ImportExcel();
+                    names = GetXlsxTablesNames();
                     break;
 
                 case ".csv":
-                    tmp = ImportCSV();
+                    names = GetCSVTablesNames();
+                    break;
+
+                default:
+                    names = GetSQLTablesNames();
                     break;
 
             }
-            return tmp;
+            return names;
         }
 
-        public ICollection<string> SheetNames(string path)
+        private List<string> GetCSVTablesNames()
         {
-            List<string> tmp = new List<string>();
-            using (XLWorkbook ws = new XLWorkbook(path))
+            var csv = new List<string>();
+            csv.Add("Is .CSV");
+            return csv;
+        }
+
+        private List<string> GetSQLTablesNames()
+        {
+            DataTable table = new DataTable();
+            using (SqlConnection connection = new SqlConnection(path))
             {
-                foreach (var item in ws.Worksheets)
+                using (SqlCommand command = new SqlCommand($"SELECT [TABLE_NAME] FROM information_schema.tables ORDER BY TABLE_NAME;", connection))
                 {
-                    tmp.Add(item.Name);
+                    SqlDataAdapter da = new SqlDataAdapter(command);
+                    da.Fill(table);
                 }
             }
-            return tmp;
+            List<string> names = new List<string>();
+            foreach (DataRow i in table.Rows)
+            {
+                names.Add(i[0].ToString());
+            }
+            return names;
         }
 
-        private DataSet ImportCSV()
+        private List<string> GetXlsxTablesNames()
         {
-            DataSet tmp;
+            List<string> names = new List<string>();
+            using (XLWorkbook ws = new XLWorkbook(path))
+            {
+                foreach (IXLWorksheet sheet in ws.Worksheets)
+                {
+                    names.Add(sheet.Name);
+                }
+            }
+            return names;
+        }
+
+        public DataTable GetDataTable(string sheetName = null)
+        {
+            DataTable dataTable = new DataTable();
+
+            switch (Path.GetExtension(path))
+            {
+                case ".xlsx":
+                    dataTable = ImportXlsxTable(sheetName);
+                    break;
+
+                case ".csv":
+                    dataTable = ImportCSVTable();
+                    break;
+
+                default:
+                    dataTable = ImportSQLTable(sheetName);
+                    break;
+
+            }
+            return dataTable;
+        }
+
+        private DataTable ImportCSVTable()
+        {
+            DataTable table;
             using (GenericParserAdapter parser = new GenericParserAdapter())
             {
                 parser.ColumnDelimiter = ',';
-                parser.SetDataSource(filePath);
+                parser.SetDataSource(path);
                 parser.FirstRowHasHeader = hasHeader;
-                tmp = parser.GetDataSet();
+                table = parser.GetDataTable();
             }
-            return tmp;
+            return table;
         }
 
-        private DataSet ImportExcel()
+        private DataTable ImportXlsxTable(string sheetName)
         {
-            using (XLWorkbook ws = new XLWorkbook(filePath))
+            DataTable table = new DataTable();
+            using (XLWorkbook ws = new XLWorkbook(path))
             {
-                DataSet ds = new DataSet(Path.GetFileNameWithoutExtension(filePath));
-                //IXLWorksheet workSheet = ws.Worksheet(1);
-                foreach (IXLWorksheet workSheet in ws.Worksheets)
+                var workSheet = ws.Worksheet(sheetName);
+                bool nullTable = false;
+                //Create a new DataTable.
+                DataTable dt = new DataTable(workSheet.Name);
+                //Loop through the Worksheet rows.
+                if (!hasHeader)
                 {
-                    bool nullTable = false;
-                    //Create a new DataTable.
-                    DataTable dt = new DataTable(workSheet.Name);
-                    //Loop through the Worksheet rows.
-                    if (!hasHeader)
+                    for (int i = 0; i < workSheet.ColumnsUsed().Count(); i++)
                     {
-                        for (int i = 0; i < workSheet.ColumnsUsed().Count(); i++)
-                        {
-                            dt.Columns.Add($"Column{i}");
-                        }
-                    }
-                    foreach (IXLRow row in workSheet.Rows())
-                    {
-                        //Use the first row to add columns to DataTable.
-                        if (hasHeader)
-                        {
-                            if (row.Cells().Count() < 2 || workSheet.RowsUsed().Count() < 2)
-                            {
-                                nullTable = true;
-                                break;
-                            }
-                            for (int i = 1; i <= workSheet.ColumnsUsed().Count(); i++)
-                            {
-                                if (i <= row.CellsUsed().Count())
-                                {
-                                    dt.Columns.Add(row.Cell(i).Value.ToString());
-                                }
-                                else
-                                {
-                                    dt.Columns.Add($"Filler {i}");
-                                }
-                            }
-                            hasHeader = false;
-                        }
-                        else
-                        {
-                            //Add rows to DataTable.
-                            dt.Rows.Add();
-                            int i = 0;
-                            foreach (IXLCell cell in row.Cells())
-                            {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
-                                i++;
-                            }
-                        }
-                    }
-                    if (!nullTable)
-                    {
-                        ds.Tables.Add(dt);
+                        dt.Columns.Add($"Column{i}");
                     }
                 }
-                return ds;
+                foreach (IXLRow row in workSheet.Rows())
+                {
+                    //Use the first row to add columns to DataTable.
+                    if (hasHeader)
+                    {
+                        if (row.Cells().Count() < 2 || workSheet.RowsUsed().Count() < 2)
+                        {
+                            nullTable = true;
+                            break;
+                        }
+                        for (int i = 1; i <= workSheet.ColumnsUsed().Count(); i++)
+                        {
+                            if (i <= row.CellsUsed().Count())
+                            {
+                                dt.Columns.Add(row.Cell(i).Value.ToString());
+                            }
+                            else
+                            {
+                                dt.Columns.Add($"Filler {i}");
+                            }
+                        }
+                        hasHeader = false;
+                    }
+                    else
+                    {
+                        //Add rows to DataTable.
+                        dt.Rows.Add();
+                        int i = 0;
+                        foreach (IXLCell cell in row.Cells())
+                        {
+                            dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
+                            i++;
+                        }
+                    }
+                }
+                if (!nullTable)
+                {
+                    table = dt;
+                }
+
+                return dt;
             }
 
         }
 
-        private DataSet ImportSql(string server, string database, string tableName, bool trustedConnection = false, string username = null, string password = null)
+        private DataTable ImportSQLTable(string sheetName)
         {
-            string connectionString;
-            if (trustedConnection)
+            DataTable table = new DataTable();
+            using (SqlConnection connection = new SqlConnection(path))
             {
-                connectionString = $"Server={server};Database={database};Trusted_Connection=True;";
-            }
-            else
-            {
-                connectionString = $"Server={server};Database={database};User Id={username};Password={password};";
-            }
-            DataSet ds = new DataSet();
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand($"SELECT * FROM [{tableName}];",connection))
+                using (SqlCommand command = new SqlCommand($"SELECT * FROM [{sheetName}]", connection))
                 {
-                    DataTable table = new DataTable();
                     SqlDataAdapter da = new SqlDataAdapter(command);
                     da.Fill(table);
-                    ds.Tables.Add(table);
-                }                
+                }
             }
-            return ds;
+            return table;
         }
     }
 }

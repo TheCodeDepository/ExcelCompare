@@ -2,8 +2,7 @@
 using System.Data;
 using System.Windows.Forms;
 using System.IO;
-
-
+using SpreadsheetLogic;
 
 namespace SpreadsheetCompare
 {
@@ -15,8 +14,10 @@ namespace SpreadsheetCompare
         private delegate void CompareComplete();
         CompareComplete compareHandler;
 
-        public string docPathOne { get { return openFileControl1.FilePath; } private set { openFileControl1.FilePath = value; } }
-        public string docPathTwo { get { return openFileControl2.FilePath; } private set { openFileControl2.FilePath = value; } }
+        TableImport TableOne;
+        TableImport TableTwo;
+
+
         public string outputPath { get; private set; }
 
         public MainForm()
@@ -24,6 +25,8 @@ namespace SpreadsheetCompare
             InitializeComponent();
             openFileControl1._TextChanged += GetSheetNamesOne;
             openFileControl2._TextChanged += GetSheetNamesTwo;
+
+
             coViewGrid.MouseWheel += ScrollSideOne;
             compareHandler = CompareThreadCompleted;
             ctrl = new FormController(Compare_OnComplete);
@@ -42,6 +45,8 @@ namespace SpreadsheetCompare
             }
             sheetController.SelectedIndex = 0;
         }
+
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             ctrl.SaveConfig();
@@ -117,76 +122,38 @@ namespace SpreadsheetCompare
         }
         private void GetSheetNamesOne(object sender, EventArgs e)
         {
-            if (!File.Exists(docPathOne))
-                return;
-            coSheetsCb.Items.Clear();
-            if (Path.GetExtension(docPathOne) == ".xlsx")
-            {
-                try
-                {
-                    ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
-
-                }
-                catch (Exception m )
-                {
-                    MetroFramework.MetroMessageBox.Show(this, "Please Ensure files are closed before importing." + m.Message);
-                    docPathOne = string.Empty;
-                    return;
-                }
-                foreach (DataTable table in ctrl.workbookOne.Tables)
-                {
-                    coSheetsCb.Items.Add(table.TableName);
-                }
-                coSheetsCb.Enabled = true;
-                coSheetsCb.SelectedIndex = 0;
-            }
-            else
-            {
-                coSheetsCb.Enabled = false;
-                coSheetsCb.Items.Add("CSV file selected");
-                ctrl.tableOne = ctrl.ReturnFirstDataTable(docPathOne);
-                CheckSelections();
-            }
-            CheckSortMethod();
-
+            TableOne = new TableImport(file.ConnectionString, hasHeader.Checked);
+            UpdateSheets(openFileControl1,TableOne, coSheetsCb);       
         }
         private void GetSheetNamesTwo(object sender, EventArgs e)
         {
-            if (!File.Exists(docPathTwo))
-            {
-                return;
-            }
-            toSheetsCb.Items.Clear();
-            if (Path.GetExtension(docPathTwo) == ".xlsx")
-            {
-                try
-                {
-                    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
-
-                }
-                catch (Exception)
-                {
-                    MetroFramework.MetroMessageBox.Show(this, "Please Ensure files are closed. Reselect the file before continuing.");
-                    docPathTwo = string.Empty;
-                    return;
-                }
-                foreach (DataTable table in ctrl.workbookTwo.Tables)
-                {
-                    toSheetsCb.Items.Add(table.TableName);
-                }
-                toSheetsCb.Enabled = true;
-                toSheetsCb.SelectedIndex = 0;
-            }
-            else
-            {
-                toSheetsCb.Enabled = false;
-                toSheetsCb.Items.Add("CSV file selected");
-                ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
-                CheckSelections();
-            }
-            CheckSortMethod();
-
+            TableTwo = new TableImport(file.ConnectionString, hasHeader.Checked);
+            UpdateSheets(openFileControl2, TableTwo, toSheetsCb);
         }
+
+        private void coSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tmp = TableOne.GetDataTable(coSheetsCb.SelectedText);
+            ctrl.tableOne = tmp;
+        }
+        private void toSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tmp = TableOne.GetDataTable(coSheetsCb.SelectedText);
+            ctrl.tableTwo = tmp;
+        }
+        private void UpdateSheets(OpenFileControl file, TableImport import, MetroFramework.Controls.MetroComboBox comboBox)
+        {
+            if (file.ConnectionPath != null)
+            {                
+                foreach (string tableName in import.GetTableNames())
+                {
+                    comboBox.Items.Add(tableName);
+                }
+                comboBox.SelectedIndex = 0;
+            }
+            comboBox.Enabled = true;
+        }
+
         private void SideBySideGrid1_Scroll(object sender, ScrollEventArgs e)
         {
             if (toViewGrid.Rows.Count > coViewGrid.FirstDisplayedScrollingRowIndex)
@@ -201,22 +168,7 @@ namespace SpreadsheetCompare
                 this.coViewGrid.FirstDisplayedScrollingRowIndex = this.toViewGrid.FirstDisplayedScrollingRowIndex;
             }
         }
-        private void coSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (coSheetsCb.SelectedIndex > -1)
-            {
-                ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
-                CheckSelections();
-            }
-        }
-        private void toSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (toSheetsCb.SelectedIndex > -1)
-            {
-                ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
-                CheckSelections();
-            }
-        }
+
         private void CompareThreadCompleted()
         {
             if (meViewGrid.DataSource != null)
@@ -309,21 +261,22 @@ namespace SpreadsheetCompare
         }
         private void CheckSortMethod()
         {
-            switch ((SortMethod)sortModeCb.SelectedIndex)
+            if (ctrl.tableOne != null && ctrl.tableTwo != null)
             {
-                case SortMethod.CellbyCell:
-                    if (ctrl.tableOne != null && ctrl.tableTwo != null)
-                    {
-                        CompareBtn.Enabled = true;
-                    }
-                    uniqueIdColCb.Visible = false;
-                    idLbl.Visible = false;
-                    break;
-                case SortMethod.RowByRow:
-                    CompareBtn.Enabled = false;
-                    ColumnNamesforUID();
-                    break;
+                CompareBtn.Enabled = true;
+                switch ((SortMethod)sortModeCb.SelectedIndex)
+                {
+                    case SortMethod.CellbyCell:
+                        uniqueIdColCb.Visible = false;
+                        idLbl.Visible = false;
+                        break;
+                    case SortMethod.RowByRow:
+                        CompareBtn.Enabled = false;
+                        ColumnNamesforUID();
+                        break;
+                }
             }
+
         }
         private void ColumnNamesforUID()
         {
@@ -336,6 +289,8 @@ namespace SpreadsheetCompare
                 uniqueIdColCb.Items.Clear();
                 uniqueIdColCb.Visible = true;
                 idLbl.Visible = true;
+
+
                 foreach (DataColumn item in ctrl.tableOne.Columns)
                 {
                     uniqueIdColCb.Items.Add(item.ColumnName);
@@ -360,33 +315,33 @@ namespace SpreadsheetCompare
         }
         private void hasHeader_CheckedChanged(object sender, EventArgs e)
         {
-            ctrl.hasHeader = hasHeader.Checked;
-            if (ctrl.workbookOne != null || ctrl.tableOne != null)
-            {
-                ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
-                if (Path.GetExtension(docPathOne).ToLower() == ".xlsx")
-                {
-                    ctrl.tableOne = ctrl.GetTableByIndex(coSheetsCb.SelectedIndex, ctrl.workbookOne);
-                }
-                else
-                {
-                    ctrl.tableOne = ctrl.ReturnFirstDataTable(docPathOne);
-                }
+            //ctrl.hasHeader = hasHeader.Checked;
+            //if (ctrl.workbookOne != null || ctrl.tableOne != null)
+            //{
+            //    ctrl.workbookOne = ctrl.GetWorkBook(docPathOne);
+            //    if (Path.GetExtension(docPathOne).ToLower() == ".xlsx")
+            //    {
+            //        ctrl.tableOne = ctrl.GetTableByName(coSheetsCb.SelectedText, ctrl.workbookOne, openFileControl1.ConnectionString);
+            //    }
+            //    else
+            //    {
+            //        ctrl.tableOne = ctrl.ReturnFirstDataTable(docPathOne);
+            //    }
 
-            }
-            if (ctrl.workbookTwo != null || ctrl.tableTwo != null)
-            {
-                ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
-                if (Path.GetExtension(docPathTwo).ToLower() == ".xlsx")
-                {
-                    ctrl.tableTwo = ctrl.GetTableByIndex(toSheetsCb.SelectedIndex, ctrl.workbookTwo);
-                }
-                else
-                {
-                    ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
-                }
-            }
-            ColumnNamesforUID();
+            //}
+            //if (ctrl.workbookTwo != null || ctrl.tableTwo != null)
+            //{
+            //    ctrl.workbookTwo = ctrl.GetWorkBook(docPathTwo);
+            //    if (Path.GetExtension(docPathTwo).ToLower() == ".xlsx")
+            //    {
+            //        ctrl.tableTwo = ctrl.GetTableByName(toSheetsCb.SelectedText, ctrl.workbookTwo, openFileControl1.ConnectionString);
+            //    }
+            //    else
+            //    {
+            //        ctrl.tableTwo = ctrl.ReturnFirstDataTable(docPathTwo);
+            //    }
+            //}
+            //ColumnNamesforUID();
         }
         private void AboutLbl_Click(object sender, EventArgs e)
         {
@@ -394,8 +349,8 @@ namespace SpreadsheetCompare
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
             string about = string.Format($"This is a spreadsheet comparison tool designed to compare spreadsheets and output the differences.\nVersion Number: {version}\nAuthor: Martin White");
-            MetroFramework.MetroMessageBox.Show(this, about, "About", MessageBoxButtons.OK, MessageBoxIcon.Information);           
-            
+            MetroFramework.MetroMessageBox.Show(this, about, "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
         private void ColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
         {
@@ -423,7 +378,6 @@ namespace SpreadsheetCompare
                 view.PushSingleView(selectedView.SelectedIndex);
             }
         }
-
         private void metroButton2_Click(object sender, EventArgs e)
         {
             SqlSelect show = new SqlSelect();

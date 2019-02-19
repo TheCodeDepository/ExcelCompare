@@ -75,7 +75,7 @@
             // TestConnectionBtn
             // 
             this.TestConnectionBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.TestConnectionBtn.Location = new System.Drawing.Point(209, 285);
+            this.TestConnectionBtn.Location = new System.Drawing.Point(10, 285);
             this.TestConnectionBtn.Margin = new System.Windows.Forms.Padding(10);
             this.TestConnectionBtn.Name = "TestConnectionBtn";
             this.TestConnectionBtn.Size = new System.Drawing.Size(138, 23);
