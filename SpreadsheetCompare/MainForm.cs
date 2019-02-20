@@ -48,6 +48,7 @@ namespace SpreadsheetCompare
         }
         private void UpdateSheets(OpenFileControl file, TableImport import, MetroFramework.Controls.MetroComboBox comboBox)
         {
+            comboBox.Items.Clear();
             if (file.ConnectionPath != null)
             {
                 foreach (string tableName in import.GetTableNames())

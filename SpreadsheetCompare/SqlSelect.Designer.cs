@@ -202,6 +202,7 @@
             this.SaveCredentialsChk.TabIndex = 9;
             this.SaveCredentialsChk.Text = "Save Credentials";
             this.SaveCredentialsChk.UseSelectable = true;
+            this.SaveCredentialsChk.Visible = false;
             this.SaveCredentialsChk.CheckedChanged += new System.EventHandler(this.SaveCredentialsChk_CheckedChanged);
             // 
             // ServerCbo
