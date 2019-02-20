@@ -48,7 +48,6 @@ namespace TableCompare
 
             foreach (DataRow toRow in to.Rows)
             {
-
                 bool exists = false;
                 string toI = toRow[RefColIndex].ToString();
                 foreach (DataRow coRow in compare.Rows)

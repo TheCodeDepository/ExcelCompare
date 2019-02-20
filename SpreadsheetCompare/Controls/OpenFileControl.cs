@@ -55,8 +55,8 @@ namespace SpreadsheetCompare
                     string ext = Path.GetExtension(openFileDialog.FileName).ToLower();
                     if (ext == ".xlsx" || ext == ".csv")
                     {
-                        FilePath = openFileDialog.FileName;
                         ConnectionPath = openFileDialog.FileName;
+                        FilePath = openFileDialog.FileName;
                     }
                     else
                     {

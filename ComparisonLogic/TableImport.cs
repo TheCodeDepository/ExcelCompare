@@ -12,14 +12,13 @@ namespace SpreadsheetLogic
     public class TableImport
     {
 
-        public bool hasHeader { get; private set; }
+        public bool hasHeader { get; set; }
         public string path { get; private set; }
 
         public TableImport(string filePath, bool hasHeader)
         {
             this.path = filePath;
             this.hasHeader = hasHeader;
-
         }
 
         public List<string> GetTableNames()
@@ -39,7 +38,6 @@ namespace SpreadsheetLogic
                 default:
                     names = GetSQLTablesNames();
                     break;
-
             }
             return names;
         }
@@ -135,6 +133,7 @@ namespace SpreadsheetLogic
                         dt.Columns.Add($"Column{i}");
                     }
                 }
+
                 foreach (IXLRow row in workSheet.Rows())
                 {
                     //Use the first row to add columns to DataTable.
