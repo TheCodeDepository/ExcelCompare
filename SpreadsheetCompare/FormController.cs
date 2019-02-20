@@ -15,20 +15,15 @@ namespace SpreadsheetCompare
     /// Last edit: 24/04/2018
     /// </summary>
     public class FormController
-    {
-        
+    {      
         public ResultContext resultContext { get; set; }
-        public DataTable mergedView { get; set; }
 
+        public DataTable mergedView { get; set; }
         public DataTable tableOne { get; set; }
         public DataTable tableTwo { get; set; }
+
         public SortMethod sortMethod { get; set; }
         public int columnIndex { get; set; }
-        public bool hasHeader
-        {
-            get { return Properties.Settings.Default.hasHeader; }
-            set { Properties.Settings.Default.hasHeader = value; }
-        }
         public bool GenerateSpreadsheet
         {
             get { return Properties.Settings.Default.generateSpreadsheet; }
@@ -77,7 +72,6 @@ namespace SpreadsheetCompare
                     break;
             }
         }
-
 
         /// <summary>
         /// Exports Merged view to desired filepath 

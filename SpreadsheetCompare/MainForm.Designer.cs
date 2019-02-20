@@ -61,8 +61,9 @@
             this.hasHeader = new MetroFramework.Controls.MetroCheckBox();
             this.metroLabel6 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
+            this.openFileControl1 = new SpreadsheetCompare.OpenFileControl();
+            this.openFileControl2 = new SpreadsheetCompare.OpenFileControl();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
-            this.metroButton1 = new MetroFramework.Controls.MetroButton();
             this.metroPanel2 = new MetroFramework.Controls.MetroPanel();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
             this.metroPanel3 = new MetroFramework.Controls.MetroPanel();
@@ -71,9 +72,6 @@
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.AboutLbl = new MetroFramework.Controls.MetroLabel();
-            this.metroButton2 = new MetroFramework.Controls.MetroButton();
-            this.openFileControl1 = new SpreadsheetCompare.OpenFileControl();
-            this.openFileControl2 = new SpreadsheetCompare.OpenFileControl();
             this.sheetController.SuspendLayout();
             this.mergedViewTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.meViewGrid)).BeginInit();
@@ -519,9 +517,32 @@
             this.metroLabel5.Text = "Table 1";
             this.ToolTips.SetToolTip(this.metroLabel5, "Select Table from the older document (Compare)");
             // 
+            // openFileControl1
+            // 
+            this.openFileControl1.ConnectionPath = null;
+            this.openFileControl1.FilePath = "";
+            this.openFileControl1.Location = new System.Drawing.Point(1, 25);
+            this.openFileControl1.Name = "openFileControl1";
+            this.openFileControl1.Size = new System.Drawing.Size(427, 29);
+            this.openFileControl1.TabIndex = 1;
+            this.openFileControl1.Title = "Compare";
+            this.ToolTips.SetToolTip(this.openFileControl1, "Original document");
+            this.openFileControl1.UseSelectable = true;
+            // 
+            // openFileControl2
+            // 
+            this.openFileControl2.ConnectionPath = null;
+            this.openFileControl2.FilePath = "";
+            this.openFileControl2.Location = new System.Drawing.Point(1, 60);
+            this.openFileControl2.Name = "openFileControl2";
+            this.openFileControl2.Size = new System.Drawing.Size(427, 29);
+            this.openFileControl2.TabIndex = 2;
+            this.openFileControl2.Title = "To";
+            this.ToolTips.SetToolTip(this.openFileControl2, "Newer document");
+            this.openFileControl2.UseSelectable = true;
+            // 
             // metroPanel1
             // 
-            this.metroPanel1.Controls.Add(this.metroButton1);
             this.metroPanel1.Controls.Add(this.hasHeader);
             this.metroPanel1.Controls.Add(this.openFileControl1);
             this.metroPanel1.Controls.Add(this.openFileControl2);
@@ -535,15 +556,6 @@
             this.metroPanel1.VerticalScrollbarBarColor = true;
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel1.VerticalScrollbarSize = 10;
-            // 
-            // metroButton1
-            // 
-            this.metroButton1.Location = new System.Drawing.Point(265, 1);
-            this.metroButton1.Name = "metroButton1";
-            this.metroButton1.Size = new System.Drawing.Size(59, 19);
-            this.metroButton1.TabIndex = 24;
-            this.metroButton1.Text = "Use SQL";
-            this.metroButton1.UseSelectable = true;
             // 
             // metroPanel2
             // 
@@ -649,45 +661,11 @@
             this.AboutLbl.Text = "About";
             this.AboutLbl.Click += new System.EventHandler(this.AboutLbl_Click);
             // 
-            // metroButton2
-            // 
-            this.metroButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroButton2.Location = new System.Drawing.Point(1026, 57);
-            this.metroButton2.Name = "metroButton2";
-            this.metroButton2.Size = new System.Drawing.Size(75, 23);
-            this.metroButton2.TabIndex = 24;
-            this.metroButton2.Text = "test";
-            this.metroButton2.UseSelectable = true;
-            this.metroButton2.Click += new System.EventHandler(this.metroButton2_Click);
-            // 
-            // openFileControl1
-            // 
-            this.openFileControl1.FilePath = "";
-            this.openFileControl1.Location = new System.Drawing.Point(1, 25);
-            this.openFileControl1.Name = "openFileControl1";
-            this.openFileControl1.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl1.TabIndex = 1;
-            this.openFileControl1.Title = "Compare";
-            this.ToolTips.SetToolTip(this.openFileControl1, "Original document");
-            this.openFileControl1.UseSelectable = true;
-            // 
-            // openFileControl2
-            // 
-            this.openFileControl2.FilePath = "";
-            this.openFileControl2.Location = new System.Drawing.Point(1, 60);
-            this.openFileControl2.Name = "openFileControl2";
-            this.openFileControl2.Size = new System.Drawing.Size(427, 29);
-            this.openFileControl2.TabIndex = 2;
-            this.openFileControl2.Title = "To";
-            this.ToolTips.SetToolTip(this.openFileControl2, "Newer document");
-            this.openFileControl2.UseSelectable = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1200, 800);
-            this.Controls.Add(this.metroButton2);
             this.Controls.Add(this.AboutLbl);
             this.Controls.Add(this.metroLabel1);
             this.Controls.Add(this.metroPanel4);
@@ -765,7 +743,5 @@
         private MetroFramework.Controls.MetroComboBox selectedView;
         private System.Windows.Forms.DataGridView singleViewGrid;
         private System.Windows.Forms.DataGridView meViewGrid;
-        private MetroFramework.Controls.MetroButton metroButton1;
-        private MetroFramework.Controls.MetroButton metroButton2;
     }
 }
