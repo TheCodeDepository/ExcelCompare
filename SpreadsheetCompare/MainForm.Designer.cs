@@ -59,17 +59,17 @@
             this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.metroPanel2 = new MetroFramework.Controls.MetroPanel();
+            this.toSheetsCb = new System.Windows.Forms.ComboBox();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
+            this.coSheetsCb = new System.Windows.Forms.ComboBox();
             this.metroPanel3 = new MetroFramework.Controls.MetroPanel();
+            this.uniqueIdColCb = new System.Windows.Forms.ComboBox();
+            this.sortModeCb = new System.Windows.Forms.ComboBox();
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.AboutLbl = new MetroFramework.Controls.MetroLabel();
-            this.coSheetsCb = new System.Windows.Forms.ComboBox();
-            this.toSheetsCb = new System.Windows.Forms.ComboBox();
-            this.sortModeCb = new System.Windows.Forms.ComboBox();
-            this.uniqueIdColCb = new System.Windows.Forms.ComboBox();
             this.openFileControl1 = new SpreadsheetCompare.OpenFileControl();
             this.openFileControl2 = new SpreadsheetCompare.OpenFileControl();
             this.sheetController.SuspendLayout();
@@ -140,7 +140,7 @@
             this.sheetController.Controls.Add(this.singleViewTab);
             this.sheetController.Location = new System.Drawing.Point(23, 166);
             this.sheetController.Name = "sheetController";
-            this.sheetController.SelectedIndex = 0;
+            this.sheetController.SelectedIndex = 2;
             this.sheetController.Size = new System.Drawing.Size(1154, 611);
             this.sheetController.Style = MetroFramework.MetroColorStyle.Green;
             this.sheetController.TabIndex = 10;
@@ -197,7 +197,6 @@
             this.meViewGrid.Name = "meViewGrid";
             this.meViewGrid.ReadOnly = true;
             this.meViewGrid.RowHeadersVisible = false;
-            this.meViewGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.meViewGrid.Size = new System.Drawing.Size(1147, 563);
             this.meViewGrid.TabIndex = 13;
             // 
@@ -269,7 +268,6 @@
             this.coViewGrid.Name = "coViewGrid";
             this.coViewGrid.ReadOnly = true;
             this.coViewGrid.RowHeadersVisible = false;
-            this.coViewGrid.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
             this.coViewGrid.Size = new System.Drawing.Size(566, 566);
             this.coViewGrid.TabIndex = 12;
             this.coViewGrid.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.ColumnDividerDoubleClick);
@@ -361,7 +359,7 @@
             this.singleViewGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.singleViewGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.singleViewGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.singleViewGrid.BackgroundColor = System.Drawing.Color.White;
             this.singleViewGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.singleViewGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -488,6 +486,20 @@
             this.metroPanel2.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel2.VerticalScrollbarSize = 10;
             // 
+            // toSheetsCb
+            // 
+            this.toSheetsCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toSheetsCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.toSheetsCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.toSheetsCb.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toSheetsCb.FormattingEnabled = true;
+            this.toSheetsCb.Location = new System.Drawing.Point(59, 60);
+            this.toSheetsCb.Name = "toSheetsCb";
+            this.toSheetsCb.Size = new System.Drawing.Size(121, 23);
+            this.toSheetsCb.TabIndex = 25;
+            this.toSheetsCb.SelectedIndexChanged += new System.EventHandler(this.toSheetsCb_SelectedIndexChanged);
+            // 
             // metroLabel2
             // 
             this.metroLabel2.AutoSize = true;
@@ -497,6 +509,20 @@
             this.metroLabel2.Size = new System.Drawing.Size(49, 19);
             this.metroLabel2.TabIndex = 24;
             this.metroLabel2.Text = "Sheets";
+            // 
+            // coSheetsCb
+            // 
+            this.coSheetsCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.coSheetsCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.coSheetsCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.coSheetsCb.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.coSheetsCb.FormattingEnabled = true;
+            this.coSheetsCb.Location = new System.Drawing.Point(59, 26);
+            this.coSheetsCb.Name = "coSheetsCb";
+            this.coSheetsCb.Size = new System.Drawing.Size(121, 23);
+            this.coSheetsCb.TabIndex = 24;
+            this.coSheetsCb.SelectedIndexChanged += new System.EventHandler(this.coSheetsCb_SelectedIndexChanged);
             // 
             // metroPanel3
             // 
@@ -515,6 +541,40 @@
             this.metroPanel3.VerticalScrollbarBarColor = true;
             this.metroPanel3.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel3.VerticalScrollbarSize = 10;
+            // 
+            // uniqueIdColCb
+            // 
+            this.uniqueIdColCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.uniqueIdColCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.uniqueIdColCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.uniqueIdColCb.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.uniqueIdColCb.FormattingEnabled = true;
+            this.uniqueIdColCb.Location = new System.Drawing.Point(75, 60);
+            this.uniqueIdColCb.Name = "uniqueIdColCb";
+            this.uniqueIdColCb.Size = new System.Drawing.Size(131, 23);
+            this.uniqueIdColCb.TabIndex = 27;
+            this.uniqueIdColCb.Visible = false;
+            this.uniqueIdColCb.SelectedIndexChanged += new System.EventHandler(this.uniqueIdColCb_SelectedIndexChanged);
+            // 
+            // sortModeCb
+            // 
+            this.sortModeCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sortModeCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.sortModeCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.sortModeCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.sortModeCb.Enabled = false;
+            this.sortModeCb.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.sortModeCb.FormattingEnabled = true;
+            this.sortModeCb.Items.AddRange(new object[] {
+            "Cell By Cell",
+            "Row By Row"});
+            this.sortModeCb.Location = new System.Drawing.Point(75, 26);
+            this.sortModeCb.Name = "sortModeCb";
+            this.sortModeCb.Size = new System.Drawing.Size(131, 23);
+            this.sortModeCb.TabIndex = 26;
+            this.sortModeCb.SelectedIndexChanged += new System.EventHandler(this.sortModeCb_SelectedIndexChanged);
             // 
             // metroLabel3
             // 
@@ -573,68 +633,6 @@
             this.AboutLbl.TabIndex = 14;
             this.AboutLbl.Text = "About";
             this.AboutLbl.Click += new System.EventHandler(this.AboutLbl_Click);
-            // 
-            // coSheetsCb
-            // 
-            this.coSheetsCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.coSheetsCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.coSheetsCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.coSheetsCb.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.coSheetsCb.FormattingEnabled = true;
-            this.coSheetsCb.Location = new System.Drawing.Point(59, 26);
-            this.coSheetsCb.Name = "coSheetsCb";
-            this.coSheetsCb.Size = new System.Drawing.Size(121, 23);
-            this.coSheetsCb.TabIndex = 24;
-            this.coSheetsCb.SelectedIndexChanged += new System.EventHandler(this.coSheetsCb_SelectedIndexChanged);
-            // 
-            // toSheetsCb
-            // 
-            this.toSheetsCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.toSheetsCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.toSheetsCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.toSheetsCb.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.toSheetsCb.FormattingEnabled = true;
-            this.toSheetsCb.Location = new System.Drawing.Point(59, 60);
-            this.toSheetsCb.Name = "toSheetsCb";
-            this.toSheetsCb.Size = new System.Drawing.Size(121, 23);
-            this.toSheetsCb.TabIndex = 25;
-            this.toSheetsCb.SelectedIndexChanged += new System.EventHandler(this.toSheetsCb_SelectedIndexChanged);
-            // 
-            // sortModeCb
-            // 
-            this.sortModeCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.sortModeCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.sortModeCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.sortModeCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.sortModeCb.Enabled = false;
-            this.sortModeCb.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.sortModeCb.FormattingEnabled = true;
-            this.sortModeCb.Items.AddRange(new object[] {
-            "Cell By Cell",
-            "Row By Row"});
-            this.sortModeCb.Location = new System.Drawing.Point(75, 26);
-            this.sortModeCb.Name = "sortModeCb";
-            this.sortModeCb.Size = new System.Drawing.Size(131, 23);
-            this.sortModeCb.TabIndex = 26;
-            this.sortModeCb.SelectedIndexChanged += new System.EventHandler(this.sortModeCb_SelectedIndexChanged);
-            // 
-            // uniqueIdColCb
-            // 
-            this.uniqueIdColCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.uniqueIdColCb.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.uniqueIdColCb.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.uniqueIdColCb.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.uniqueIdColCb.FormattingEnabled = true;
-            this.uniqueIdColCb.Location = new System.Drawing.Point(75, 60);
-            this.uniqueIdColCb.Name = "uniqueIdColCb";
-            this.uniqueIdColCb.Size = new System.Drawing.Size(131, 23);
-            this.uniqueIdColCb.TabIndex = 27;
-            this.uniqueIdColCb.Visible = false;
-            this.uniqueIdColCb.SelectedIndexChanged += new System.EventHandler(this.uniqueIdColCb_SelectedIndexChanged);
             // 
             // openFileControl1
             // 

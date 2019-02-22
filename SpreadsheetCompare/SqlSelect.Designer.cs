@@ -33,6 +33,7 @@
             this.HoldingPanel = new MetroFramework.Controls.MetroPanel();
             this.TestConnectionBtn = new MetroFramework.Controls.MetroButton();
             this.DatabaseSelectionPanel = new MetroFramework.Controls.MetroPanel();
+            this.DatabaseCbo = new System.Windows.Forms.ComboBox();
             this.databaseGrpLbl = new MetroFramework.Controls.MetroLabel();
             this.databaseLbl = new MetroFramework.Controls.MetroLabel();
             this.ServerLoginPanel = new MetroFramework.Controls.MetroPanel();
@@ -49,7 +50,6 @@
             this.SQLAuthRadio = new MetroFramework.Controls.MetroRadioButton();
             this.refreshServersWorker = new System.ComponentModel.BackgroundWorker();
             this.refreshDatabasesWorker = new System.ComponentModel.BackgroundWorker();
-            this.DatabaseCbo = new System.Windows.Forms.ComboBox();
             this.HoldingPanel.SuspendLayout();
             this.DatabaseSelectionPanel.SuspendLayout();
             this.ServerLoginPanel.SuspendLayout();
@@ -126,6 +126,18 @@
             this.DatabaseSelectionPanel.VerticalScrollbarHighlightOnWheel = false;
             this.DatabaseSelectionPanel.VerticalScrollbarSize = 10;
             // 
+            // DatabaseCbo
+            // 
+            this.DatabaseCbo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.DatabaseCbo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.DatabaseCbo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.DatabaseCbo.FormattingEnabled = true;
+            this.DatabaseCbo.Location = new System.Drawing.Point(83, 35);
+            this.DatabaseCbo.Name = "DatabaseCbo";
+            this.DatabaseCbo.Size = new System.Drawing.Size(260, 23);
+            this.DatabaseCbo.TabIndex = 8;
+            this.DatabaseCbo.Click += new System.EventHandler(this.DatabaseCbo_Click);
+            // 
             // databaseGrpLbl
             // 
             this.databaseGrpLbl.AutoSize = true;
@@ -170,7 +182,7 @@
             // 
             // ServerCbo
             // 
-            this.ServerCbo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ServerCbo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.ServerCbo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.ServerCbo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.ServerCbo.FormattingEnabled = true;
@@ -345,18 +357,6 @@
             // 
             this.refreshDatabasesWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.refreshDatabasesWorker_DoWork);
             this.refreshDatabasesWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.refreshDatabasesWorker_RunWorkerCompleted);
-            // 
-            // DatabaseCbo
-            // 
-            this.DatabaseCbo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.DatabaseCbo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.DatabaseCbo.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.DatabaseCbo.FormattingEnabled = true;
-            this.DatabaseCbo.Location = new System.Drawing.Point(83, 35);
-            this.DatabaseCbo.Name = "DatabaseCbo";
-            this.DatabaseCbo.Size = new System.Drawing.Size(260, 23);
-            this.DatabaseCbo.TabIndex = 8;
-            this.DatabaseCbo.Click += new System.EventHandler(this.DatabaseCbo_Click);
             // 
             // SqlSelect
             // 

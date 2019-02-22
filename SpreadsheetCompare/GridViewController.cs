@@ -33,9 +33,9 @@ namespace SpreadsheetCompare
         }
         public void SetColumnWidth()
         {
-            me.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            co.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            to.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            me.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            co.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            to.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
         public void PushSingleView(int index)
         {

@@ -177,7 +177,6 @@ namespace SpreadsheetCompare
                 MetroFramework.MetroMessageBox.Show(this, "Invalid Tables. Please ensure tables have the same number of columns. Tables Should contain more than one Column and Row.");
             }
         }
-
         private void Compare_OnComplete(object sender, EventArgs e)
         {
             if (InvokeRequired)
