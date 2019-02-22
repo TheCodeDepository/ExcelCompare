@@ -34,22 +34,22 @@
             this.TestConnectionBtn = new MetroFramework.Controls.MetroButton();
             this.DatabaseSelectionPanel = new MetroFramework.Controls.MetroPanel();
             this.databaseGrpLbl = new MetroFramework.Controls.MetroLabel();
-            this.DatabaseCbo = new MetroFramework.Controls.MetroComboBox();
             this.databaseLbl = new MetroFramework.Controls.MetroLabel();
             this.ServerLoginPanel = new MetroFramework.Controls.MetroPanel();
+            this.ServerCbo = new System.Windows.Forms.ComboBox();
             this.serverGrpLbl = new MetroFramework.Controls.MetroLabel();
-            this.SaveCredentialsChk = new MetroFramework.Controls.MetroCheckBox();
-            this.ServerCbo = new MetroFramework.Controls.MetroComboBox();
+            this.SaveCreds = new MetroFramework.Controls.MetroCheckBox();
             this.UsernameTxt = new MetroFramework.Controls.MetroTextBox();
             this.passwordLbl = new MetroFramework.Controls.MetroLabel();
             this.PasswordTxt = new MetroFramework.Controls.MetroTextBox();
             this.usernameLbl = new MetroFramework.Controls.MetroLabel();
             this.serverLbl = new MetroFramework.Controls.MetroLabel();
             this.AuthTypePanel = new MetroFramework.Controls.MetroPanel();
-            this.WindowsAuthRadio = new MetroFramework.Controls.MetroRadioButton();
+            this.WinAuth = new MetroFramework.Controls.MetroRadioButton();
             this.SQLAuthRadio = new MetroFramework.Controls.MetroRadioButton();
             this.refreshServersWorker = new System.ComponentModel.BackgroundWorker();
             this.refreshDatabasesWorker = new System.ComponentModel.BackgroundWorker();
+            this.DatabaseCbo = new System.Windows.Forms.ComboBox();
             this.HoldingPanel.SuspendLayout();
             this.DatabaseSelectionPanel.SuspendLayout();
             this.ServerLoginPanel.SuspendLayout();
@@ -61,7 +61,7 @@
             this.selectionDone.Location = new System.Drawing.Point(284, 285);
             this.selectionDone.Name = "selectionDone";
             this.selectionDone.Size = new System.Drawing.Size(63, 23);
-            this.selectionDone.TabIndex = 13;
+            this.selectionDone.TabIndex = 8;
             this.selectionDone.Text = "Done";
             this.selectionDone.UseSelectable = true;
             this.selectionDone.Click += new System.EventHandler(this.selectionDone_Click);
@@ -72,6 +72,7 @@
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(63, 23);
             this.cancelBtn.TabIndex = 14;
+            this.cancelBtn.TabStop = false;
             this.cancelBtn.Text = "Cancel";
             this.cancelBtn.UseSelectable = true;
             this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
@@ -102,7 +103,7 @@
             this.TestConnectionBtn.Margin = new System.Windows.Forms.Padding(10);
             this.TestConnectionBtn.Name = "TestConnectionBtn";
             this.TestConnectionBtn.Size = new System.Drawing.Size(138, 23);
-            this.TestConnectionBtn.TabIndex = 10;
+            this.TestConnectionBtn.TabIndex = 7;
             this.TestConnectionBtn.Text = "Test Connection";
             this.TestConnectionBtn.UseSelectable = true;
             this.TestConnectionBtn.Click += new System.EventHandler(this.TestConnectionBtn_Click);
@@ -111,8 +112,8 @@
             // 
             this.DatabaseSelectionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DatabaseSelectionPanel.Controls.Add(this.databaseGrpLbl);
             this.DatabaseSelectionPanel.Controls.Add(this.DatabaseCbo);
+            this.DatabaseSelectionPanel.Controls.Add(this.databaseGrpLbl);
             this.DatabaseSelectionPanel.Controls.Add(this.databaseLbl);
             this.DatabaseSelectionPanel.HorizontalScrollbarBarColor = true;
             this.DatabaseSelectionPanel.HorizontalScrollbarHighlightOnWheel = false;
@@ -135,20 +136,6 @@
             this.databaseGrpLbl.TabIndex = 10;
             this.databaseGrpLbl.Text = "Database Selection";
             // 
-            // DatabaseCbo
-            // 
-            this.DatabaseCbo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DatabaseCbo.FormattingEnabled = true;
-            this.DatabaseCbo.ItemHeight = 23;
-            this.DatabaseCbo.Location = new System.Drawing.Point(83, 32);
-            this.DatabaseCbo.Name = "DatabaseCbo";
-            this.DatabaseCbo.Size = new System.Drawing.Size(260, 29);
-            this.DatabaseCbo.TabIndex = 3;
-            this.DatabaseCbo.UseSelectable = true;
-            this.DatabaseCbo.SelectedIndexChanged += new System.EventHandler(this.DatabaseCbo_SelectedIndexChanged);
-            this.DatabaseCbo.Click += new System.EventHandler(this.DatabaseCbo_Click);
-            // 
             // databaseLbl
             // 
             this.databaseLbl.AutoSize = true;
@@ -162,9 +149,9 @@
             // 
             this.ServerLoginPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ServerLoginPanel.Controls.Add(this.serverGrpLbl);
-            this.ServerLoginPanel.Controls.Add(this.SaveCredentialsChk);
             this.ServerLoginPanel.Controls.Add(this.ServerCbo);
+            this.ServerLoginPanel.Controls.Add(this.serverGrpLbl);
+            this.ServerLoginPanel.Controls.Add(this.SaveCreds);
             this.ServerLoginPanel.Controls.Add(this.UsernameTxt);
             this.ServerLoginPanel.Controls.Add(this.passwordLbl);
             this.ServerLoginPanel.Controls.Add(this.PasswordTxt);
@@ -181,6 +168,18 @@
             this.ServerLoginPanel.VerticalScrollbarHighlightOnWheel = false;
             this.ServerLoginPanel.VerticalScrollbarSize = 10;
             // 
+            // ServerCbo
+            // 
+            this.ServerCbo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ServerCbo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.ServerCbo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.ServerCbo.FormattingEnabled = true;
+            this.ServerCbo.Location = new System.Drawing.Point(83, 33);
+            this.ServerCbo.Name = "ServerCbo";
+            this.ServerCbo.Size = new System.Drawing.Size(260, 23);
+            this.ServerCbo.TabIndex = 2;
+            this.ServerCbo.SelectedIndexChanged += new System.EventHandler(this.ServerCbo_SelectedIndexChanged);
+            // 
             // serverGrpLbl
             // 
             this.serverGrpLbl.AutoSize = true;
@@ -191,32 +190,17 @@
             this.serverGrpLbl.TabIndex = 4;
             this.serverGrpLbl.Text = "Server Login";
             // 
-            // SaveCredentialsChk
+            // SaveCreds
             // 
-            this.SaveCredentialsChk.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.SaveCredentialsChk.AutoSize = true;
-            this.SaveCredentialsChk.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.SaveCredentialsChk.Location = new System.Drawing.Point(226, 123);
-            this.SaveCredentialsChk.Name = "SaveCredentialsChk";
-            this.SaveCredentialsChk.Size = new System.Drawing.Size(109, 15);
-            this.SaveCredentialsChk.TabIndex = 9;
-            this.SaveCredentialsChk.Text = "Save Credentials";
-            this.SaveCredentialsChk.UseSelectable = true;
-            this.SaveCredentialsChk.Visible = false;
-            this.SaveCredentialsChk.CheckedChanged += new System.EventHandler(this.SaveCredentialsChk_CheckedChanged);
-            // 
-            // ServerCbo
-            // 
-            this.ServerCbo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ServerCbo.FormattingEnabled = true;
-            this.ServerCbo.ItemHeight = 23;
-            this.ServerCbo.Location = new System.Drawing.Point(83, 30);
-            this.ServerCbo.Name = "ServerCbo";
-            this.ServerCbo.Size = new System.Drawing.Size(260, 29);
-            this.ServerCbo.TabIndex = 8;
-            this.ServerCbo.UseSelectable = true;
-            this.ServerCbo.SelectedIndexChanged += new System.EventHandler(this.ServerCbo_SelectedIndexChanged);
+            this.SaveCreds.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.SaveCreds.AutoSize = true;
+            this.SaveCreds.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.SaveCreds.Location = new System.Drawing.Point(226, 123);
+            this.SaveCreds.Name = "SaveCreds";
+            this.SaveCreds.Size = new System.Drawing.Size(109, 15);
+            this.SaveCreds.TabIndex = 5;
+            this.SaveCreds.Text = "Save Credentials";
+            this.SaveCreds.UseSelectable = true;
             // 
             // UsernameTxt
             // 
@@ -250,7 +234,6 @@
             this.UsernameTxt.UseSelectable = true;
             this.UsernameTxt.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.UsernameTxt.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.UsernameTxt.TextChanged += new System.EventHandler(this.UsernameTxt_TextChanged);
             // 
             // passwordLbl
             // 
@@ -294,7 +277,6 @@
             this.PasswordTxt.UseSystemPasswordChar = true;
             this.PasswordTxt.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.PasswordTxt.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.PasswordTxt.TextChanged += new System.EventHandler(this.PasswordTxt_TextChanged);
             // 
             // usernameLbl
             // 
@@ -318,7 +300,7 @@
             // 
             this.AuthTypePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.AuthTypePanel.Controls.Add(this.WindowsAuthRadio);
+            this.AuthTypePanel.Controls.Add(this.WinAuth);
             this.AuthTypePanel.Controls.Add(this.SQLAuthRadio);
             this.AuthTypePanel.HorizontalScrollbarBarColor = true;
             this.AuthTypePanel.HorizontalScrollbarHighlightOnWheel = false;
@@ -331,18 +313,18 @@
             this.AuthTypePanel.VerticalScrollbarHighlightOnWheel = false;
             this.AuthTypePanel.VerticalScrollbarSize = 10;
             // 
-            // WindowsAuthRadio
+            // WinAuth
             // 
-            this.WindowsAuthRadio.AutoSize = true;
-            this.WindowsAuthRadio.Checked = true;
-            this.WindowsAuthRadio.Location = new System.Drawing.Point(21, 16);
-            this.WindowsAuthRadio.Name = "WindowsAuthRadio";
-            this.WindowsAuthRadio.Size = new System.Drawing.Size(154, 15);
-            this.WindowsAuthRadio.TabIndex = 3;
-            this.WindowsAuthRadio.TabStop = true;
-            this.WindowsAuthRadio.Text = "Windows Authentication";
-            this.WindowsAuthRadio.UseSelectable = true;
-            this.WindowsAuthRadio.CheckedChanged += new System.EventHandler(this.WindowsAuthRadio_CheckedChanged);
+            this.WinAuth.AutoSize = true;
+            this.WinAuth.Checked = true;
+            this.WinAuth.Location = new System.Drawing.Point(21, 16);
+            this.WinAuth.Name = "WinAuth";
+            this.WinAuth.Size = new System.Drawing.Size(154, 15);
+            this.WinAuth.TabIndex = 0;
+            this.WinAuth.TabStop = true;
+            this.WinAuth.Text = "Windows Authentication";
+            this.WinAuth.UseSelectable = true;
+            this.WinAuth.CheckedChanged += new System.EventHandler(this.WinAuth_CheckedChanged);
             // 
             // SQLAuthRadio
             // 
@@ -350,7 +332,7 @@
             this.SQLAuthRadio.Location = new System.Drawing.Point(205, 16);
             this.SQLAuthRadio.Name = "SQLAuthRadio";
             this.SQLAuthRadio.Size = new System.Drawing.Size(126, 15);
-            this.SQLAuthRadio.TabIndex = 2;
+            this.SQLAuthRadio.TabIndex = 1;
             this.SQLAuthRadio.Text = "SQL Authentication";
             this.SQLAuthRadio.UseSelectable = true;
             // 
@@ -364,13 +346,28 @@
             this.refreshDatabasesWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.refreshDatabasesWorker_DoWork);
             this.refreshDatabasesWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.refreshDatabasesWorker_RunWorkerCompleted);
             // 
+            // DatabaseCbo
+            // 
+            this.DatabaseCbo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.DatabaseCbo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.DatabaseCbo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.DatabaseCbo.FormattingEnabled = true;
+            this.DatabaseCbo.Location = new System.Drawing.Point(83, 35);
+            this.DatabaseCbo.Name = "DatabaseCbo";
+            this.DatabaseCbo.Size = new System.Drawing.Size(260, 23);
+            this.DatabaseCbo.TabIndex = 8;
+            this.DatabaseCbo.Click += new System.EventHandler(this.DatabaseCbo_Click);
+            // 
             // SqlSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 411);
             this.Controls.Add(this.HoldingPanel);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "SqlSelect";
+            this.Resizable = false;
             this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "SQL Table Selection";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SqlSelect_FormClosing);
@@ -392,21 +389,21 @@
         private MetroFramework.Controls.MetroButton TestConnectionBtn;
         private MetroFramework.Controls.MetroPanel DatabaseSelectionPanel;
         private MetroFramework.Controls.MetroLabel databaseGrpLbl;
-        private MetroFramework.Controls.MetroComboBox DatabaseCbo;
         private MetroFramework.Controls.MetroLabel databaseLbl;
         private MetroFramework.Controls.MetroPanel ServerLoginPanel;
         private MetroFramework.Controls.MetroLabel serverGrpLbl;
-        private MetroFramework.Controls.MetroCheckBox SaveCredentialsChk;
-        private MetroFramework.Controls.MetroComboBox ServerCbo;
+        private MetroFramework.Controls.MetroCheckBox SaveCreds;
         private MetroFramework.Controls.MetroTextBox UsernameTxt;
         private MetroFramework.Controls.MetroLabel passwordLbl;
         private MetroFramework.Controls.MetroTextBox PasswordTxt;
         private MetroFramework.Controls.MetroLabel usernameLbl;
         private MetroFramework.Controls.MetroLabel serverLbl;
         private MetroFramework.Controls.MetroPanel AuthTypePanel;
-        private MetroFramework.Controls.MetroRadioButton WindowsAuthRadio;
+        private MetroFramework.Controls.MetroRadioButton WinAuth;
         private MetroFramework.Controls.MetroRadioButton SQLAuthRadio;
         private System.ComponentModel.BackgroundWorker refreshServersWorker;
         private System.ComponentModel.BackgroundWorker refreshDatabasesWorker;
+        private System.Windows.Forms.ComboBox ServerCbo;
+        private System.Windows.Forms.ComboBox DatabaseCbo;
     }
 }

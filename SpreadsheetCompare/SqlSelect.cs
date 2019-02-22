@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
@@ -21,25 +22,13 @@ namespace SpreadsheetCompare
             refreshServersWorker.RunWorkerAsync();
         }
 
-        private string ConnectionString
-        {
-            get
-            {
-                if (WindowsAuthRadio.Checked)
-                {
-                    return $"Server={Server};Trusted_Connection=True;";
-                }
-                else
-                {
-                    return $"Server={Server};User Id={Username};Password={Password};";
-                }
-            }
-        }
+
+        private string ConnectionString { get; set; }
         public string DatabaseConnectionString
         {
             get
             {
-                if (WindowsAuthRadio.Checked)
+                if (WinAuth.Checked)
                 {
                     return $"Database={DatabaseName};Server={Server};Trusted_Connection=True;";
                 }
@@ -53,12 +42,24 @@ namespace SpreadsheetCompare
         public List<string> ServerList { get; set; }
         public List<string> DatabaseList { get; set; }
 
-        public string Server { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string DatabaseName { get; set; }
-        public bool Trusted { get; set; }
+        public string Server { get { return ServerCbo.Text; } set { ServerCbo.Text = value; } }
+        public string Username { get { return UsernameTxt.Text; } set { UsernameTxt.Text = value; } }
+        public string Password { get { return PasswordTxt.Text; } set { PasswordTxt.Text = value; } }
+        public string DatabaseName { get { return DatabaseCbo.Text; } set { DatabaseCbo.Text = value; } }
+        public bool Trusted { get { return WinAuth.Checked; } set { if (value) { WinAuth.Checked = true; } else { SQLAuthRadio.Checked = true; } } }
 
+        public StringCollection ServerCredentails
+        {
+            get { return Properties.Settings.Default.savedSqlCredentials; }
+            set { Properties.Settings.Default.savedSqlCredentials = value; }
+        }
+        public bool ShouldSave { get { return SaveCreds.Checked; } set { SaveCreds.Checked = value; } }
+
+        // Servers
+        public void GetServers()
+        {
+            refreshServersWorker.RunWorkerAsync();
+        }
         private List<string> GetNetworkServerNames()
         {
             List<string> ServersNames = new List<string>();
@@ -68,13 +69,12 @@ namespace SpreadsheetCompare
             }
             return ServersNames;
         }
-
         private List<string> GetSavedServerNames()
         {
             List<string> ServersNames = new List<string>();
-            if (Properties.Settings.Default.savedSqlCredentials != null)
+            if (ServerCredentails != null)
             {
-                foreach (string hash in Properties.Settings.Default.savedSqlCredentials)
+                foreach (string hash in ServerCredentails)
                 {
                     string[] creds = StringCipher.Decrypt(hash, GetPrivateKey()).Split(',');
                     ServersNames.Add(creds[0]);
@@ -83,43 +83,67 @@ namespace SpreadsheetCompare
             return ServersNames;
         }
 
-        private void SaveServerCredentials(string server, string username, string password, bool trustedConnection)
+        // Credentials
+        private void SaveServerCredentials()
         {
-            string credentials = $"{server},{username},{password},{trustedConnection}";
-
-            foreach (string hash in Properties.Settings.Default.savedSqlCredentials)
+            string credentials = $"{Server},{Username},{Password},{Trusted}";
+            if (ServerCredentails != null)
             {
-                string[] creds = StringCipher.Decrypt(hash, GetPrivateKey()).Split(',');
-                if (creds[0].ToUpper() == server.ToUpper())
+                foreach (string hash in ServerCredentails)
                 {
-                    Properties.Settings.Default.savedSqlCredentials.Remove(hash);
-                    break;
+                    string[] creds = StringCipher.Decrypt(hash, GetPrivateKey()).Split(',');
+                    if (creds[0].ToUpper() == Server.ToUpper())
+                    {
+                        ServerCredentails.Remove(hash);
+                        break;
+                    }
                 }
             }
-            Properties.Settings.Default.savedSqlCredentials.Add(StringCipher.Encrypt(credentials, GetPrivateKey()));
+            else
+            {
+                ServerCredentails = new StringCollection();
+            }
+            ServerCredentails.Add(StringCipher.Encrypt(credentials, GetPrivateKey()));
             Properties.Settings.Default.Save();
+        }
+        private void LoadServerCredentials()
+        {
+            if (ServerCredentails != null)
+            {
+                foreach (string hash in ServerCredentails)
+                {
+                    string[] creds = StringCipher.Decrypt(hash, GetPrivateKey()).Split(',');
+                    if (creds[0].ToUpper() == Server.ToUpper())
+                    {
+                        Server = creds[0];
+                        Username = creds[1];
+                        Password = creds[2];
+                        Trusted = bool.Parse(creds[3]);
+                        break;
+                    }
+                }
+            }
         }
 
         private void refreshServersWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var network = GetNetworkServerNames();
             var saved = GetSavedServerNames();
-
-            foreach (string hash in saved)
-            {
-                string server = StringCipher.Decrypt(hash, GetPrivateKey()).Split(',')[0];
-                if (!network.Contains(server))
+            var serverList = new List<string>();
+            foreach (string name in saved)
+            {                
+                if (!network.Contains(name))
                 {
-                    network.Add(server);
+                    network.Add(name);
                 }
             }
             ServerList = network;
+            ServerList.Sort();
         }
 
         private void refreshServersWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ServerCbo.DataSource = null;
-            ServerCbo.Refresh();
             ServerCbo.DataSource = ServerList;
         }
 
@@ -143,14 +167,24 @@ namespace SpreadsheetCompare
 
         private void refreshDatabasesWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            DatabaseCbo.DataSource = null;
-            DatabaseCbo.Refresh();
             DatabaseCbo.DataSource = DatabaseList;
         }
 
         private void DatabaseCbo_Click(object sender, EventArgs e)
         {
-            refreshDatabasesWorker.RunWorkerAsync();
+            if (!refreshDatabasesWorker.IsBusy)
+            {
+                if (WinAuth.Checked)
+                {
+                    ConnectionString = $"Server={Server};Trusted_Connection=True;";
+                }
+                else
+                {
+                    ConnectionString = $"Server={Server};User Id={Username};Password={Password};";
+                }
+                refreshDatabasesWorker.RunWorkerAsync();
+            }
+
         }
 
         private DataTable QueryTable(string query, SqlConnection sqlConnection = null)
@@ -195,6 +229,11 @@ namespace SpreadsheetCompare
 
         private bool TestConnection(out string result)
         {
+            if (DatabaseName == "" || DatabaseName == null)
+            {
+                result = "Please Select a database.";
+                return false;
+            }
             string query = $@"Declare @Table Table
                               (
                                   attribute_id int,
@@ -216,68 +255,33 @@ namespace SpreadsheetCompare
                     dataTable = QueryTable(query, connection);
                     connection.Close();
                     executionTime = connection.RetrieveStatistics()["ExecutionTime"].ToString();
+                    result = $"Version: {dataTable.Rows[0][0]}\nExecution Time: {executionTime}";
+
                 }
             }
             catch (Exception)
             {
                 success = false;
+                result = "Test Connection Failed, Consider using a different authentication option";
             }
-            result = $"Version: {dataTable.Rows[0][0]}\nExecution Time: {executionTime}";
             return success;
         }
 
         // Collecting Data
-        private void ServerCbo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Server = ServerCbo.Text;
-        }
-
-        private void DatabaseCbo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DatabaseName = DatabaseCbo.Text;
-        }
-
-        private void PasswordTxt_TextChanged(object sender, EventArgs e)
-        {
-            Password = PasswordTxt.Text;
-        }
-
-        private void UsernameTxt_TextChanged(object sender, EventArgs e)
-        {
-            Username = UsernameTxt.Text;
-        }
-
-        private void WindowsAuthRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            if (WindowsAuthRadio.Checked)
-            {
-                Trusted = true;
-                UsernameTxt.Enabled = false;
-                PasswordTxt.Enabled = false;
-            }
-            else
-            {
-                Trusted = false;
-                UsernameTxt.Enabled = true;
-                PasswordTxt.Enabled = true;
-            }
-        }
-
-        private void SaveCredentialsChk_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void selectionDone_Click(object sender, EventArgs e)
         {
             if (TestConnection(out string result))
             {
+                if (ShouldSave)
+                {
+                    SaveServerCredentials();
+                }
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
             {
-                MetroFramework.MetroMessageBox.Show(this, "Connection failed, please consider using a different authentication option.", "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MetroFramework.MetroMessageBox.Show(this, result, "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -290,6 +294,34 @@ namespace SpreadsheetCompare
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void ServerCbo_Click(object sender, EventArgs e)
+        {
+            ServerCbo.DataSource = null;
+            ServerCbo.DataSource = ServerList;
+        }
+
+        private void WinAuth_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Trusted)
+            {
+                PasswordTxt.Enabled = false;
+                UsernameTxt.Enabled = false;
+
+            }
+            else
+            {
+                PasswordTxt.Enabled = true;
+                UsernameTxt.Enabled = true;
+            }
+        }
+
+
+        // Try Loading Server Credentials
+        private void ServerCbo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadServerCredentials();
         }
     }
 }

@@ -11,7 +11,6 @@ namespace SpreadsheetLogic
 {
     public class TableImport
     {
-
         public bool hasHeader { get; set; }
         public string path { get; private set; }
 
@@ -184,7 +183,17 @@ namespace SpreadsheetLogic
             DataTable table = new DataTable();
             using (SqlConnection connection = new SqlConnection(path))
             {
-                using (SqlCommand command = new SqlCommand($"SELECT * FROM [{sheetName}]", connection))
+                string defaultSchema = "";
+                using (SqlCommand command = new SqlCommand($@"SELECT [TABLE_SCHEMA] FROM INFORMATION_SCHEMA.TABLES WHERE [TABLE_NAME] = '{sheetName}'", connection))
+                {
+                    connection.Open();
+                    defaultSchema = command.ExecuteScalar().ToString();
+                }
+                if (defaultSchema != "" || defaultSchema != null)
+                {
+                    defaultSchema = defaultSchema + "."; 
+                }
+                using (SqlCommand command = new SqlCommand($@"SELECT * FROM {defaultSchema}[{sheetName}]", connection))
                 {
                     SqlDataAdapter da = new SqlDataAdapter(command);
                     da.Fill(table);

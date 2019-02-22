@@ -17,7 +17,9 @@ namespace SpreadsheetCompare
         public OpenFileControl()
         {
             InitializeComponent();
+
         }
+
         public string Title
         {
             get { return label.Text; }

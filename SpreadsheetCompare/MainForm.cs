@@ -11,8 +11,6 @@ namespace SpreadsheetCompare
         private FormController ctrl;
         private GridColorController view;
 
-
-
         private TableImport TableOne;
         private TableImport TableTwo;
 
@@ -28,6 +26,8 @@ namespace SpreadsheetCompare
 
             compareHandler = CompareThreadCompleted;
             ctrl = new FormController(Compare_OnComplete);
+
+            //sortModeCb.DropDownStyle = ComboBoxStyle.DropDownList;
 
             sortModeCb.SelectedIndex = (int)ctrl.sortMethod;
             genSpreadcBox.Checked = ctrl.GenerateSpreadsheet;
@@ -46,7 +46,7 @@ namespace SpreadsheetCompare
             TableTwo = new TableImport(openFileControl2.ConnectionPath, hasHeader.Checked);
             UpdateSheets(openFileControl2, TableTwo, toSheetsCb);
         }
-        private void UpdateSheets(OpenFileControl file, TableImport import, MetroFramework.Controls.MetroComboBox comboBox)
+        private void UpdateSheets(OpenFileControl file, TableImport import, ComboBox comboBox)
         {
             comboBox.Items.Clear();
             if (file.ConnectionPath != null)
@@ -62,7 +62,7 @@ namespace SpreadsheetCompare
 
         private void coSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (coSheetsCb.Text != "")
+            if (coSheetsCb.Text != "" && coSheetsCb.Enabled)
             {
                 ctrl.tableOne = TableOne.GetDataTable(coSheetsCb.Text);
                 CheckSelections();
@@ -70,7 +70,7 @@ namespace SpreadsheetCompare
         }
         private void toSheetsCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (toSheetsCb.Text != "")
+            if (toSheetsCb.Text != "" && toSheetsCb.Enabled)
             {
                 ctrl.tableTwo = TableTwo.GetDataTable(toSheetsCb.Text);
                 CheckSelections();
@@ -160,9 +160,9 @@ namespace SpreadsheetCompare
 
         private void CompareBtn_Click(object sender, EventArgs e)
         {
-            CompareBtn.Enabled = false;
             if (ctrl.AreTablesValid())
             {
+                CompareBtn.Enabled = false;
                 try
                 {
                     ctrl.CompareThreadGo();
@@ -222,6 +222,7 @@ namespace SpreadsheetCompare
         }
         private void CheckSelections()
         {
+            CheckSortMethod();
             if (ctrl.tableOne != null && ctrl.tableTwo != null)
             {
                 sortModeCb.Enabled = true;
